@@ -1,0 +1,283 @@
+:root {
+    --bodybackground: #f0ffff;
+    --boxbackground: white;
+    --border: #e3e3e3;
+    --shadow: #0000001a;
+    --unselected_tab: #f0f0f0;
+    --unselected_tab_border: #9e9e9e;
+    --unselected_tab_color: #828282;
+    --selected_tab:#008e84;
+    --tab_focus: hsl(208, 99%, 50%);
+}
+/*[data-theme='dark'] {
+    --bodybackground: #151515;
+    --boxbackground: #3f3f3f;
+    --border: #ffffff00;
+    --shadow: rgba(255, 255, 255, 0);
+    --unselected_tab: #151515;
+    --unselected_tab_border: #9b9b9b;
+    --unselected_tab_color: #b5b5b5;
+    --selected_tab:#3f3f3f;
+    --selected_tab_color: white;
+}*/
+
+/*Top navbar*/
+.top-nav {
+    background: 'transparent';
+    z-index:2;
+    top:20px;
+    height: 40px;
+    border: 0.7px solid var(--black);
+    border-radius: 10px;
+    width: 40px; 
+    margin-left:5vw;
+    overflow:hidden;
+    transition: all 0.2s ease-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+}
+
+.top-nav:hover{
+    background: var(--unselected_tab)
+}
+/*Clickable href stays on NDC logo, not spreading to full navbar*/
+/*.top-nav a {
+    display:inline-block;
+}*/
+
+/*Two logos can switch depending on width screen size*/
+/*.thelogo{
+    background-image: url('./images/NDC_logo_color.png');
+    top: 57px;
+    background-size: 47px;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+    margin-left:15px;
+    margin-right: 20px;
+    transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+  }*/
+/*@media only screen and (min-width: 700px) {
+    .thelogo{
+        background-image: url('./images/NDC_logo_color_horizontal-black-text.png');
+        background-size: 120px;
+        height: 50px;
+        width: 115px;
+    }
+}*/
+
+/*Body*/
+.body {
+    background: var(--bodybackground);
+    z-index:-100;
+    width: 100vh;
+    overflow-x: hidden;
+    min-height: 0vh;
+    display: flex;
+    flex-direction: column;
+    position:static;
+}
+/*Two columns switch to each other depending on clickable button */
+.column-close {
+    background-color: #282729;
+    min-height:150vh;
+    top: -0px;
+    z-index: 2;
+    height:max-content;
+    width: 240px;
+    margin-left: -240px;
+    float: left;
+    transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+    position:fixed;
+}
+.column-open {
+    background-color: #282729;
+    min-height:100vh;
+    top: -0px;
+    z-index: 2;
+    height:max-content;
+    width: 240px;
+    margin-left: 0;
+    float: left;
+    transition: 0.2s ease-in-out;
+    -moz-transition: 0.2s ease-in-out;
+    -o-transition: 0.2s ease-in-out;
+    -webkit-transition: 0.2s ease-in-out;
+    position:fixed;
+    color: white;
+}
+
+/*Stylizing column button */
+.for-column-icon {
+    color: var(--black);
+    padding:5px;
+    padding-top: 10px;
+    user-select: none;
+}
+.for-column {
+position: static;
+    z-index: 4;
+	cursor: pointer;
+	transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+    border: None;
+    background: None;
+}
+.for-column-close{
+    position: absolute;
+    background: transparent;
+    cursor: pointer;
+    border: none;
+    color: white;
+    user-select: none;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 5px;
+    margin-left:-25px;
+}
+
+/*Button for left black column*/
+/*li {
+    display: inline-block;
+}*/
+.column-text {
+    text-align: left;
+    font-size: 16px;
+    padding: 15px 5px 15px 25px;
+    margin:0;
+    transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+    cursor: pointer;
+}
+.column-text:hover {
+    background:#535254;
+}
+
+/*Accessibility Color*/
+.main-grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    padding-right:20px;
+    width: 100%;
+    margin: 18px 0 18px 0;
+}
+.main-a {
+    grid-column-start: 1;
+    grid-column-end: 9;
+    grid-template-rows: 1;
+    display: flex;
+    justify-content: flex-start;
+    width: auto;
+}
+.main-b {
+    grid-column-start: 10;
+    grid-column-end: 10;
+    display: flex;
+    justify-content: flex-end;
+    width: auto;
+}
+.invisible-button{
+    position: static;
+    z-index: 4;
+	cursor: pointer;
+	transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+    padding: 10px;
+    margin-right: auto;
+    margin-left: 85vw;
+    border: None;
+    background: None;
+    cursor: pointer;
+}
+.invisible-button:hover > .iconButton {
+    color: var(--tab_focus);
+}
+.iconButton{
+    font-size: 30px;
+    text-align: right;
+    color: var(--unselected_tab_color);
+    cursor: pointer; 
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+}
+.popup-close {
+    display: None;
+}
+.popup-open {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 10;
+    overflow-y: scroll;
+    background: rgba(0,0,0,0.5);
+}
+.accessible-container{
+    display:contents;
+}
+#accessible-id{
+    margin-top: 60px;
+}
+.accessible-box {
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: auto;
+    border-radius: 10px 10px 10px 10px;
+    padding:10px;
+    border: rgb(227, 227, 227) solid 1px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 10%);
+    max-width: 500px;
+    max-height: 250px;
+}
+.accessible-color {
+    display:flex; 
+    justify-content:center;
+    padding: 40px;
+ }
+ #title{
+    font-size: 20px;
+    color: var(--unselected_tab_color);
+    padding: 0px 0px 5px 0px;
+    font-weight: 900;
+    font-family: 'Roboto';
+}
+.accessible-close{
+    background: none;
+    border: none;
+    color: --var(shadow);
+    font-size: 16px;
+    padding:5px 10px;
+    margin-right: auto;
+    margin-left: 90%;
+    position:relative;
+    user-select: none;
+    top: -20px;
+}
+
+/*Container for React App in WordPress*/
+.entire-container{
+    position:relative;
+    background: var(--bodybackground);
+}
