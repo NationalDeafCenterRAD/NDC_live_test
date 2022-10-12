@@ -30,13 +30,13 @@ import HighchartsReact from 'highcharts-react-official';
 import HCMore from 'highcharts/highcharts-more';
 import HCPattern from 'highcharts-pattern-fill';
 import HC_exporting from 'highcharts/modules/exporting';
-import HCxrange from 'highcharts/modules/xrange';
+import HC_accessible from "highcharts/modules/accessibility";
 
 // Add pattern in Highcharts
 HCPattern(Highcharts);
 HCMore(Highcharts);
 HC_exporting(Highcharts);
-HCxrange(Highcharts);
+HC_accessible(Highcharts);
 
 // General
 let thelist = [
@@ -106,7 +106,7 @@ let variables = [
    deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men']},
   {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
    deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
-   hearing: ['hearing and blind people','hearing and disabled people', 'hearing people with no additional disabilities']}
+   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities']}
 ]
 
 // For React Select: More Options - Open
@@ -142,8 +142,8 @@ let attributions = [
   {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
-  {label: 'hearing and blind', value: 'hearing and blind', variable: 'disability', color: 'black', words: 'hearing and blind people'},
-  {label: 'hearing and disabled', value: 'hearing and disabled', variable: 'disability', color: 'black', words: 'hearing and disabled people'},
+  {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
+  {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'}
 ]
 //Stylize Inner Menu in React Select 

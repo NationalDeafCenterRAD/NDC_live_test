@@ -24,12 +24,15 @@ import HighchartsReact from 'highcharts-react-official';
 import HCMore from 'highcharts/highcharts-more';
 import HCPattern from 'highcharts-pattern-fill';
 import HC_exporting from 'highcharts/modules/exporting';
+import HC_accessible from "highcharts/modules/accessibility";
+
 //import HCxrange from 'highcharts/modules/xrange';
 
 // Add pattern in Highcharts
 HCPattern(Highcharts);
 HC_exporting(Highcharts);
 HCMore(Highcharts);
+HC_accessible(Highcharts);
 
 //Current Year
 //const current_year = new Date().getFullYear()
@@ -72,8 +75,8 @@ let attributions = [
   {label: 'deaf-blind', value: 'deaf-blind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deaf disabled', value: 'deaf disabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
-  {label: 'hearing and blind', value: 'hearing and blind', variable: 'disability', color: 'black', words: 'hearing and blind people'},
-  {label: 'hearing and disabled', value: 'hearing and disabled', variable: 'disability', color: 'black', words: 'hearing and disabled people'},
+  {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
+  {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'}
 ]
 

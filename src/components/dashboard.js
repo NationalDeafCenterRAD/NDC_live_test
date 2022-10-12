@@ -108,7 +108,7 @@ let variables = [
    deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men']},
   {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
    deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
-   hearing: ['hearing and blind people','hearing and disabled people', 'hearing people with no additional disabilities']}
+   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities']}
 ]
 
 // For React Select: More Options - Open
@@ -144,8 +144,8 @@ let attributions = [
   {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
-  {label: 'hearing and blind', value: 'hearing and blind', variable: 'disability', color: 'black', words: 'hearing and blind people'},
-  {label: 'hearing and disabled', value: 'hearing and disabled', variable: 'disability', color: 'black', words: 'hearing and disabled people'},
+  {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
+  {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'}
 ]
 
