@@ -127,6 +127,24 @@ li span { color: var(--black); }
     float: center;
 }
 
+/*Stylize two charts*/
+.subgrid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.subgrid_a{
+    grid-column: 1;
+    grid-row:1;
+    width: 100%;
+}
+
+.subgrid_b{
+    grid-column: 2;
+    grid-row:1;
+    width: 100%;
+}
+
 /*Stylize interface and container*/
 .container{
     width: 90vw;

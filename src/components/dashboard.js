@@ -1246,7 +1246,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   }
 
   // Demographics
-  let demographics = {
+  let overall_demographics = {
     chart:{
       type: 'item',
       width: HCwidth,
@@ -1281,8 +1281,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     series: [{
         name: 'Percentage',
         keys: ['name', 'y', 'color'],
-        data: {
-          overall:
+        data:
           [['deaf', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'overall' & employment.state === chosen_state &
               employment.attribution === 'deaf').map(
@@ -1290,7 +1289,58 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
            ['hearing', 100-employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'overall' & employment.state === chosen_state &
               employment.attribution === 'deaf').map(
-              employment => employment.percentage)[0], '#dbdbdb']],
+              employment => employment.percentage)[0], '#dbdbdb']
+          ],
+        dataLabels: {
+            enabled: true,
+            format: '{point.y}%'
+        },
+        center: ['50%', '48%'],
+        size: '100%',
+        startAngle: 0,
+        endAngle: 0
+    }],
+    exporting: {
+      enabled: false 
+    }
+  }
+
+  let deaf_demographics = {
+    chart:{
+      type: 'item',
+      height: 330,
+      width: 300,
+      animation: {
+        duration: 1000
+      }
+    },
+    legend: {
+      labelFormat: '{name}',
+      align: 'center',
+      verticalAlign: 'top'
+    },
+    title: {
+      text: ""
+    },
+    tooltip: {
+      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    series: [{
+        name: 'Percentage',
+        keys: ['name', 'y', 'color'],
+        data: {
           age:
           [['deaf: ages 16-24', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
@@ -1350,19 +1400,138 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           [['deaf with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deaf with no additional disabilities').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[0],[100,100]],
            ['deafdisabled', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deafdisabled').map(
-              employment => employment.percentage)[0], colorfill[6]],
+              employment => employment.percentage)[0], colorfill[6],[100,100]],
            ['deafblind', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deafblind').map(
-              employment => employment.percentage)[0], '#E05A43']]
+              employment => employment.percentage)[0], '#E05A43',[100,100]]]
 
         }[selected_attributions],
         dataLabels: {
-            enabled: true,
+            enabled: false,
+            format: '{point.y}%'
+        },
+        center: ['50%', '48%'],
+        size: '100%',
+        startAngle: 0,
+        endAngle: 0
+    }],
+    exporting: {
+      enabled: false 
+    }
+  }
+  let hearing_demographics = {
+    chart:{
+      type: 'item',
+      height: 330,
+      width: 300,
+      animation: {
+        duration: 1000
+      }
+    },
+    legend: {
+      labelFormat: '{name}',
+      align: 'center',
+      verticalAlign: 'top'
+    },
+    title: {
+      text: ""
+    },
+    tooltip: {
+      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    series: [{
+        name: 'Percentage',
+        keys: ['name', 'y', 'color'],
+        data: {
+          age:
+          [['hearing: ages 16-24', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'age' & employment.state === chosen_state &
+              employment.attribution === 'hearing: ages 16-24').map(
+              employment => employment.percentage)[0], colorfill[0]],
+           ['hearing: ages 25-34', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'age' & employment.state === chosen_state &
+              employment.attribution === 'hearing: ages 25-34').map(
+              employment => employment.percentage)[0], colorfill[6]],
+           ['hearing: ages 35-44', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'age' & employment.state === chosen_state &
+              employment.attribution === 'hearing: ages 35-44').map(
+              employment => employment.percentage)[0], '#E05A43'],
+           ['hearing: ages 45-54', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'age' & employment.state === chosen_state &
+              employment.attribution === 'hearing: ages 45-54').map(
+              employment => employment.percentage)[0], '#DD938A'],
+           ['hearing: ages 55-64', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'age' & employment.state === chosen_state &
+              employment.attribution === 'hearing: ages 55-64').map(
+              employment => employment.percentage)[0], '#8362AA']],
+          race:
+          [['hearing Asian', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing Asian').map(
+              employment => employment.percentage)[0], colorfill[0]],
+           ['hearing Black', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing Black').map(
+              employment => employment.percentage)[0], colorfill[6]],
+           ['hearing Latinx', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing Latinx').map(
+              employment => employment.percentage)[0], '#E05A43'],
+           ['hearing Native American', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing Native American').map(
+              employment => employment.percentage)[0], '#DD938A'],
+           ['hearing multiracial', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing multiracial').map(
+              employment => employment.percentage)[0], '#8362AA'],
+           ['hearing white', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'race' & employment.state === chosen_state &
+              employment.attribution === 'hearing white').map(
+              employment => employment.percentage)[0], '#dbdbdb']],
+          gender:
+          [['hearing women', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'gender' & employment.state === chosen_state &
+              employment.attribution === 'hearing women').map(
+              employment => employment.percentage)[0], colorfill[0]],
+            ['hearing men', 100-employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'gender' & employment.state === chosen_state &
+              employment.attribution === 'hearing women').map(
+              employment => employment.percentage)[0], colorfill[6]]],
+          disability:
+          [['hearing with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'disability' & employment.state === chosen_state &
+              employment.attribution === 'hearing with no additional disabilities').map(
+              employment => employment.percentage)[0], colorfill[0],[100,100]],
+           ['hearing disabled', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'disability' & employment.state === chosen_state &
+              employment.attribution === 'hearing disabled').map(
+              employment => employment.percentage)[0], colorfill[6],[100,100]],
+           ['hearing blind', employment.filter(employment => employment.type === 'population' & 
+              employment.variable === 'disability' & employment.state === chosen_state &
+              employment.attribution === 'hearing blind').map(
+              employment => employment.percentage)[0], '#E05A43',[100,100]]]
+
+        }[selected_attributions],
+        dataLabels: {
+            enabled: false,
             format: '{point.y}%'
         },
         center: ['50%', '48%'],
@@ -2869,9 +3038,48 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             </div>
                           </div>,
                         notmap: 
-                          <div style={{display:'contents'}}>
-                            <HighchartsReact highcharts={Highcharts} options={demographics}/>
-                          </div>
+                        {
+                          overall: 
+                            <div style={{displays:'contents'}}>
+                              <HighchartsReact highcharts={Highcharts} options={overall_demographics}/>
+                            </div>,
+                          age:
+                            <div className='subgrid'>
+                              <div className='subgrid_a'>
+                                <HighchartsReact highcharts={Highcharts} options={deaf_demographics}/>
+                              </div>
+                              <div className = 'subgrid_b'>
+                                <HighchartsReact highcharts={Highcharts} options={hearing_demographics}/>
+                              </div>
+                            </div>,
+                          race:
+                            <div className='subgrid'>
+                              <div className='subgrid_a'>
+                                <HighchartsReact highcharts={Highcharts} options={deaf_demographics}/>
+                              </div>
+                              <div className = 'subgrid_b'>
+                                <HighchartsReact highcharts={Highcharts} options={hearing_demographics}/>
+                              </div>
+                            </div>,
+                          gender:
+                            <div className='subgrid'>
+                              <div className='subgrid_a'>
+                                <HighchartsReact highcharts={Highcharts} options={deaf_demographics}/>
+                              </div>
+                              <div className = 'subgrid_b'>
+                                <HighchartsReact highcharts={Highcharts} options={hearing_demographics}/>
+                              </div>
+                            </div>,
+                          disability:
+                            <div className='subgrid'>
+                              <div className='subgrid_a'>
+                                <HighchartsReact highcharts={Highcharts} options={deaf_demographics}/>
+                              </div>
+                              <div className = 'subgrid_b'>
+                                <HighchartsReact highcharts={Highcharts} options={hearing_demographics}/>
+                              </div>
+                            </div>
+                        }[selected_attributions]
                       }[USmap]
                     }
                     <p className='aria-text'>Description:</p>
@@ -3793,8 +4001,21 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                     survey conducted by the U.S. Census Bureau, providing the most recent information 
                     on employment and educational trends for deaf people in the United States. Survey 
                     respondents who stated that they were deaf, or had serious difficulty hearing, were 
-                    used to represent the deaf population in these analyses. The final sample included
-                    XX,XXX deaf people in {most_recent_year} and XXX,XXX in {most_recent_year-4}-{most_recent_year}. 
+                    used to represent the deaf population in these analyses. The final sample included {
+                      employment.filter(employment => employment.type === 'employment' & 
+                        employment.attribution === 'deaf' & 
+                        employment.state === 'United States' &
+                        (employment.status === 'unemployed' | employment.status === 'employed' | 
+                        employment.status === 'notinLF')).map(employment => employment.n).reduce(
+                        (sum, a) => sum + a, 0).toLocaleString('en-US')
+                    } deaf people in {most_recent_year} and {
+                      employment.filter(employment => employment.type === 'employment' & 
+                        employment.attribution === 'deaf' & 
+                        employment.state !== 'United States' &
+                        (employment.status === 'unemployed' | employment.status === 'employed' | 
+                        employment.status === 'notinLF')).map(employment => employment.n).reduce(
+                        (sum, a) => sum + a, 0).toLocaleString('en-US')
+                    } in {most_recent_year-4}-{most_recent_year}. 
                     For more information, see our Method page.
                   </div>
                   <div className = 'thep'>

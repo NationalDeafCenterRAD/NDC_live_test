@@ -24,15 +24,12 @@ import HighchartsReact from 'highcharts-react-official';
 import HCMore from 'highcharts/highcharts-more';
 import HCPattern from 'highcharts-pattern-fill';
 import HC_exporting from 'highcharts/modules/exporting';
-import HC_accessible from "highcharts/modules/accessibility";
-
 //import HCxrange from 'highcharts/modules/xrange';
 
 // Add pattern in Highcharts
 HCPattern(Highcharts);
 HC_exporting(Highcharts);
 HCMore(Highcharts);
-HC_accessible(Highcharts);
 
 //Current Year
 //const current_year = new Date().getFullYear()

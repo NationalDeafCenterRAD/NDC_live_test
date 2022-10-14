@@ -1,6 +1,6 @@
 {
-  "short_name": "Dashboard | National Deaf Center",
-  "name": "Dashboard | National Deaf Center on Postsecondary Outcomes",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",
