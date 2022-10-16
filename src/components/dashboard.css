@@ -57,6 +57,18 @@ li { color: var(--selected_tab); } /* bullet */
 li span { color: var(--black); } 
 
 /*Create React Select with Map Button*/
+.usmap-close{
+    background: none;
+    border: none;
+    color: --var(shadow);
+    font-size: 16px;
+    padding:10px 10px;
+    margin-right: auto;
+    margin-left: 92%;
+    position:relative;
+    user-select: none;
+    cursor: pointer;
+}
 .select-left-button{
     background: #F6F6F7;
     color: var(--selected_tab);
@@ -126,23 +138,87 @@ li span { color: var(--black); }
 .select-right{
     float: center;
 }
+.map_text{
+    font-weight: 900;
+    font-family: 'Roboto';
+    color: var(--black);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+}
+.map_path{
+    fill: #00A79D;
+}
+.map_rect{
+    fill: #00A79D;
+}
+.map_path:hover {
+    fill: #8DC63F;
+}
+.map_rect:hover{
+    fill: #8DC63F;
+}
+.map_text:hover{
+    fill: white;
+}
 
 /*Stylize two charts*/
 .subgrid{
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-left: 5%;
 }
-
 .subgrid_a{
     grid-column: 1;
     grid-row:1;
     width: 100%;
+    margin: 0 auto;
 }
-
 .subgrid_b{
     grid-column: 2;
     grid-row:1;
     width: 100%;
+    margin: 0 auto;
+}
+@media only screen and (max-width: 1060px){
+    .subgrid {
+        display:grid;
+        margin-left: 0;
+    } 
+} 
+@media only screen and (max-width: 990px){
+    .subgrid {
+        display:block;
+        margin-left: 12vw;
+    } 
+}
+
+@media only screen and (max-width: 799px){
+    .subgrid {
+        display:block;
+        margin-left: 25vw;
+    } 
+}
+
+@media only screen and (max-width: 630px){
+    .subgrid {
+        display:block;
+        margin-left: 17vw;
+    } 
+}
+
+@media only screen and (max-width: 500px){
+    .subgrid {
+        display:block;
+        margin-left: 10vw;
+    } 
+}
+@media only screen and (max-width: 430px){
+    .subgrid {
+        display:block;
+        margin-left: 5vw;
+    } 
 }
 
 /*Stylize interface and container*/

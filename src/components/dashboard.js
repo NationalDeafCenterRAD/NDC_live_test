@@ -32,11 +32,13 @@ import HC_exporting from 'highcharts/modules/exporting';
 //import HCMore from 'highcharts/highcharts-more';
 import HC_accessible from "highcharts/modules/accessibility";
 import HCItem from 'highcharts/modules/item-series';
+//import HCPattern from 'highcharts-pattern-fill';
 
 // Add pattern in Highcharts
 HC_exporting(Highcharts);
 HC_accessible(Highcharts);
 HCItem(Highcharts);
+//HCPattern(Highcharts);
 
 // General
 let thelist = [
@@ -230,12 +232,14 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [data_sidebar, setData_SideBar] = useState('None')
   const [interface_side, setInterface_Side] = useState('unset')
   const [data_grid, setData_Grid] = useState('grid')
+  const [pie_width, setPieWidth] = useState(300)
   const [HCwidth, setHC_Width] = useState(null)
   const [searchable, setSearchable] = useState(true)
   const [slice_string, setSliceString] = useState([50,''])
   const [paddingSide, setPaddingSide] = useState(null)
   useEffect(() => {
     if(size[0] < 800 & size[0] >= 365){
+      setPieWidth(300)
       setData_SideBar('grid')
       setInterface_Side('None')
       setData_Grid('ungrid')
@@ -246,6 +250,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     }else if(size[1] < 500){
       setSearchable(false)
     }else if(size[0] < 365){
+      setPieWidth(200)
       setData_SideBar('grid')
       setInterface_Side('None')
       setData_Grid('ungrid')
@@ -254,6 +259,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setSliceString([2,'.'])
       setPaddingSide('10px')
     }else if(size[0] < 1070){
+      setPieWidth(300)
       setData_SideBar('None')
       setInterface_Side('unset')
       setData_Grid('grid')
@@ -262,6 +268,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setSliceString([10,''])
       setPaddingSide(null)
     }else{
+      setPieWidth(300)
       setData_SideBar('None')
       setInterface_Side('unset')
       setData_Grid('grid')
@@ -1248,7 +1255,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   // Demographics
   let overall_demographics = {
     chart:{
-      type: 'item',
+      type: 'pie',
       width: HCwidth,
       height: 330,
       animation: {
@@ -1275,21 +1282,36 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         color: '#fff'
       }
     },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        innerSize: "auto",
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          formatter:function(){
+            return this.y + '%'
+          },
+        },
+      showInLegend: true,
+      }
+    },
     credits: {
       enabled: false
     },
     series: [{
-        name: 'Percentage',
-        keys: ['name', 'y', 'color'],
+        name: '',
+        innerSize: '77%',
+        keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data:
           [['deaf', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'overall' & employment.state === chosen_state &
               employment.attribution === 'deaf').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
            ['hearing', 100-employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'overall' & employment.state === chosen_state &
               employment.attribution === 'deaf').map(
-              employment => employment.percentage)[0], '#dbdbdb']
+              employment => employment.percentage)[0], colorfill[6],colorfill[6],1]
           ],
         dataLabels: {
             enabled: true,
@@ -1307,15 +1329,15 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
 
   let deaf_demographics = {
     chart:{
-      type: 'item',
+      type: 'pie',
       height: 330,
-      width: 300,
+      width: pie_width,
       animation: {
         duration: 1000
       }
     },
     legend: {
-      labelFormat: '{name}',
+      labelFormat: '<span style="color:#949494">{y}%</span> {name}',
       align: 'center',
       verticalAlign: 'top'
     },
@@ -1334,81 +1356,423 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         color: '#fff'
       }
     },
+    defs: {
+      patterns: [
+        {
+          id: "purple",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#7140BF',
+              icon: <div />
+            }
+        },
+        {
+          id: "purple1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#7140BF',
+            fill: '#dbc4ff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "purple2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#b485ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "pink",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#d100d1',
+              icon: <div />
+            }
+        },
+        {
+          id: "pink1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#d100d1',
+            fill: '#ffccff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "pink2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff69ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "maroon",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a3004f',
+              icon: <div />
+            }
+        },
+        {
+          id: "maroon1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a3004f',
+            fill: '#ff94c8',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "maroon2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff007c',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "red",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a80b00',
+              icon: <div />
+            }
+        },
+        {
+          id: "red1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a80b00',
+            fill: '#ffa099',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "red2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#eb4034',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "orange",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#cc7904',
+              icon: <div />
+            }
+        },
+        {
+          id: "orange1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#cc7904',
+            fill: '#ffc778',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "orange2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff990a',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "yellow",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#c99400',
+              icon: <div />
+            }
+        },
+        {
+          id: "yellow1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#c99400',
+            fill: '#ffe18f',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "yellow2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ffbe0a',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "gold",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a19100',
+              icon: <div />
+            }
+        },
+        {
+          id: "gold1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a19100',
+            fill: '#fff491',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "gold2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#e3cc00',
+            strokeWidth: 3
+          }
+        },
+      {
+          id: "green",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#2e7800',
+            icon: <div />
+          }
+        },
+        {
+          id: "green1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#2e7800',
+            fill: '#a9ff73',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "green2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#48bd00',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "teal",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#00A79D',
+            icon: <div />
+          }
+        },
+        {
+          id: "teal1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#00A79D',
+            fill: '#D6EEF0',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "teal2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#43C9C8',
+            strokeWidth: 3
+          }
+        },
+      {
+          id: "blue",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#00c9c3',
+            icon: <div />
+          }
+        },
+        {
+          id: "blue1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#00c9c3',
+            fill: '#ccfffd',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "blue2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#24fff8',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "sky",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#009ac9',
+            icon: <div />
+          }
+        },
+        {
+          id: "sky1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#009ac9',
+            fill: '#adecff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "sky2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#45d3ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "brown",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#856c3a',
+            icon: <div />
+          }
+        },
+        {
+          id: "brown1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#856c3a',
+            fill: '#dbccad',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "brown2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#b39862',
+            strokeWidth: 3
+          }
+        }
+      ]
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        innerSize: "auto",
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          formatter:function(){
+            return this.y + '%'
+          },
+        },
+      showInLegend: true,
+      }
+    },
     credits: {
       enabled: false
     },
     series: [{
-        name: 'Percentage',
-        keys: ['name', 'y', 'color'],
+        innerSize: '77%',
+        keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data: {
           age:
           [['deaf: ages 16-24', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 16-24').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
            ['deaf: ages 25-34', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 25-34').map(
-              employment => employment.percentage)[0], colorfill[6]],
+              employment => employment.percentage)[0], colorfill[1],colorfill[0],1],
            ['deaf: ages 35-44', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 35-44').map(
-              employment => employment.percentage)[0], '#E05A43'],
+              employment => employment.percentage)[0], colorfill[2],colorfill[0],1],
            ['deaf: ages 45-54', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 45-54').map(
-              employment => employment.percentage)[0], '#DD938A'],
+              employment => employment.percentage)[0], colorfill[3],colorfill[0],1],
            ['deaf: ages 55-64', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 55-64').map(
-              employment => employment.percentage)[0], '#8362AA']],
+              employment => employment.percentage)[0], colorfill[4],colorfill[0],1]],
           race:
           [['deaf Asian', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf Asian').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
            ['deaf Black', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf Black').map(
-              employment => employment.percentage)[0], colorfill[6]],
+              employment => employment.percentage)[0], colorfill[1],colorfill[0],1],
            ['deaf Latinx', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf Latinx').map(
-              employment => employment.percentage)[0], '#E05A43'],
+              employment => employment.percentage)[0], colorfill[2],colorfill[0],1],
            ['deaf Native American', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf Native American').map(
-              employment => employment.percentage)[0], '#DD938A'],
+              employment => employment.percentage)[0], colorfill[3],colorfill[0],1],
            ['deaf multiracial', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf multiracial').map(
-              employment => employment.percentage)[0], '#8362AA'],
+              employment => employment.percentage)[0], colorfill[4],colorfill[0],1],
            ['deaf white', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf white').map(
-              employment => employment.percentage)[0], '#dbdbdb']],
+              employment => employment.percentage)[0], colorfill[5],colorfill[0],1]],
           gender:
           [['deaf women', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'deaf women').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
             ['deaf men', 100-employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'deaf women').map(
-              employment => employment.percentage)[0], colorfill[6]]],
+              employment => employment.percentage)[0], colorfill[1],colorfill[0],1]],
           disability:
           [['deaf with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deaf with no additional disabilities').map(
-              employment => employment.percentage)[0], colorfill[0],[100,100]],
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
            ['deafdisabled', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deafdisabled').map(
-              employment => employment.percentage)[0], colorfill[6],[100,100]],
+              employment => employment.percentage)[0], colorfill[1],colorfill[0],1],
            ['deafblind', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deafblind').map(
-              employment => employment.percentage)[0], '#E05A43',[100,100]]]
+              employment => employment.percentage)[0], colorfill[2],colorfill[0],1]]
 
         }[selected_attributions],
         dataLabels: {
@@ -1426,17 +1790,17 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   }
   let hearing_demographics = {
     chart:{
-      type: 'item',
+      type: 'pie',
       height: 330,
-      width: 300,
+      width: pie_width,
       animation: {
         duration: 1000
       }
     },
     legend: {
-      labelFormat: '{name}',
+      labelFormat: '<span style="color:#949494">{y}%</span> {name}',
       align: 'center',
-      verticalAlign: 'top'
+      verticalAlign: 'top',
     },
     title: {
       text: ""
@@ -1453,81 +1817,137 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         color: '#fff'
       }
     },
+    defs: {
+      patterns: [
+        {
+          id: "black",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#282729',
+              icon: <div />
+            }
+        },
+        {
+          id: "black1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#282729',
+            fill: '#949494',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "black2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#dbdbdb',
+            fill: '#282729',
+            strokeWidth: 3
+          }
+        }
+      ]
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        innerSize: "auto",
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          formatter:function(){
+            return this.y + '%'
+          },
+        },
+      showInLegend: true,
+      }
+    },
     credits: {
       enabled: false
     },
     series: [{
+
+
+   /*name: 'Employed',
+    color: '#33dad0',
+    borderColor: '#008e84',
+    borderWidth: 1,
+    y: emp16_64.filter(emp16_64 => emp16_64.year === year & emp16_64.type === 'general' &&
+    emp16_64.DEAR === 'deaf' & emp16_64.ESR === 'employed').map(
+    emp16_64 => emp16_64.percentage)[0]*/
         name: 'Percentage',
-        keys: ['name', 'y', 'color'],
+        innerSize: '77%',
+        keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data: {
           age:
           [['hearing: ages 16-24', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 16-24').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[6],colorfill[6],1],
            ['hearing: ages 25-34', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 25-34').map(
-              employment => employment.percentage)[0], colorfill[6]],
+              employment => employment.percentage)[0], colorfill[7],colorfill[6],1],
            ['hearing: ages 35-44', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 35-44').map(
-              employment => employment.percentage)[0], '#E05A43'],
+              employment => employment.percentage)[0], colorfill[8],colorfill[6],1],
            ['hearing: ages 45-54', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 45-54').map(
-              employment => employment.percentage)[0], '#DD938A'],
+              employment => employment.percentage)[0], 'url(#black)',colorfill[6],1],
            ['hearing: ages 55-64', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 55-64').map(
-              employment => employment.percentage)[0], '#8362AA']],
+              employment => employment.percentage)[0], 'url(#black1)',colorfill[6],1]],
           race:
           [['hearing Asian', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing Asian').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[6],colorfill[6],1],
            ['hearing Black', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing Black').map(
-              employment => employment.percentage)[0], colorfill[6]],
+              employment => employment.percentage)[0], colorfill[7],colorfill[6],1],
            ['hearing Latinx', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing Latinx').map(
-              employment => employment.percentage)[0], '#E05A43'],
+              employment => employment.percentage)[0], colorfill[8],colorfill[6],1],
            ['hearing Native American', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing Native American').map(
-              employment => employment.percentage)[0], '#DD938A'],
+              employment => employment.percentage)[0], 'url(#black)',colorfill[6],1],
            ['hearing multiracial', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing multiracial').map(
-              employment => employment.percentage)[0], '#8362AA'],
+              employment => employment.percentage)[0], 'url(#black1)',colorfill[6],1],
            ['hearing white', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing white').map(
-              employment => employment.percentage)[0], '#dbdbdb']],
+              employment => employment.percentage)[0], 'url(#black2)',colorfill[6],1]],
           gender:
           [['hearing women', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'hearing women').map(
-              employment => employment.percentage)[0], colorfill[0]],
+              employment => employment.percentage)[0], colorfill[6],colorfill[6],1],
             ['hearing men', 100-employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'hearing women').map(
-              employment => employment.percentage)[0], colorfill[6]]],
+              employment => employment.percentage)[0], colorfill[7],colorfill[6],1]],
           disability:
           [['hearing with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'hearing with no additional disabilities').map(
-              employment => employment.percentage)[0], colorfill[0],[100,100]],
+              employment => employment.percentage)[0], colorfill[6],colorfill[6],1],
            ['hearing disabled', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'hearing disabled').map(
-              employment => employment.percentage)[0], colorfill[6],[100,100]],
+              employment => employment.percentage)[0], colorfill[7],colorfill[6],1],
            ['hearing blind', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'hearing blind').map(
-              employment => employment.percentage)[0], '#E05A43',[100,100]]]
+              employment => employment.percentage)[0], colorfill[8],colorfill[6],1]]
 
         }[selected_attributions],
         dataLabels: {
@@ -2933,7 +3353,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   };
 
   // USMap function
-  const translate = {x: 20,y: 20};
+  const translate = {x: 10,y: 20};
 
   // Zoom function
   const svgViewportWidth = 1000;
@@ -3012,31 +3432,47 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                     {
                       {
                         map: 
+                          <>
+                          <button className='usmap-close' onClick={switchtoUSMap} aria-hidden="true">
+                            X
+                          </button>
                           <div style={{marginLeft: 'auto',marginRight: 'auto',marginTop: '20px',
                                         width: 'auto', padding: '10px', maxWidth: '500px',maxHeight: '500px'}}>
                             <div style={{overflow:'hidden', height: 300, width: 'auto'}}>
                               <svg viewBox={[0, 0, svgViewportWidth, svgViewportHeight].join(' ')} width={containerWidth}
                                 height={containerHeight} style={{transform: `translateX(${translate.x}px) translateY(${translate.y}px)`}}>
                                   {usmap.map((stateData, index) =>
+                                    <>
                                     <path
-                                    className="someCSSClass"
-                                    style={{cursor: "pointer", fill: "#00A79D"}}
-                                    key={index}
-                                    stroke="#fff"
-                                    strokeWidth="5px"
-                                    d={stateData.shape}
-                                    onMouseOver={(event) => {
-                                      event.target.style.fill = '#8DC63F';
-                                    }}
-                                    onMouseOut={(event) => {
-                                      event.target.style.fill = '#00A79D';
-                                    }}
+                                      className="map_path"
+                                      style={{cursor: "pointer"}}
+                                      key={index}
+                                      stroke="#fff"
+                                      strokeWidth="5px"
+                                      d={stateData.shape}
+                                      onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
+                                    />
+                                    <rect style={{cursor: "pointer", display: stateData.display}}
+                                    className = "map_rect"
+                                    rx='5' ry='5'
+                                    key = {index}
+                                    onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])} 
+                                    x={stateData.xend} y={stateData.yend} 
+                                    height="30" width="55"/>
+                                    <text className = 'map_text'
+                                    key = {index}
                                     onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
-                                  />)
+                                    style={{cursor: "pointer"}}
+                                    x={stateData.X} 
+                                    y={stateData.Y}>
+                                      {stateData.id}
+                                    </text>
+                                  </>)
                                   }
                               </svg>
                             </div>
-                          </div>,
+                          </div>
+                          </>,
                         notmap: 
                         {
                           overall: 
