@@ -118,7 +118,7 @@ const Navbar = () => {
   let demo = {
       chart:{
         type: 'column',
-        height: '200px'
+        height: '200px',
       },
       title: {
         text: ""

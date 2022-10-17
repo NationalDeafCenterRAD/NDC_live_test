@@ -154,17 +154,17 @@ let attributions = [
 // State Comparison List
 let state_comparison = [
   {label: 'Education Attainment',value: 'Education Attainment', disabled: true,},
-  {label: 'All Levels', value: 'All Levels', title: "Education Attainment - High School, Some College, AA, BA, MA, PHD", variable: 'all', type: 'education',age: '25-64', description: ''},
-  {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher'},
-  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college'},
-  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher"},
-  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher"},
-  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher"},
-  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent'},
+  {label: 'All Levels', value: 'All Levels', title: "Education Attainment - High School, Some College, AA, BA, MA, PHD", variable: 'all', type: 'education',age: '25-64', description: '', description1: ''},
+  {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher'},
+  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college'},
+  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher"},
+  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher"},
+  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher"},
+  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent'},
   {label: 'Employment Status', value: 'Employment Status', disabled: true},
-  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed'},
-  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are currently or recently looking for work'},
-  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in labor force'}
+  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed'},
+  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed'},
+  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force'}
 ]
 
 //Stylize Inner Menu in React Select 
@@ -1129,6 +1129,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [chart_edcomp1, setChart_edcomp1] = useState('accordionBtn');
   const [state_age, setStateAge] = useState('25-64');
   const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher')
+  const [state_descript1, setStateDescript1] = useState(' have completed a bachelor’s degree or higher')
 
   const changeState = (e) => {
     setMultiCompState(e)
@@ -1137,38 +1138,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     setStateType(e.type)
     setStateAge(e.age)
     setStateDescript(e.description)
-    /*if(e.variable === 'phd/dr'){
-      setEduLabelDescript('doctoral degree or equivalent')
-    }else if(e.variable === 'HS diploma'){
-      setEduLabelDescript('High School or higher')
-    }else if(e.variable === 'associate'){
-      setEduLabelDescript("Associate's Degree or higher")
-    }else if(e.variable === 'bachelor'){
-      setEduLabelDescript("Bachelor's Degree or higher")
-    }else if(e.variable === 'master'){
-      setEduLabelDescript("Master's Degree or higher")
-    }else{
-      setEduLabelDescript(e.variable)
-    }
-    if(e.label === "Associate's"){
-      setStateA(" an ")
-      setStateLabel(e.label)
-    }else if(e.label === 'Some College'){
-      setStateA(" ")
-      setStateLabel(e.label.toLowerCase())
-    }else if(e.label === 'High School'){
-      setStateA(' ')
-      setStateLabel(e.label)
-    }else if(e.label === "Bachelor's"){
-      setStateA(' a ')
-      setStateLabel(e.label)
-    }else if(e.label === "Master's"){
-      setStateA(' a ')
-      setStateLabel(e.label)
-    }else{
-      setEduA(' ')
-      setStateLabel(e.label)
-    }*/
+    setStateDescript1(e.description1)
   }
 
   const [stateDisabled, setStateDisabled] = useState(false)
@@ -1300,7 +1270,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
-        name: '',
+        name: 'Percentage',
         innerSize: '77%',
         keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data:
@@ -1702,6 +1672,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
+        name: 'Percentage',
         innerSize: '77%',
         keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data: {
@@ -1867,15 +1838,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
-
-
-   /*name: 'Employed',
-    color: '#33dad0',
-    borderColor: '#008e84',
-    borderWidth: 1,
-    y: emp16_64.filter(emp16_64 => emp16_64.year === year & emp16_64.type === 'general' &&
-    emp16_64.DEAR === 'deaf' & emp16_64.ESR === 'employed').map(
-    emp16_64 => emp16_64.percentage)[0]*/
         name: 'Percentage',
         innerSize: '77%',
         keys: ['name', 'y', 'color','borderColor','borderWidth'],
@@ -2123,7 +2085,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages '+state_age+', an estimated '+
+          text: 'In the United States, among people age '+state_age+', an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === stateLevel &  
             employment.type === stateType & 
@@ -2309,7 +2271,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages '+state_age+', an estimated'+
+          text: 'In the United States, among people age '+state_age+', an estimated'+
           employment.filter(employment => employment.type === stateType & 
             employment.variable === selected_attributions & employment.state === 'United States' &
             employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -2516,7 +2478,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages '+state_age+', an estimated'+
+          text: 'In the United States, among people age '+state_age+', an estimated'+
           employment.filter(employment => employment.attribution === 'deaf' & 
           employment.status !== 'no HS diploma' &  
           employment.type === 'education' & 
@@ -3353,11 +3315,11 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   };
 
   // USMap function
-  const translate = {x: 10,y: 20};
+  const translate = {x: 0,y: 5};
 
   // Zoom function
-  const svgViewportWidth = 1000;
-  const svgViewportHeight = 700;
+  const svgViewportWidth = 965;
+  const svgViewportHeight = 650;
   const { containerHeight, containerWidth } = [0,0];
 
   //Write HTML d scripts
@@ -3442,8 +3404,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               <svg viewBox={[0, 0, svgViewportWidth, svgViewportHeight].join(' ')} width={containerWidth}
                                 height={containerHeight} style={{transform: `translateX(${translate.x}px) translateY(${translate.y}px)`}}>
                                   {usmap.map((stateData, index) =>
-                                    <>
-                                    <path
+                                    <a href="/#">
+                                      <path
                                       className="map_path"
                                       style={{cursor: "pointer"}}
                                       key={index}
@@ -3459,6 +3421,18 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])} 
                                     x={stateData.xend} y={stateData.yend} 
                                     height="30" width="55"/>
+                                    <line className = "map_line"
+                                    x1={stateData.firstx} y1={stateData.firsty} 
+                                    x2={stateData.secondx} y2={stateData.secondy}
+                                    style={{cursor: "pointer", display: stateData.display,strokeWidth:"3"}}/>
+                                    <line className = "map_line"
+                                    x1={stateData.secondx} y1={stateData.secondy} 
+                                    x2={stateData.thirdx} y2={stateData.thirdy}
+                                    style={{cursor: "pointer", display: stateData.display,strokeWidth:"3"}}/>
+                                    <line className = "map_line"
+                                    x1={stateData.thirdx} y1={stateData.thirdy} 
+                                    x2={stateData.fourthx} y2={stateData.fourthy}
+                                    style={{cursor: "pointer", display: stateData.display1,strokeWidth:"3"}}/>
                                     <text className = 'map_text'
                                     key = {index}
                                     onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
@@ -3466,8 +3440,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     x={stateData.X} 
                                     y={stateData.Y}>
                                       {stateData.id}
-                                    </text>
-                                  </>)
+                                    </text></a>
+                                  )
                                   }
                               </svg>
                             </div>
@@ -3529,7 +3503,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}
                       textContent = {
-                        'Among people ages 16-64, an estimated '+
+                        'Among people age 16-64, an estimated '+
                         employment.filter(employment => employment.type === 'population' & 
                           employment.variable === 'overall' & employment.state === chosen_state &
                           employment.attribution === 'deaf').map(
@@ -3715,7 +3689,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       }
                       textContent={
                         {
-                          accordionBtn: 'In the United States, among people ages '+state_age+', an estimated'+
+                          accordionBtn: 'In the United States, among people age '+state_age+', an estimated'+
                             employment.filter(employment => employment.type === stateType & 
                               employment.variable === selected_attributions & employment.state === 'United States' &
                               employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -3736,7 +3710,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                               hear_labels[employment.index]})+
                             '.',
-                          accordionBtnActive: 'In the United States, among people ages '+state_age+', an estimated '+
+                          accordionBtnActive: 'In the United States, among people age '+state_age+', an estimated '+
                             employment.filter(employment => employment.attribution === attribute[0] & 
                               employment.status === stateLevel &  
                               employment.type === stateType & 
@@ -3752,7 +3726,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                 function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                               )+
                             words[1]+'.',
-                          AllLevels: 'In the United States, among people ages '+state_age+', an estimated'+
+                          AllLevels: 'In the United States, among people age '+state_age+', an estimated'+
                             employment.filter(employment => employment.attribution === 'deaf' & 
                             employment.status !== 'no HS diploma' &  
                             employment.type === 'education' & 
@@ -4162,7 +4136,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                   }
                   textContent={
                       {
-                        accordionBtn: in_the+chosen_state+', among people ages '+state_age+', an estimated'+
+                        accordionBtn: in_the+chosen_state+', among people age '+state_age+', an estimated'+
                           employment.filter(employment => employment.type === stateType & 
                             employment.variable === selected_attributions & employment.state === chosen_state &
                             employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -4182,7 +4156,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             hear_labels[employment.index] : ' '+
                             (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                             hear_labels[employment.index]})+
-                          '. While '+in_the1.toLowerCase()+chosen_state1+', among people ages '+state_age+', an estimated'+
+                          '. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
                           employment.filter(employment => employment.type === stateType & 
                             employment.variable === selected_attributions & employment.state === chosen_state1 &
                             employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -4192,7 +4166,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             deaf_labels[employment.index] : ' '+ 
                             (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                             deaf_labels[employment.index]})+
-                          state_descript+', compared to '+
+                          state_descript1+', compared to '+
                           employment.filter(employment => employment.type === stateType & 
                             employment.variable === selected_attributions & employment.state === chosen_state1 &
                             employment.status === stateLevel & employment.attribution.includes('hearing')).map(
@@ -4203,7 +4177,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                             hear_labels[employment.index]})+
                           '.',
-                        accordionBtnActive: in_the+chosen_state+', among people ages '+state_age+', an estimated '+
+                        accordionBtnActive: in_the+chosen_state+', among people age '+state_age+', an estimated '+
                           employment.filter(employment => employment.attribution === attribute[0] & 
                             employment.status === stateLevel &  
                             employment.type === stateType & 
@@ -4218,7 +4192,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
                               function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                             )+
-                          words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people ages '+state_age+', an estimated '+
+                          words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated '+
                           employment.filter(employment => employment.attribution === attribute[0] & 
                             employment.status === stateLevel &  
                             employment.type === stateType & 
@@ -4226,7 +4200,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                             )
                             +
-                          words[0]+state_descript+', compared to '+
+                          words[0]+state_descript1+', compared to '+
                           employment.filter(employment => employment.attribution === attribute[1] & 
                             employment.status === stateLevel &  
                             employment.type === stateType & 
@@ -4234,7 +4208,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                             )+
                           words[1]+'.',
-                        AllLevels: in_the+chosen_state+', among people ages '+state_age+', an estimated'+
+                        AllLevels: in_the+chosen_state+', among people age '+state_age+', an estimated'+
                           employment.filter(employment => employment.attribution === 'deaf' & 
                           employment.status !== 'no HS diploma' &  
                           employment.type === 'education' & 
@@ -4258,7 +4232,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                             edulist[index] :
                             ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                          '. While'+in_the1.toLowerCase()+chosen_state1+', among people ages '+state_age+', an estimated'+
+                          '. While'+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
                           employment.filter(employment => employment.attribution === 'deaf' & 
                           employment.status !== 'no HS diploma' &  
                           employment.type === 'education' & 

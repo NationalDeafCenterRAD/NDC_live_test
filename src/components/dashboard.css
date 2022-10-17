@@ -149,18 +149,46 @@ li span { color: var(--black); }
 }
 .map_path{
     fill: #00A79D;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
 }
 .map_rect{
     fill: #00A79D;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
 }
-.map_path:hover {
-    fill: #8DC63F;
+.map_line{
+    stroke: #00A79D;
+    stroke-linecap: round;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -webkit-transition: all 0.2s ease-out;
 }
-.map_rect:hover{
-    fill: #8DC63F;
+a:hover .map_path {
+    fill: #8DC63F !important;
 }
-.map_text:hover{
-    fill: white;
+a:hover .map_rect{
+    fill: #8DC63F !important;
+}
+a:hover .map_line{
+    stroke: #8DC63F !important;
 }
 
 /*Stylize two charts*/

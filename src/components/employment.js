@@ -584,10 +584,10 @@ const Employment = ({colors, justcolor, colorfill}) => {
       setFirstDesc('employed')
     }else if(e.target.name === 'Unemployment Rate'){
       setStatus_A('unemployed')
-      setFirstDesc('unemployed')
+      setFirstDesc('unemployed, which is defined as being currently or recently looking for work')
     }else if(e.target.name === 'Not in Labor Force'){
       setStatus_A('notinLF')
-      setFirstDesc('not in labor force')
+      setFirstDesc('not in labor force, which is defined as not currently employed and not looking for work')
     }
   }
 
@@ -935,7 +935,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: in_the+chosen_state+', among people ages 16-64, an estimated '+
+          text: in_the+chosen_state+', among people age 16-64, an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === status_a & 
             employment.type === 'employment' & 
@@ -1132,7 +1132,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: in_the+chosen_state+', among people ages 16-64, an estimated'+
+          text: in_the+chosen_state+', among people age 16-64, an estimated'+
           employment.filter(employment => employment.type === 'employment' & 
             employment.variable === selected_attributions & employment.state === chosen_state &
             employment.status === status_a & employment.attribution.includes('deaf')).map(
@@ -1337,7 +1337,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages 16-64, an estimated '+
+          text: 'In the United States, among people age 16-64, an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === status_selfEmp & 
             employment.type === 'self-employment' & 
@@ -1535,7 +1535,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages 16-64, an estimated'+
+          text: 'In the United States, among people age 16-64, an estimated'+
           employment.filter(employment => employment.type === 'self-employment' & 
             employment.variable === selected_attributions & employment.state === 'United States' &
             employment.status === status_selfEmp & employment.attribution.includes('deaf')).map(
@@ -1745,7 +1745,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'Based on the median annual earning report, in the United States, among people ages 16-64,'+
+          text: 'Based on the median annual earning report, in the United States, among people age 16-64,'+
           employment.filter(employment => employment.status === 'earning' &  
             employment.type === 'salary-range' & 
             employment.state === 'United States' &  
@@ -1967,7 +1967,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'Based on the median annual earning report, in the United States, among people ages 16-64,'+
+          text: 'Based on the median annual earning report, in the United States, among people age 16-64,'+
           employment.filter(employment => employment.status === 'earning' &  
             employment.type === 'salary-range' & 
             employment.state === 'United States' &  
@@ -2186,7 +2186,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                       textContent={
                         {
                         accordionBtn:
-                          in_the+chosen_state+', among people ages 16-64, an estimated'+
+                          in_the+chosen_state+', among people age 16-64, an estimated'+
                           employment.filter(employment => employment.type === 'employment' & 
                             employment.variable === selected_attributions & employment.state === chosen_state &
                             employment.status === status_a & employment.attribution.includes('deaf')).map(
@@ -2208,7 +2208,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                               hear_labels[employment.index]})+
                           '.',
                         accordionBtnActive: 
-                          in_the+chosen_state+', among people ages 16-64, an estimated '+
+                          in_the+chosen_state+', among people age 16-64, an estimated '+
                           employment.filter(employment => employment.attribution === attribute[0] & 
                             employment.status === status_a & 
                             employment.type === 'employment' & 
@@ -2451,7 +2451,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                       textContent={
                         {
                         accordionBtn:
-                          'Based on the median annual earning report, in the United States, among people ages 16-64,'+
+                          'Based on the median annual earning report, in the United States, among people age 16-64,'+
                           employment.filter(employment => employment.status === 'earning' &  
                             employment.type === 'salary-range' & 
                             employment.state === 'United States' &  
@@ -2482,7 +2482,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                               ' '+hear_labels[employment.index]+
                               ' $'+employment.median_income/1000 + 'K'}),
                         accordionBtnActive: 
-                          'Based on the median annual earning report, in the United States, among people ages 16-64,'+
+                          'Based on the median annual earning report, in the United States, among people age 16-64,'+
                           employment.filter(employment => employment.status === 'earning' &  
                             employment.type === 'salary-range' & 
                             employment.state === 'United States' &  
@@ -2724,7 +2724,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                       textContent={
                         {
                         accordionBtn:
-                          'In the United States, among people ages 16-64, an estimated'+
+                          'In the United States, among people age 16-64, an estimated'+
                           employment.filter(employment => employment.type === 'self-employment' & 
                             employment.variable === selected_attributions & employment.state === 'United States' &
                             employment.status === status_selfEmp & employment.attribution.includes('deaf')).map(
@@ -2746,7 +2746,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
                               hear_labels[employment.index]})+
                           '.',
                         accordionBtnActive: 
-                          'In the United States, among people ages 16-64, an estimated '+
+                          'In the United States, among people age 16-64, an estimated '+
                           employment.filter(employment => employment.attribution === attribute[0] & 
                             employment.status === status_selfEmp & 
                             employment.type === 'self-employment' & 

@@ -1377,7 +1377,7 @@ function Education({colors, justcolor, colorfill}) {
           }
         },
         subtitle: {
-          text: in_the+chosen_state+', among people ages 25-64, an estimated '+
+          text: in_the+chosen_state+', among people age 25-64, an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === eduLevel & 
             employment.type === 'education' & 
@@ -1588,7 +1588,7 @@ function Education({colors, justcolor, colorfill}) {
           }
         },
         subtitle: {
-          text: in_the+chosen_state+', among people ages 25-64, an estimated'+
+          text: in_the+chosen_state+', among people age 25-64, an estimated'+
           employment.filter(employment => employment.type === 'education' & 
             employment.variable === selected_attributions & employment.state === chosen_state &
             employment.status === eduLevel & employment.attribution.includes('deaf')).map(
@@ -1798,7 +1798,7 @@ function Education({colors, justcolor, colorfill}) {
           }
         },
         subtitle: {
-          text: in_the+chosen_state+', among people ages 25-64, an estimated'+
+          text: in_the+chosen_state+', among people age 25-64, an estimated'+
           employment.filter(employment => employment.attribution === 'deaf' & 
             employment.status !== 'no HS diploma' & employment.type === 'education' & 
             employment.state === chosen_state).map(
@@ -2026,7 +2026,7 @@ function Education({colors, justcolor, colorfill}) {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages 25-64, an estimated '+
+          text: 'In the United States, among people age 25-64, an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === 'Enrolled' &  
             employment.type === 'enrollment' & 
@@ -2239,7 +2239,7 @@ function Education({colors, justcolor, colorfill}) {
           }
         },
         subtitle: {
-          text: 'In the United States, among people ages 25-64, an estimated'+
+          text: 'In the United States, among people age 25-64, an estimated'+
           employment.filter(employment => employment.status === 'Enrolled' &  
             employment.type === 'enrollment' &  
             employment.variable === selected_attributions & employment.state === 'United States' &
@@ -2466,7 +2466,7 @@ function Education({colors, justcolor, colorfill}) {
         },
         subtitle: {
           text: 
-          'In the United States, among people ages 25-64, an estimated'+
+          'In the United States, among people age 25-64, an estimated'+
           dgraduate.map(function(dgraduate, index){ return index === 0 ?
             ' and '+
             (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
@@ -2905,7 +2905,7 @@ function Education({colors, justcolor, colorfill}) {
                       }
                       textContent={
                         {
-                          accordionBtn: in_the+chosen_state+', among people ages 25-64, an estimated'+
+                          accordionBtn: in_the+chosen_state+', among people age 25-64, an estimated'+
                             employment.filter(employment => employment.type === 'education' & 
                               employment.variable === selected_attributions & employment.state === chosen_state &
                               employment.status === eduLevel & employment.attribution.includes('deaf')).map(
@@ -2926,7 +2926,7 @@ function Education({colors, justcolor, colorfill}) {
                               (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                               hear_labels[employment.index]})+
                             '.',
-                          accordionBtnActive: in_the+chosen_state+', among people ages 25-64, an estimated '+
+                          accordionBtnActive: in_the+chosen_state+', among people age 25-64, an estimated '+
                             employment.filter(employment => employment.attribution === attribute[0] & 
                               employment.status === eduLevel & 
                               employment.type === 'education' & 
@@ -2942,7 +2942,7 @@ function Education({colors, justcolor, colorfill}) {
                                 function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                               )+
                             words[1]+'.',
-                          AllLevels: in_the+chosen_state+', among people ages 25-64, an estimated'+
+                          AllLevels: in_the+chosen_state+', among people age 25-64, an estimated'+
                             employment.filter(employment => employment.attribution === 'deaf' & 
                               employment.status !== 'no HS diploma' & employment.type === 'education' & 
                               employment.state === chosen_state).map(
@@ -3242,7 +3242,7 @@ function Education({colors, justcolor, colorfill}) {
                       }
                       textContent={
                         {
-                          accordionBtn: 'In the United States, among people ages 25-64, an estimated'+
+                          accordionBtn: 'In the United States, among people age 25-64, an estimated'+
                             employment.filter(employment => employment.status === 'Enrolled' &  
                               employment.type === 'enrollment' &  
                               employment.variable === selected_attributions & employment.state === 'United States' &
@@ -3265,7 +3265,7 @@ function Education({colors, justcolor, colorfill}) {
                               (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                               hear_labels[employment.index]})+
                             '.',
-                          accordionBtnActive: 'In the United States, among people ages 25-64, an estimated '+
+                          accordionBtnActive: 'In the United States, among people age 25-64, an estimated '+
                             employment.filter(employment => employment.attribution === attribute[0] & 
                               employment.status === 'Enrolled' &  
                               employment.type === 'enrollment' & 
@@ -3437,7 +3437,7 @@ function Education({colors, justcolor, colorfill}) {
                   textwidth = 'text-contain'
                   onClick = {clickAccordion1}
                   textContent={
-                    'In the United States, among people ages 25-64, an estimated'+
+                    'In the United States, among people age 25-64, an estimated'+
                     dgraduate.map(function(dgraduate, index){ return index === 0 ?
                       ' and '+
                       (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
