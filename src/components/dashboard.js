@@ -245,7 +245,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setData_Grid('ungrid')
       setSearchable(false)
       setHC_Width(size[0]/1.2)
-      setSliceString([3,'.'])
+      setSliceString([5,'.'])
       setPaddingSide('10px')
     }else if(size[1] < 500){
       setSearchable(false)
@@ -256,7 +256,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setData_Grid('ungrid')
       setSearchable(false)
       setHC_Width(size[0]/1.2)
-      setSliceString([2,'.'])
+      setSliceString([4,'.'])
       setPaddingSide('10px')
     }else if(size[0] < 1070){
       setPieWidth(300)
@@ -982,10 +982,12 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [bar_col, setBarColor] = useState(['teal', 'black'])
   const [attribute, setAttribution] = useState(['deaf','hearing'])
   const [words, setWords] = useState(['deaf people','hearing people'])
+  const [actions, setActions] = useState('...')
   const [multi_attribution, setMultiAttribution] = useState([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
   {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
 
-  const changeAttribution_A = (e) => {
+  const changeAttribution_A = (e, {action}) => {
+    setActions(action)
     // Select attribution of group
     if(e.map(x => x.value)?.length  > 2){
       setMultiAttribution(e.filter(x => x.value !== attribute[0]));
@@ -1088,6 +1090,19 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setTabIndex_Acc('-1')
     }
   }
+
+  useEffect(()=>{
+    if(actions === 'clear'){
+      setClickedId('accordion-btn');
+      setSymbol('icon');
+      setContent('accordion-content');
+      setTabIndex_Acc('-1');
+      setAttribution(['deaf','hearing'])
+      setActions('...')
+      setMultiAttribution([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
+      {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
+    }
+  },[actions])
 
 
   // Math Round
@@ -3410,7 +3425,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                       style={{cursor: "pointer"}}
                                       key={index}
                                       stroke="#fff"
-                                      strokeWidth="5px"
+                                      strokeWidth="1px"
                                       d={stateData.shape}
                                       onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
                                     />
@@ -3927,68 +3942,41 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
             </TabPanel>
             <TabPanel>
               <div className='inside_container'>
-                <p className='aria-text'>Right Content</p>
+                <p className='aria-text'>Left Content</p>
                 <p className='aria-text'>
-                  When you select any options, this will change not only two charts but title and description including 
-                  all information in exported chart in both employment and education contents.
+                  This content contains interactive chart with title and selection option atop.
+                </p>
+                <p className='aria-text'>
+                  When you select any options, this will change not only a chart but title and description including 
+                  all information in exported chart in the employment content.
                 </p>
                 <p className='aria-text'>Beginning of Interactive Chart</p>
-                <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:'grid'}} tabIndex = {tabindex1} aria-hidden = 'true'>
+                <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
                   <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
                 </button>
-                <p className='aria-text'>
-                  This content consists of three selection options: 7 education attainment and employment status categories, 
-                  four categories (i.e. overall, race, gender, and disability), and more specific groups.
-                </p>
-                <div className = 'data_sidebar' ref={sidebarRef} style={{display:'grid',marginRight: sidebarWidth}}>
+                <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
                   <div className='data_sidebar_interface'>
-                    <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:'grid'}} tabIndex = {tabindex} aria-hidden = 'true'>
+                    <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
                       <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
                     </button>
-                    <form>
-                      <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1">
-                      </label>
-                      <div style = {{marginBottom: '10px'}}/>
-                      <Select 
-                        aria-labelledby="aria-label1"
-                        //ariaLiveMessages={{
-                        //  onFocus,
-                        //}}
-                        inputId="aria-input1"
-                        name="aria-live"
-                        //onMenuOpen={onMenuOpen1}
-                        //onMenuClose={onMenuClose1}
-                        styles={stateCompStyles}
-                        value = {multi_comp_state}
-                        options = {state_comparison}
-                        isSearchable = {searchable}
-                        onChange = {changeState}
-                        isOptionDisabled = {state_comparison => state_comparison.disabled}
-                        tabIndex={null}
-                      />
-                    </form>
-                    <form>
-                      <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1">
-                      </label>
-                      <div style = {{padding: 10}}/>
-                      <Select
-                        aria-labelledby="aria-label"
-                        inputId="aria-input1"
-                        name="aria-live"
-                        //ariaLiveMessages={{
-                        //  onFocus,
-                        //}}
-                        styles={edulistoptions2}
-                        value = {multiVariable}
-                        menuIsOpen={true}
-                        isDisabled={stateDisabled}
-                        onChange = {changeList}
-                        //openMenuOnFocus={true}
-                        options = {variables}
-                        isSearchable = {false}
-                        tabIndex={null}
-                      />
-                    </form>
+                    <Select 
+                    styles={stateCompStyles}
+                    value = {multi_comp_state}
+                    options = {state_comparison}
+                    isSearchable = {searchable}
+                    onChange = {changeState}
+                    isOptionDisabled = {state_comparison => state_comparison.disabled}
+                    tabIndex={null}
+                    />
+                    <Select 
+                    styles={edulistoptions2}
+                    value = {multiVariable}
+                    menuIsOpen={true}
+                    isDisabled={stateDisabled}
+                    onChange = {changeList}
+                    options = {variables}
+                    isSearchable = {false}
+                    />
                     <div style={{ padding: 10 }} /> 
                     <ContentDowndrop buttonLabel = {'More'+more_options+'Options'}
                       clickedId = {clickedId}
@@ -4000,21 +3988,13 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       textwidth = 'text-contain1'
                       onClick = {clickAccordion}
                       textContent={
-                      <form>
-                        <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1">
-                        </label>
-                        <div style = {{marginBottom: '10px'}}/>
                         <Select 
-                        aria-labelledby="aria-label"
-                        inputId="aria-input1"
-                        name="aria-live"
                         styles={eduselect_attribution2}
                         menuIsOpen={true}
                         isMulti={true}
                         isDisabled={stateDisabled}
                         tabIndex = {tabindex_acc}
                         value = {multi_attribution}
-                        //openMenuOnFocus={true}
                         closeMenuOnSelect={false}
                         hideSelectedOptions={false}
                         components={{
@@ -4024,379 +4004,471 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                         isSearchable = {false}
                         onChange = {changeAttribution_A}
                         />
-                      </form>
                       }
                     />
                     <div style={{marginBottom:60}}></div>
                   </div>
                 </div>
-                <p className='aria-text'>
-                  Left Content
-                </p>
-                <p className='aria-text'>
-                  This content contains two interactive charts with title and two selection options atop.
-                </p>
-                <div className='state_grid'>
-                  <div className = 'state_title'>{stateLevelTitle.toUpperCase()+edutitle_by.toUpperCase()+': '+chosen_state.toUpperCase()+
-                  ' AND '+chosen_state1.toUpperCase()}</div>
-                  <div className='state_a'>
-                  <div className = 'aria-text'>{'Chart Title - '+stateLevelTitle+edutitle_by+': '+chosen_state+' and '+chosen_state1}</div>
-                    <div style = {{maxWidth: '200px', marginLeft: 'auto', marginRight: 'auto'}}>
-                    <form>
-                      <label id="aria-label" className = 'aria-focus' htmlFor="aria-input">
-                      </label>
-                      <div style = {{marginBottom: '10px'}}></div>
-                      <Select
-                        aria-labelledby="aria-label"
-                        //ariaLiveMessages={{
-                        //  onFocus,
-                        //}}
-                        inputId="aria-input"
-                        name="aria-live"
-                        //onMenuOpen={onMenuOpen}
-                        //onMenuClose={onMenuClose}
-                        styles={manybuttonStyle}
-                        value = {multi_state}
-                        options = {thelist}
-                        isSearchable = {searchable}
-                        onChange = {changeEmpState}
-                        tabIndex={null}
-                      /> 
-                    </form>
+                <div className = 'state_title'>{stateLevelTitle.toUpperCase()+edutitle_by.toUpperCase()+': '+chosen_state.toUpperCase()+
+                ' AND '+chosen_state1.toUpperCase()}</div>
+                <div className={data_grid}>
+                  <div className = 'a'>
+                    <div className='state_grid'>
+                      <div className='state_a'>
+                      <div className = 'aria-text'>{'Chart Title - '+stateLevelTitle+edutitle_by+': '+chosen_state+' and '+chosen_state1}</div>
+                        <div style = {{maxWidth: '200px', marginLeft: 'auto', marginRight: 'auto'}}>
+                        <form>
+                          <label id="aria-label" className = 'aria-focus' htmlFor="aria-input">
+                          </label>
+                          <div style = {{marginBottom: '10px'}}></div>
+                          <Select
+                            aria-labelledby="aria-label"
+                            //ariaLiveMessages={{
+                            //  onFocus,
+                            //}}
+                            inputId="aria-input"
+                            name="aria-live"
+                            //onMenuOpen={onMenuOpen}
+                            //onMenuClose={onMenuClose}
+                            styles={manybuttonStyle}
+                            value = {multi_state}
+                            options = {thelist}
+                            isSearchable = {searchable}
+                            onChange = {changeEmpState}
+                            tabIndex={null}
+                          /> 
+                        </form>
+                        </div>
+                        {
+                          {
+                            accordionBtn: <HighchartsReact highcharts={Highcharts} options={state_variable_only}/>,
+                            accordionBtnActive: <HighchartsReact highcharts={Highcharts} options={state}/>,
+                            AllLevels: <HighchartsReact highcharts={Highcharts} options={stateall}/>
+                          }[chart_edcomp]
+                        }
+                      </div>
+                      <div className='state_b'>
+                        <div style = {{maxWidth: '200px', marginLeft: 'auto', marginRight: 'auto'}}>
+                        <form>
+                          <label id="aria-label" className = 'aria-focus' htmlFor="aria-input">
+                          </label>
+                          <div style = {{marginBottom: '10px'}}></div>
+                          <Select
+                            aria-labelledby="aria-label"
+                            //ariaLiveMessages={{
+                            //  onFocus,
+                            //}}
+                            inputId="aria-input"
+                            name="aria-live"
+                            //onMenuOpen={onMenuOpen}
+                            //onMenuClose={onMenuClose}
+                            styles={manybuttonStyle}
+                            value = {multi_state1}
+                            options = {thelist}
+                            isSearchable = {searchable}
+                            onChange = {changeEmpState1}
+                            tabIndex={null}
+                          /> 
+                        </form>
+                        </div>
+                        {
+                          {
+                            accordionBtn: <HighchartsReact highcharts={Highcharts} options={state_variable_only1}/>,
+                            accordionBtnActive: <HighchartsReact highcharts={Highcharts} options={state1}/>,
+                            AllLevels: <HighchartsReact highcharts={Highcharts} options={stateall1}/>
+                          }[chart_edcomp]
+                        }
+                      </div>
+                      <div className = 'state_c'>
+                        <ContentDowndrop buttonLabel = '' 
+                          clickedId = {clickedId1}
+                          symbol = {symbol1}
+                          content = {content1}
+                          background = '#ffffff'
+                          your_color = '#008e84'
+                          textwidth = 'text-contain'
+                          onClick = {clickAccordion1}
+                          n = {
+                            {
+                              accordionBtn: Math.max(...employment.filter(employment => employment.type === stateType & 
+                                employment.variable === selected_attributions & (employment.state === chosen_state | employment.state === chosen_state1) &
+                                employment.status === stateLevel).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
+                                )),
+                              accordionBtnActive: Math.max(...employment.filter(employment => (employment.attribution === attribute[0] | 
+                                employment.attribution === attribute[1]) & 
+                                employment.status === stateLevel & 
+                                employment.type === stateType & 
+                                (employment.state === chosen_state | employment.state === chosen_state1)).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
+                                )),
+                              AllLevels: Math.max(...employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
+                                employment.status === 'phd/dr' & employment.type === 'education' & 
+                                (employment.state === chosen_state | employment.state === chosen_state1)).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
+                                ))
+                            }[chart_edcomp]
+                          }
+                          textContent={
+                              {
+                                accordionBtn: in_the+chosen_state+', among people age '+state_age+', an estimated'+
+                                  employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state &
+                                    employment.status === stateLevel & employment.attribution.includes('deaf')).map(
+                                    function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    deaf_labels[employment.index] : ' '+ 
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    deaf_labels[employment.index]})+
+                                  state_descript+', compared to '+
+                                  employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state &
+                                    employment.status === stateLevel & employment.attribution.includes('hearing')).map(
+                                    function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    hear_labels[employment.index] : ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    hear_labels[employment.index]})+
+                                  '. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
+                                  employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state1 &
+                                    employment.status === stateLevel & employment.attribution.includes('deaf')).map(
+                                    function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    deaf_labels[employment.index] : ' '+ 
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    deaf_labels[employment.index]})+
+                                  state_descript1+', compared to '+
+                                  employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state1 &
+                                    employment.status === stateLevel & employment.attribution.includes('hearing')).map(
+                                    function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    hear_labels[employment.index] : ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                    hear_labels[employment.index]})+
+                                  '.',
+                                accordionBtnActive: in_the+chosen_state+', among people age '+state_age+', an estimated '+
+                                  employment.filter(employment => employment.attribution === attribute[0] & 
+                                    employment.status === stateLevel &  
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                    )
+                                    +
+                                  words[0]+state_descript+', compared to '+
+                                  employment.filter(employment => employment.attribution === attribute[1] & 
+                                    employment.status === stateLevel &  
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                    )+
+                                  words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated '+
+                                  employment.filter(employment => employment.attribution === attribute[0] & 
+                                    employment.status === stateLevel &  
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                    )
+                                    +
+                                  words[0]+state_descript1+', compared to '+
+                                  employment.filter(employment => employment.attribution === attribute[1] & 
+                                    employment.status === stateLevel &  
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => [employment.margin_errors,employment.percentage]).map(
+                                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                    )+
+                                  words[1]+'.',
+                                AllLevels: in_the+chosen_state+', among people age '+state_age+', an estimated'+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.status !== 'no HS diploma' &  
+                                  employment.type === 'education' & 
+                                  employment.state === chosen_state).map(
+                                    function(employment, index){ return index === 0 ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+                                    edulist[index] :
+                                    ' '+employment.percentage+'% '+edulist[index]}).reverse()+
+                                  ', compared to '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.status !== 'no HS diploma' & 
+                                  employment.type === 'education' & 
+                                  employment.state === chosen_state).map(
+                                    function(employment, index){ return index === 0 ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+                                    edulist[index] :
+                                    ' '+employment.percentage+'% '+edulist[index]}).reverse()+
+                                  '. While'+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.status !== 'no HS diploma' &  
+                                  employment.type === 'education' & 
+                                  employment.state === chosen_state1).map(
+                                    function(employment, index){ return index === 0 ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+                                    edulist[index] :
+                                    ' '+employment.percentage+'% '+edulist[index]}).reverse()+
+                                  ', compared to '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.status !== 'no HS diploma' & 
+                                  employment.type === 'education' & 
+                                  employment.state === chosen_state1).map(
+                                    function(employment, index){ return index === 0 ? 
+                                    ' and '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+                                    edulist[index] :
+                                    ' '+employment.percentage+'% '+edulist[index]}).reverse()+
+                                  '.',
+                                CompareItself: 'You have selected the same geographic location, consider selecting two different locations.'
+                              }[chart_edcomp1]
+                            }
+                          textContent1={
+                              {
+                                accordionBtn: 'In this chart, estimates are based on a sample size of '+
+                                  size_checker(employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state &
+                                    employment.status === stateLevel).map(employment => employment.n).reduce(
+                                      (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
+                                  ' and '+
+                                  size_checker(employment.filter(employment => employment.type === stateType & 
+                                    employment.variable === selected_attributions & employment.state === chosen_state1 &
+                                    employment.status === stateLevel).map(employment => employment.n).reduce(
+                                      (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
+                                  in_the.toLowerCase()+year1+
+                                  ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% for deaf people and '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% for hearing people while'+
+                                  in_the1.toLowerCase()+chosen_state1+', the margin of errors are '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% for deaf people and '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% for hearing people.',
+                                accordionBtnActive: 'In this chart, estimates are based on a sample size of '+
+                                  size_checker(employment.filter(employment => employment.type === stateType & 
+                                  (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
+                                  employment.state === chosen_state &
+                                  employment.status === stateLevel).map(employment => employment.n).reduce(
+                                    (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
+                                  ' and '+size_checker(employment.filter(employment => employment.type === stateType & 
+                                    (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
+                                    employment.state === chosen_state1 &
+                                    employment.status === stateLevel).map(employment => employment.n).reduce(
+                                      (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
+                                  in_the.toLowerCase()+year1+
+                                  ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
+                                  ' people who participated '+in_the.toLowerCase()+year+
+                                  employment.filter(employment => employment.attribution === attribute[0] & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% for '+words[0]+' and '+
+                                  employment.filter(employment => employment.attribution === attribute[1] & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% for '+words[1]+' while'+in_the1.toLowerCase()+chosen_state1+', the margin of errors are '+
+                                  ' people who participated '+in_the.toLowerCase()+year+
+                                  employment.filter(employment => employment.attribution === attribute[0] & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% for '+words[0]+' and '+
+                                  employment.filter(employment => employment.attribution === attribute[1] & 
+                                    employment.status === stateLevel & 
+                                    employment.type === stateType & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% for '+words[1]+'.',
+                                AllLevels: 'In this chart, estimates are based on a sample size of '+
+                                  size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
+                                    employment.status === 'no HS diploma' & employment.type === 'education' & 
+                                    employment.state === chosen_state).map(employment => employment.n).reduce(
+                                      (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
+                                  ' and '+
+                                  size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
+                                    employment.status === 'no HS diploma' & employment.type === 'education' & 
+                                    employment.state === chosen_state1).map(employment => employment.n).reduce(
+                                      (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                  ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
+                                  in_the.toLowerCase()+year1+
+                                  ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === 'phd/dr' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state).map(
+                                    employment => employment.margin_errors)+
+                                  '% and '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === 'HS diploma' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state).map(
+                                    employment => employment.margin_errors)+
+                                  '% for deaf people, and between '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === 'phd/dr' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% and '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === 'HS diploma' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state).map(employment => employment.margin_errors)+
+                                  '% for hearing people while'+in_the1.toLowerCase()+chosen_state1+
+                                  ', the margin of errors are '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === 'phd/dr' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state1).map(
+                                    employment => employment.margin_errors)+
+                                  '% and '+
+                                  employment.filter(employment => employment.attribution === 'deaf' & 
+                                    employment.status === 'HS diploma' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state1).map(
+                                    employment => employment.margin_errors)+
+                                  '% for deaf people, and between '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === 'phd/dr' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% and '+
+                                  employment.filter(employment => employment.attribution === 'hearing' & 
+                                    employment.status === 'HS diploma' & 
+                                    employment.type === 'education' & 
+                                    employment.state === chosen_state1).map(employment => employment.margin_errors)+
+                                  '% for hearing people.',
+                                CompareItself:''
+                              }[chart_edcomp1]
+                            }
+                        />
+                      </div>
                     </div>
-                    {
-                      {
-                        accordionBtn: <HighchartsReact highcharts={Highcharts} options={state_variable_only}/>,
-                        accordionBtnActive: <HighchartsReact highcharts={Highcharts} options={state}/>,
-                        AllLevels: <HighchartsReact highcharts={Highcharts} options={stateall}/>
-                      }[chart_edcomp]
-                    }
                   </div>
-                  <div className='state_b'>
-                  <div style = {{maxWidth: '200px', marginLeft: 'auto', marginRight: 'auto'}}>
-                    <form>
-                      <label id="aria-label" className = 'aria-focus' htmlFor="aria-input">
-                      </label>
-                      <div style = {{marginBottom: '10px'}}></div>
-                      <Select
+                  <div className='b' style={{display:interface_side}}>
+                      <p className='aria-text'>Right Content</p>
+                      <p className='aria-text'>
+                        This content consists of three selection options: 50 states plus United States and Washington D.C., 
+                        four categories (i.e. overall, race, gender, and disability), and more specific groups.
+                      </p>
+                      <p className='aria-text'>
+                        When you select any of these options, this will also affect a chart, title and description 
+                        including all information in exported chart in the employment content.
+                      </p>
+                      <form>
+                        <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1">
+                        </label>
+                        <div style = {{marginBottom: '10px'}}/>
+                        <Select 
+                          aria-labelledby="aria-label1"
+                          //ariaLiveMessages={{
+                          //  onFocus,
+                          //}}
+                          inputId="aria-input1"
+                          name="aria-live"
+                          //onMenuOpen={onMenuOpen1}
+                          //onMenuClose={onMenuClose1}
+                          styles={CompStyles}
+                          value = {multi_comp_state}
+                          options = {state_comparison}
+                          isSearchable = {searchable}
+                          onChange = {changeState}
+                          isOptionDisabled = {state_comparison => state_comparison.disabled}
+                          tabIndex={null}
+                        />
+                      </form>
+                      <form>
+                        <div style = {{marginBottom: '12px'}}/>
+                        <label id="aria-label" className = 'aria-focus' htmlFor="aria-example-input">
+                          
+                        </label>
+                        <div style={{ padding: 10 }}/>
+                        <Select 
                         aria-labelledby="aria-label"
+                        inputId="aria-example-input"
+                        name="aria-live-color"
                         //ariaLiveMessages={{
                         //  onFocus,
                         //}}
-                        inputId="aria-input"
-                        name="aria-live"
-                        //onMenuOpen={onMenuOpen}
-                        //onMenuClose={onMenuClose}
-                        styles={manybuttonStyle}
-                        value = {multi_state1}
-                        options = {thelist}
-                        isSearchable = {searchable}
-                        onChange = {changeEmpState1}
-                        tabIndex={null}
-                      /> 
-                    </form>
-                    </div>
-                    {
-                      {
-                        accordionBtn: <HighchartsReact highcharts={Highcharts} options={state_variable_only1}/>,
-                        accordionBtnActive: <HighchartsReact highcharts={Highcharts} options={state1}/>,
-                        AllLevels: <HighchartsReact highcharts={Highcharts} options={stateall1}/>
-                      }[chart_edcomp]
-                    }
+                        styles={edulistoptions1}
+                        value = {multiVariable}
+                        isDisabled={stateDisabled}
+                        menuIsOpen={true}
+                        //openMenuOnFocus={true}
+                        options = {variables}
+                        onChange = {changeList}
+                        isSearchable = {false}
+                        tabIndex={null}/>
+                      </form>
+                      <div style={{ padding: 10 }}/>
+                      <ContentDowndrop buttonLabel = {'More'+more_options+'Options'} 
+                        clickedId = {clickedId}
+                        symbol = {symbol}
+                        content = {content}
+                        background = 'transparent'
+                        your_color = '#008e84'
+                        textwidth = 'text-contain1'
+                        onClick = {clickAccordion}
+                        textContent={
+                        <form>
+                          <div style = {{marginBottom: '12px'}}/>
+                          <label id="aria-label" className = 'aria-focus' htmlFor="aria-example-input">
+                          </label>
+                          <div style={{ padding: 10 }}/>
+                          <Select 
+                          aria-labelledby="aria-label"
+                          inputId="aria-example-input"
+                          name="aria-live-color"
+                          styles={eduselect_attribution1}
+                          value = {multi_attribution}
+                          tabIndex = {tabindex_acc}
+                          isDisabled={stateDisabled}
+                          menuIsOpen={true}
+                          //openMenuOnFocus={true}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          hideSelectedOptions={false}
+                          maxMenuHeight={200}
+                          components={{
+                            Option
+                          }}
+                          options = {attributions.filter(attributions => attributions.variable === selected_attributions)}
+                          isSearchable = {false}
+                          onChange = {changeAttribution_A}/>
+                        </form>}
+                      />
                   </div>
                 </div>
-                <ContentDowndrop buttonLabel = '' 
-                  clickedId = {clickedId1}
-                  symbol = {symbol1}
-                  content = {content1}
-                  background = '#ffffff'
-                  your_color = '#008e84'
-                  textwidth = 'text-contain'
-                  onClick = {clickAccordion1}
-                  n = {
-                    {
-                      accordionBtn: Math.max(...employment.filter(employment => employment.type === stateType & 
-                        employment.variable === selected_attributions & (employment.state === chosen_state | employment.state === chosen_state1) &
-                        employment.status === stateLevel).map(employment => [employment.margin_errors,employment.percentage]).map(
-                          function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
-                        )),
-                      accordionBtnActive: Math.max(...employment.filter(employment => (employment.attribution === attribute[0] | 
-                        employment.attribution === attribute[1]) & 
-                        employment.status === stateLevel & 
-                        employment.type === stateType & 
-                        (employment.state === chosen_state | employment.state === chosen_state1)).map(employment => [employment.margin_errors,employment.percentage]).map(
-                          function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
-                        )),
-                      AllLevels: Math.max(...employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
-                        employment.status === 'phd/dr' & employment.type === 'education' & 
-                        (employment.state === chosen_state | employment.state === chosen_state1)).map(employment => [employment.margin_errors,employment.percentage]).map(
-                          function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
-                        ))
-                    }[chart_edcomp]
-                  }
-                  textContent={
-                      {
-                        accordionBtn: in_the+chosen_state+', among people age '+state_age+', an estimated'+
-                          employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state &
-                            employment.status === stateLevel & employment.attribution.includes('deaf')).map(
-                            function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            deaf_labels[employment.index] : ' '+ 
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            deaf_labels[employment.index]})+
-                          state_descript+', compared to '+
-                          employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state &
-                            employment.status === stateLevel & employment.attribution.includes('hearing')).map(
-                            function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            hear_labels[employment.index] : ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            hear_labels[employment.index]})+
-                          '. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
-                          employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state1 &
-                            employment.status === stateLevel & employment.attribution.includes('deaf')).map(
-                            function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            deaf_labels[employment.index] : ' '+ 
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            deaf_labels[employment.index]})+
-                          state_descript1+', compared to '+
-                          employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state1 &
-                            employment.status === stateLevel & employment.attribution.includes('hearing')).map(
-                            function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            hear_labels[employment.index] : ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                            hear_labels[employment.index]})+
-                          '.',
-                        accordionBtnActive: in_the+chosen_state+', among people age '+state_age+', an estimated '+
-                          employment.filter(employment => employment.attribution === attribute[0] & 
-                            employment.status === stateLevel &  
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
-                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-                            )
-                            +
-                          words[0]+state_descript+', compared to '+
-                          employment.filter(employment => employment.attribution === attribute[1] & 
-                            employment.status === stateLevel &  
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
-                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-                            )+
-                          words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated '+
-                          employment.filter(employment => employment.attribution === attribute[0] & 
-                            employment.status === stateLevel &  
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => [employment.margin_errors,employment.percentage]).map(
-                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-                            )
-                            +
-                          words[0]+state_descript1+', compared to '+
-                          employment.filter(employment => employment.attribution === attribute[1] & 
-                            employment.status === stateLevel &  
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => [employment.margin_errors,employment.percentage]).map(
-                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-                            )+
-                          words[1]+'.',
-                        AllLevels: in_the+chosen_state+', among people age '+state_age+', an estimated'+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                          employment.status !== 'no HS diploma' &  
-                          employment.type === 'education' & 
-                          employment.state === chosen_state).map(
-                            function(employment, index){ return index === 0 ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
-                            edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
-                            edulist[index] :
-                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                          ', compared to '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                          employment.status !== 'no HS diploma' & 
-                          employment.type === 'education' & 
-                          employment.state === chosen_state).map(
-                            function(employment, index){ return index === 0 ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
-                            edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
-                            edulist[index] :
-                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                          '. While'+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                          employment.status !== 'no HS diploma' &  
-                          employment.type === 'education' & 
-                          employment.state === chosen_state1).map(
-                            function(employment, index){ return index === 0 ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
-                            edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
-                            edulist[index] :
-                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                          ', compared to '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                          employment.status !== 'no HS diploma' & 
-                          employment.type === 'education' & 
-                          employment.state === chosen_state1).map(
-                            function(employment, index){ return index === 0 ? 
-                            ' and '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
-                            edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
-                            edulist[index] :
-                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                          '.',
-                        CompareItself: 'You have selected the same geographic location, consider selecting two different locations.'
-                      }[chart_edcomp1]
-                    }
-                  textContent1={
-                      {
-                        accordionBtn: 'In this chart, estimates are based on a sample size of '+
-                          size_checker(employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state &
-                            employment.status === stateLevel).map(employment => employment.n).reduce(
-                              (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
-                          ' and '+
-                          size_checker(employment.filter(employment => employment.type === stateType & 
-                            employment.variable === selected_attributions & employment.state === chosen_state1 &
-                            employment.status === stateLevel).map(employment => employment.n).reduce(
-                              (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
-                          in_the.toLowerCase()+year1+
-                          ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% for deaf people and '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% for hearing people while'+
-                          in_the1.toLowerCase()+chosen_state1+', the margin of errors are '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% for deaf people and '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% for hearing people.',
-                        accordionBtnActive: 'In this chart, estimates are based on a sample size of '+
-                          size_checker(employment.filter(employment => employment.type === stateType & 
-                          (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
-                          employment.state === chosen_state &
-                          employment.status === stateLevel).map(employment => employment.n).reduce(
-                            (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
-                          ' and '+size_checker(employment.filter(employment => employment.type === stateType & 
-                            (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
-                            employment.state === chosen_state1 &
-                            employment.status === stateLevel).map(employment => employment.n).reduce(
-                              (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
-                          in_the.toLowerCase()+year1+
-                          ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
-                          ' people who participated '+in_the.toLowerCase()+year+
-                          employment.filter(employment => employment.attribution === attribute[0] & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% for '+words[0]+' and '+
-                          employment.filter(employment => employment.attribution === attribute[1] & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% for '+words[1]+' while'+in_the1.toLowerCase()+chosen_state1+', the margin of errors are '+
-                          ' people who participated '+in_the.toLowerCase()+year+
-                          employment.filter(employment => employment.attribution === attribute[0] & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% for '+words[0]+' and '+
-                          employment.filter(employment => employment.attribution === attribute[1] & 
-                            employment.status === stateLevel & 
-                            employment.type === stateType & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% for '+words[1]+'.',
-                        AllLevels: 'In this chart, estimates are based on a sample size of '+
-                          size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
-                            employment.status === 'no HS diploma' & employment.type === 'education' & 
-                            employment.state === chosen_state).map(employment => employment.n).reduce(
-                              (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the.toLowerCase()+chosen_state+' who participated '+in_the.toLowerCase()+year+
-                          ' and '+
-                          size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
-                            employment.status === 'no HS diploma' & employment.type === 'education' & 
-                            employment.state === chosen_state1).map(employment => employment.n).reduce(
-                              (sum, a) => sum + a, 0)).toLocaleString('en-US')+
-                          ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
-                          in_the.toLowerCase()+year1+
-                          ' American Community Survey.'+in_the+chosen_state+', the margin of errors are '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === 'phd/dr' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state).map(
-                            employment => employment.margin_errors)+
-                          '% and '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === 'HS diploma' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state).map(
-                            employment => employment.margin_errors)+
-                          '% for deaf people, and between '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === 'phd/dr' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% and '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === 'HS diploma' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state).map(employment => employment.margin_errors)+
-                          '% for hearing people while'+in_the1.toLowerCase()+chosen_state1+
-                          ', the margin of errors are '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === 'phd/dr' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state1).map(
-                            employment => employment.margin_errors)+
-                          '% and '+
-                          employment.filter(employment => employment.attribution === 'deaf' & 
-                            employment.status === 'HS diploma' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state1).map(
-                            employment => employment.margin_errors)+
-                          '% for deaf people, and between '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === 'phd/dr' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% and '+
-                          employment.filter(employment => employment.attribution === 'hearing' & 
-                            employment.status === 'HS diploma' & 
-                            employment.type === 'education' & 
-                            employment.state === chosen_state1).map(employment => employment.margin_errors)+
-                          '% for hearing people.',
-                        CompareItself:''
-                      }[chart_edcomp1]
-                    }
-                />
               </div>
             </TabPanel>
             <TabPanel>

@@ -654,10 +654,12 @@ const Employment = ({colors, justcolor, colorfill}) => {
   const [bar_col, setBarColor] = useState(['teal', 'black'])
   const [attribute, setAttribution] = useState(['deaf','hearing'])
   const [words, setWords] = useState(['deaf people','hearing people'])
+  const [actions, setActions] = useState('...')
   const [multi_attribution, setMultiAttribution] = useState([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
   {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
 
-  const changeAttribution_A = (e) => {
+  const changeAttribution_A = (e, {action}) => {
+    setActions(action)
     // Select attribution of group
     if(e.map(x => x.value)?.length  > 2){
       setMultiAttribution(e.filter(x => x.value !== attribute[0]));
@@ -671,6 +673,19 @@ const Employment = ({colors, justcolor, colorfill}) => {
       setWords(e.map(x => x.words));
     }
   }
+
+  useEffect(()=>{
+    if(actions === 'clear'){
+      setClickedId('accordion-btn');
+      setSymbol('icon');
+      setContent('accordion-content');
+      setTabIndex_Acc('-1');
+      setAttribution(['deaf','hearing'])
+      setActions('...')
+      setMultiAttribution([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
+      {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
+    }
+  },[actions])
 
   // Change colors based on hearing status: hearing = black; deaf = teal
   useEffect(() => {
