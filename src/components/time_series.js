@@ -1,3 +1,7 @@
+///////////
+// Need to find a simple regression with standard error
+// https://medium.com/createdd-notes/implement-linear-regression-in-react-d7e539814fe5
+//////////
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';import './dashboard.css';
 import thelogo from './logo_export.js'
 
@@ -69,30 +73,28 @@ let attributions = [
   {label: 'hearing Native American', value: 'hearing Native American', variable: 'race', color: 'black', words: 'hearing Native Americans'},
   {label: 'hearing multiracial', value: 'hearing multiracial', variable: 'race', color: 'black', words: 'hearing multiracial people'},
   {label: 'hearing white', value: 'hearing white', variable: 'race', color: 'black', words: 'hearing white people'},
-  {label: 'deaf-blind', value: 'deaf-blind', variable: 'disability', color: 'teal', words: 'deafblind people'},
-  {label: 'deaf disabled', value: 'deaf disabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
+  {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
+  {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
   {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
   {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'}
 ]
 
-// For Education Attainment
-let eduattain = [
-  {label: 'High School', value: 'High School', title: "High School's Diploma or Higher", variable: 'HS diploma'},
-  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college'},
-  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate'},
-  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor'},
-  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master'},
-  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr'},
+// State Comparison List
+let state_comparison = [
+  {label: 'Education Attainment',value: 'Education Attainment', disabled: true,},
+  {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher',range: [0,100], sentence: "high school's attainments"},
+  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college',range: [0,90], sentence: 'some college attainment'},
+  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher",range: [0,80], sentence: "associate's degree attainments"},
+  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher",range: [0,70], sentence: "bachelor's degree attainments"},
+  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher",range: [0,30], sentence: "master's degree attainments"},
+  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent',range: [0,10], sentence: "doctoral attainments"},
+  {label: 'Employment Status', value: 'Employment Status', disabled: true},
+  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed',range: [0,100], sentence: 'employment rate'},
+  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed',range: [0,15], sentence: 'unemployment rate'},
+  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force',range: [0,100], sentence: 'labor force participation rate'}
 ]
-// For Employment Statuses
-let emp_data = [
-  {label: 'Employed', value: 'Employed', title: "Employment Rate", variable: 'employed'},
-  {label: 'Unemployed', value: 'Unemployed', title: "Unemployment Rate", variable: 'unemployed'},
-  {label: "Not in Labor", value: "Not in Labor", title: "Not in Labor Force", variable: 'notinLF'}
-]
-
 //Stylize Inner Menu in React Select 
 const Option = (props) => {
   return (
@@ -132,7 +134,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   const [interface_side, setInterface_Side] = useState('unset')
   const [data_grid, setData_Grid] = useState('grid')
   const [HCwidth, setHC_Width] = useState(null)
-  //const [searchable, setSearchable] = useState(true)
+  const [searchable, setSearchable] = useState(true)
   const [slice_string, setSliceString] = useState([50,''])
   const [paddingSide, setPaddingSide] = useState(null)
   useEffect(() => {
@@ -140,14 +142,14 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       setData_SideBar('grid')
       setInterface_Side('None')
       setData_Grid('ungrid')
-      //setSearchable(true)
+      setSearchable(true)
       setHC_Width(null)
       setPaddingSide(null)
     }else if(size[0] < 551){
       setData_SideBar('grid')
       setInterface_Side('None')
       setData_Grid('ungrid')
-      //setSearchable(false)
+      setSearchable(false)
       setHC_Width(size[0]/1.2)
       setSliceString([10,'.'])
       setPaddingSide('6px')
@@ -155,7 +157,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       setData_SideBar('None')
       setInterface_Side('unset')
       setData_Grid('grid')
-      //setSearchable(true)
+      setSearchable(true)
       setHC_Width(null)
       setSliceString([50,''])
       setPaddingSide(null)
@@ -206,8 +208,11 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     option: (provided, state) => ({
       ...provided,
       background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
-      color: 'black',
-      cursor: 'pointer'
+      color: state.isSelected ? 'white': 'black',
+      cursor: state.isDisabled ? 'default' : 'pointer',
+      fontWeight: state.isDisabled ? 900 : 300,
+      marginLeft: state.isDisabled ? '0px' : '20px',
+      paddingTop: state.isDisabled ? '10px' : '0px'
     }),
     indicatorSeparator: () => {},
     dropdownIndicator: (provided) => ({
@@ -256,7 +261,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       ...provided,
       background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
       color: state.isSelected ? 'white': 'black',
-      cursor: 'pointer'
+      cursor: state.isDisabled ? 'default' : 'pointer',
+      fontWeight: state.isDisabled ? 900 : 300,
+      marginLeft: state.isDisabled ? '0px' : '20px',
+      paddingTop: state.isDisabled ? '10px' : '0px'
     }),
     menu: (provided) => ({
       ...provided,
@@ -292,12 +300,12 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
           fontWeight: 700,
       }
     },
-    singleValue:(provided) => ({
+    singleValue:(provided, state) => ({
       ...provided,
       height:'100%',
       color:'black',
       paddingTop:'3px',
-      fontWeight: 700
+      fontWeight: state.isDisabled ? 900 : 700
     }),
   }
   const listoptions = {
@@ -515,57 +523,6 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       fontWeight: 700
     }),
   }
-  /*const manybuttonStyle = {
-    option: (provided, state) => ({
-      ...provided,
-      background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
-      color: state.isSelected ? 'white': 'black',
-      cursor: 'pointer'
-    }),
-    indicatorSeparator: () => {},
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: '#008e85',
-      "&:hover": {
-        color: '#008e85'
-      }
-    }),
-    menu: (provided) => ({
-      ...provided,
-      borderRadius: '0 0 10px 10px',
-      overflow: 'hidden'
-    }),
-    control: (provided) => ({
-      ...provided,
-      background: "#F6F6F7",
-      textAlign: 'center',
-      padding: 2,
-      borderRadius: 10,
-      marginBottom: 10,
-      fontSize: '16px',
-      fontFamily: 'Roboto',
-      border: '0.5px #008e85 solid',
-      "&:hover": {
-        background: '#ECEDF0',
-        color: 'white',
-        cursor: 'pointer',
-        transition: "all 0.1s ease-in-out"
-      },
-      transition: "all 0.1s ease-in-out"
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-          ...defaultStyles,
-          color: '#008e85',
-      }
-    },
-    singleValue:(provided) => ({
-      ...provided,
-      paddingTop:'3px',
-      height:'100%',
-      color:'#008e85'
-    }),
-  }*/
 
   // Interacting Selections
   const [selected_attributions, setAttributions] = useState('overall')
@@ -591,7 +548,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   //const [num_col, setNumCol] = useState([0,6])
   //const [bar_col, setBarColor] = useState(['teal', 'black'])
   const [attribute, setAttribution] = useState(['deaf','hearing'])
-  //const [words, setWords] = useState(['deaf people','hearing people'])
+  const [words, setWords] = useState(['deaf people','hearing people'])
   const [multi_attribution, setMultiAttribution] = useState([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
   {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
 
@@ -601,46 +558,15 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       setMultiAttribution(e.filter(x => x.value !== attribute[0]));
       //setBarColor(e.filter(x => x.value !== attribute[0]).map(x => x.color))
       setAttribution(e.filter(x => x.value !== attribute[0]).map(x => x.value));
-      //setWords(e.filter(x => x.value !== attribute[0]).map(x => x.words));
+      setWords(e.filter(x => x.value !== attribute[0]).map(x => x.words));
     }else{
       setMultiAttribution(e);
       //setBarColor(e.map(x => x.color))
       setAttribution(e.map(x => x.value)); 
-      //setWords(e.map(x => x.words));
+      setWords(e.map(x => x.words));
     }
-  }
+  } 
 
-  // Change colors based on hearing status: hearing = black; deaf = teal
-  /*useEffect(() => {
-    if(bar_col[0] === 'black'){
-      if(bar_col[1] === 'black'){
-        setNumCol([6,8])
-      }else{
-        setNumCol([6,0])
-      }
-    }else{
-      if(bar_col[1] === 'black'){
-        setNumCol([0,6])
-      }else{
-        setNumCol([0,2])
-      }
-    }
-  }, [bar_col])*/
-
-  // Effect of button groups for time series alone
-  //const [button_group_b, setButtonGroup_B] = useState('Labor Force')
-  const [type_b, setType_B] = useState('employment')
-
-  const changeButton_B = (e) => {
-    if(e.target.name === 'Labor Force'){
-      setType_B('employment')
-      //setButtonGroup_B('Labor Force')
-    }else{
-      setType_B('education')
-      //setButtonGroup_B('Education Attainment')
-    }
-  }
-  // Effect of button groups
   const [button_group_a, setButtonGroup_a] = useState('Employment Rates')
   const [status_a, setStatus_A] = useState('employed')
   const [variable_a, setVariable_A] = useState('percentage')
@@ -686,68 +612,99 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   };
 
   // Education Attainment Selection
-  const [eduLevelTitle, setEduLevelTitle] = useState("Bachelor's Degree Attainment")
-  const [eduLevel, setEduLevel] = useState("bachelor")
-  //const [eduLabel, setEduLabel] = useState("Bachelor's")
-  //const [eduA, setEduA] = useState(" a ")
-  //const [degree, setDegree] = useState(' degree')
-  const [range, setRange] = useState([0,60])
-      
-  const changeEduLevel = (e) => {
-    setEduLevelTitle(e.title)
-    setEduLevel(e.variable)
-    if(e.label === "Associate's"){
-      //setEduA(" an ")
-      //setEduLabel(e.label)
-      setRange([0,80])
-    }else if(e.label === 'Some College'){
-      //setEduA(" ")
-      //setEduLabel(e.label.toLowerCase())
-      setRange([0,90])
-    }else if(e.label === 'High School'){
-      //setEduA(' a ')
-      //setEduLabel(e.label)
-      setRange([0,100])
-    }else if(e.label === "Bachelor's"){
-      //setEduA(' a ')
-      //setEduLabel(e.label)
-      setRange([0,70])
-    }else if(e.label === "Master's"){
-      //setEduA(' a ')
-      //setEduLabel(e.label)
-      setRange([0,30])
-    }else{
-      //setEduA(' a ')
-      //setEduLabel(e.label)
-      setRange([0,10]) 
-    }
+  const [stateLevelTitle, setStateLevelTitle] = useState("Bachelor's Degree Attainment");
+  const [stateLevel, setStateLevel] = useState("bachelor");
+  const [stateType, setStateType] = useState('education');
+  const [multi_comp_state, setMultiCompState] = useState([{label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor'}]);
+  const [range, setRange] = useState([0,100]);
+  const [state_age, setStateAge] = useState('25-64');
+  const [crease, setCrease] = useState('increased slightly more')
+  const [sentence, setSentence] = useState("bachelor's degree attainment")
+  //const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher');
+  //const [state_descript1, setStateDescript1] = useState(' have completed a bachelor’s degree or higher');
+
+  const changeState = (e) => {
+    setMultiCompState(e)
+    setStateLevelTitle(e.title)
+    setStateLevel(e.variable)
+    setStateType(e.type)
+    setStateAge(e.age)
+    //setStateDescript(e.description)
+    //setStateDescript1(e.description1)
+    setRange(e.range)
+    setSentence(e.sentence)
   }
 
-    // Education Attainment Selection
-    const [empTitle, setEmpTitle] = useState("Employment Rate")
-    const [empStatus, setEmpStatus] = useState("employed")
-    //const [eduLabel, setEduLabel] = useState("Bachelor's")
-    //const [eduA, setEduA] = useState(" a ")
-    //const [degree, setDegree] = useState(' degree')
-    const [emprange, setEmpRange] = useState([0,100])
-        
-    const changEmpStatus = (e) => {
-      setEmpTitle(e.title)
-      setEmpStatus(e.variable)
-      if(e.variable === "employed"){
-        //setEduA(" an ")
-        //setEduLabel(e.label)
-        setEmpRange([0,100])
-      }else if(e.variable === 'unemployed'){
-        //setEduA(" ")
-        //setEduLabel(e.label.toLowerCase())
-        setEmpRange([0,15])
-      }else{
-        //setEduA(' a ')
-        //setEduLabel(e.label)
-        setEmpRange([0,100])
-      }
+  // Find two slopes of time series
+  const min_year = Math.min(...timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries => timeseries['year']))
+  const max_year = Math.max(...timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries => timeseries['year']))
+
+  const mean = (arr) => {
+    return(arr.reduce((a,b) => a + b, 0)/arr.length)
+  }
+  const around_mean = (arr1,arr2) => {
+    const mx = mean(arr1)
+    const my = mean(arr2)
+    return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
+  }
+  const slope = (x,y) => {
+    return(around_mean(x,y)/around_mean(x,x))
+  }
+  const [slope1, setSlope1] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries => timeseries['percentage'])))
+  const [slope2, setSlope2] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
+    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
+    timeseries => timeseries['percentage'])))
+
+  useEffect(()=>{
+    const mean = (arr) => {
+      return(arr.reduce((a,b) => a + b, 0)/arr.length)
     }
+    const around_mean = (arr1,arr2) => {
+      const mx = mean(arr1)
+      const my = mean(arr2)
+      return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
+    }
+    const slope = (x,y) => {
+      return(around_mean(x,y)/around_mean(x,x))
+    }
+    setSlope1(slope(timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+      timeseries => timeseries['percentage'])))
+    setSlope2(slope(timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
+      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
+      timeseries => timeseries['percentage'])))
+    if((slope1 > 0) & (slope2 < 0)){
+      setCrease('increased for '+words[0]+' while it has decreased for '+words[1])
+    }else if((slope1 < 0) & (slope2 > 0)){
+      setCrease('decreased for '+words[0]+' while it has increased for '+words[1])
+    }else if((slope1 > slope2) & (slope1 > 0) & (slope2 > 0)){
+      setCrease('increased slightly more for '+words[0]+' than '+words[1])
+    }else if((slope1 < slope2) & (slope1 > 0) & (slope2 > 0)){
+      setCrease('increased slightly less for '+words[0]+' than '+words[1])
+    }else if((slope1 > slope2) & (slope1 < 0) & (slope2 < 0)){
+      setCrease('decreased slightly less for '+words[0]+' than '+words[1])
+    }else if((slope1 < slope2) & (slope1 < 0) & (slope2 > 0)){
+      setCrease('decreased slightly more for '+words[0]+' than '+words[1])
+    }else if((slope1 === slope2) & (slope1 > 0) & (slope2 > 0)){
+      setCrease('neither increased slightly more nor less for '+words[0]+' than '+words[1])
+    }else{
+      setCrease('neither decreased slightly more nor less')
+    }
+  },[stateType,stateLevel,attribute,slope1,slope2, words])
 
   // Levels of Education Chart
   let eduyear = {
@@ -1097,8 +1054,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       allowDecimals: false
     },
     yAxis: {
-      min: emprange[0],
-      max: emprange[1],
+      min: range[0],
+      max: range[1],
       gridLineColor: '#ffffff',
       gridLineWidth: 0,
       title: {
@@ -1114,7 +1071,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     tooltip: {
       shared: false,
       formatter: function(){
-        return this.series.name+'<br>Year: '+this.x+'<br>'+empTitle+': '+this.y+'%'
+        return this.series.name+'<br>Year: '+this.x+'<br>'+stateLevelTitle+': '+this.y+'%'
       },
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -1152,8 +1109,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       name: 'deaf: 95% confidence interval',
       type: 'areasplinerange',
       color: colorfill[1],
-      data: timeseries.filter(timeseries => timeseries.type === 'employment' &
-      timeseries.status === empStatus & timeseries.attribution === attribute[0]).map(
+      data: timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
       timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
       round(timeseries['percentage']+timeseries.margin_errors)]),
       enableMouseTracking: false,
@@ -1163,8 +1120,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       name: 'hearing: 95% confidence interval',
       type: 'areasplinerange',
       color: colorfill[7],
-      data: timeseries.filter(timeseries => timeseries.type === 'employment' &
-      timeseries.status === empStatus & timeseries.attribution === attribute[1]).map(
+      data: timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
       timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
       round(timeseries['percentage']+timeseries.margin_errors)]),
       enableMouseTracking: false,
@@ -1174,8 +1131,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       name: attribute[0],
       type: 'spline',
       color: colorfill[0],
-      data: timeseries.filter(timeseries => timeseries.type === 'employment' &
-      timeseries.status === empStatus & timeseries.attribution === attribute[0]).map(
+      data: timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
         timeseries => [timeseries.year,timeseries['percentage']]),
     },
     {
@@ -1183,8 +1140,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       type: 'spline',
       color: colorfill[6],
       dashStyle: 'dot',
-      data: timeseries.filter(timeseries => timeseries.type === 'employment' &
-      timeseries.status === empStatus & timeseries.attribution === attribute[1]).map(
+      data: timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
         timeseries => [timeseries.year,timeseries['percentage']])
     }],
     exporting: {
@@ -1239,169 +1196,16 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       }
     }
   }
-  let edutime_year = {
-    title: {
-      text: ""
-    },
-    legend: {
-      align: 'center',
-      verticalAlign: 'top',
-    },
-    xAxis: {
-      allowDecimals: false
-    },
-    yAxis: {
-      min: range[0],
-      max: range[1],
-      gridLineColor: '#ffffff',
-      gridLineWidth: 0,
-      title: {
-        text: 'Education Attainment'
-      },
-      labels: {
-        overflow: 'justify',
-        formatter: function(){
-          return this.value+'%'
-        },
-      }
-    },
-    tooltip: {
-      shared: false,
-      formatter: function(){
-        return this.series.name+'<br>Year: '+this.x+'<br>Education Attainment: '+this.y+'%'
-      },
-      backgroundColor: 'rgba(0,0,0,0.6)',
-      borderWidth: 0,
-      borderRadius: 20,
-      border: 'none',
-      style: {
-        fontSize: '16px',
-        color: '#fff'
-      }
-    },
-    credits: {
-      enabled: false
-    },
-    plotOptions: {
-      connectNulls: false,
-      column: {
-        pointPadding: 0,
-        borderWidth: 0,
-      },
-      series: {
-        pointStart: most_recent_year-4,
-        marker: {
-          enabled: false
-        },
-        dataLabels: {
-        enabled: false,
-        formatter: function(){
-          return this.y+'%'
-        },
-        }
-      }
-    },
-    series: [
-    {
-      name: 'deaf: 95% confidence interval',
-      type: 'areasplinerange',
-      color: colorfill[1],
-      data: timeseries.filter(timeseries => timeseries.type === 'education' &
-      timeseries.status === eduLevel & timeseries.attribution === attribute[0]).map(
-      timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
-      round(timeseries['percentage']+timeseries.margin_errors)]),
-      enableMouseTracking: false,
-      showInLegend: false
-    },
-    {
-      name: 'hearing: 95% confidence interval',
-      type: 'areasplinerange',
-      color: colorfill[7],
-      data: timeseries.filter(timeseries => timeseries.type === 'education' &
-      timeseries.status === eduLevel & timeseries.attribution === attribute[1]).map(
-      timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
-      round(timeseries['percentage']+timeseries.margin_errors)]),
-      enableMouseTracking: false,
-      showInLegend: false
-    },
-    {
-      name: attribute[0],
-      type: 'spline',
-      color: colorfill[0],
-      data: timeseries.filter(timeseries => timeseries.type === 'education' &
-      timeseries.status === eduLevel & timeseries.attribution === attribute[0]).map(
-        timeseries => [timeseries.year,timeseries['percentage']]),
-    },
-    {
-      name: attribute[1],
-      type: 'spline',
-      color: colorfill[6],
-      dashStyle: 'dot',
-      data: timeseries.filter(timeseries => timeseries.type === 'education' &
-      timeseries.status === eduLevel & timeseries.attribution === attribute[1]).map(
-        timeseries => [timeseries.year,timeseries['percentage']])
-    }],
-    exporting: {
-      width: 2000,
-      buttons: {
-        contextButton: {
-          text: 'Download',
-          symbol: 'download'
-        }
-      },
-      chartOptions: { // specific options for the exported image
-        plotOptions: {
-          series: {
-            dataLabels: {
-            enabled: false,
-            formatter: function () {
-              return this.y + '%';
-            },
-            }
-          }
-        },
-        title: {
-          text: eduLevelTitle+' by Year in the United States, '+most_recent_year+'-'+(most_recent_year-4),
-          align: 'left',
-          style: {
-            color: '#787878',
-            fontWeight: 700,
-            fontFamily: 'Roboto',
-            marginRight: 20
-          }
-        },
-        caption: {
-          text: '...',
-          style: {
-            fontSize: '10px'
-          }
-        },
-        chart: {
-          events: {
-            render() {
-              const chart = this,
-                width = 100;
-                chart.renderer.image(thelogo,
-                  chart.plotLeft + chart.plotSizeX - width, //x
-                  10, //y
-                  2.37216657881*35, //width
-                  35//height
-              ).add();
-            }
-          }
-        }
-      }
-    }
-  }
 
   return (
       <>
+      {slope1}
         <div className="body">
           <div className = 'container'>
             <div className = 'main-grid'>
               <div className = 'main-a'>
                 <div id = 'title'>
-                  Deaf Postsecondary Data from the American Community Survey ({most_recent_year+'-'+(most_recent_year-4)})
+                  Deaf Postsecondary Data from the American Community Survey ({(most_recent_year-4)+'-'+most_recent_year})
                 </div>
               </div>
             </div>
@@ -1421,24 +1225,15 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                       <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
                         <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
                       </button>
-                      {
-                        {
-                          employment:<Select styles={customStyles1}
-                                      defaultValue={{label: "Employed", value: "Employed"}}
-                                      options = {emp_data}
-                                      isSearchable = {false}
-                                      onChange = {changEmpStatus}
-                                      tabIndex={null}
-                                    />,
-                          education:<Select styles={customStyles1}
-                                      defaultValue={{label: "Bachelor's", value: "Bachelor's"}}
-                                      options = {eduattain}
-                                      isSearchable = {false}
-                                      onChange = {changeEduLevel}
-                                      tabIndex={null}
-                                    />  
-                        }[type_b]
-                      }
+                      <Select 
+                      styles={customStyles1}
+                      value = {multi_comp_state}
+                      options = {state_comparison}
+                      isSearchable = {searchable}
+                      onChange = {changeState}
+                      isOptionDisabled = {state_comparison => state_comparison.disabled}
+                      tabIndex={null}
+                      />
                       <Select 
                       styles={listoptions1}
                       value = {multiVariable}
@@ -1468,80 +1263,103 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                   <div className={data_grid}>
                     <div className='a'>
                       <div className = 'title'>
-                      {
-                        {
-                          education: eduLevelTitle.toUpperCase()+' BY YEAR: UNITED STATES, '+most_recent_year+'-'+(most_recent_year-4),
-                          employment:empTitle.toUpperCase()+' BY YEAR: UNITED STATES, '+most_recent_year+'-'+(most_recent_year-4)
-                        }[type_b]
-                      }
+                       {stateLevelTitle.toUpperCase()+' BY YEAR: UNITED STATES, '+(most_recent_year-4)+'-'+most_recent_year}
                       </div>
-                      <ButtonGroup id = 'employment' thewidth = {'30%'} buttons={[
-                      "Labor Force", 
-                      "Education"]}
-                      AfterClick = {changeButton_B}
-                      />
                       <div style = {{maxWidth: '200px', marginLeft: 'auto', marginRight: 'auto'}}/>
-                      {
-                        {
-                          employment: <HighchartsReact highcharts={Highcharts} options={time_year}/>,
-                          education:  <HighchartsReact highcharts={Highcharts} options={edutime_year}/>
-                        }[type_b]
-                      }
+                      <HighchartsReact highcharts={Highcharts} options={time_year}/>
                       <ContentDowndrop buttonLabel = '' 
                         clickedId = {clickedId1}
                         symbol = {symbol1}
                         content = {content1}
-                        background = '#f0f0f0'
+                        background = '#ffffff'
                         your_color = '#008e84'
                         textwidth = 'text-contain'
                         onClick = {clickAccordion1}
-                        textContent={'...'}
+                        textContent={
+                          'In the United States from '+(most_recent_year-4)+'-'+most_recent_year+
+                          ', among people aged '+state_age+', '+sentence+' have '+crease+'. In '+(most_recent_year-4)+', an estimated '+
+                          timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === min_year &
+                            timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+                            timeseries => timeseries['percentage'])+
+                          '% of deaf people were employed. In '+most_recent_year+', an estimated '+
+                          timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === max_year &
+                            timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+                            timeseries => timeseries['percentage'])+
+                          '% of deaf people were employed, an average increase of '+
+                          round(slope1)+'%.'
+                        }
                       />
                     </div>
                     <div className='b' style={{display:interface_side}}>
-                    {
-                        {
-                          employment:<Select styles={customStyles}
-                                        defaultValue={{label: "Employed", value: "Employed"}}
-                                        options = {emp_data}
-                                        isSearchable = {false}
-                                        onChange = {changEmpStatus}
-                                        tabIndex={null}
-                                      />,
-                          education: <Select styles={customStyles}
-                                        defaultValue={{label: "Bachelor's", value: "Bachelor's"}}
-                                        options = {eduattain}
-                                        isSearchable = {false}
-                                        onChange = {changeEduLevel}
-                                        tabIndex={null}
-                                      />
-                        }[type_b]
-                      }
+                    <form>
+                      <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1">
+                      </label>
+                      <div style = {{marginBottom: '10px'}}/>
                       <Select 
+                        aria-labelledby="aria-label1"
+                        //ariaLiveMessages={{
+                        //  onFocus,
+                        //}}
+                        inputId="aria-input1"
+                        name="aria-live"
+                        //onMenuOpen={onMenuOpen1}
+                        //onMenuClose={onMenuClose1}
+                        styles={customStyles}
+                        value = {multi_comp_state}
+                        options = {state_comparison}
+                        isSearchable = {searchable}
+                        onChange = {changeState}
+                        isOptionDisabled = {state_comparison => state_comparison.disabled}
+                        tabIndex={null}
+                      />
+                    </form>
+                    <form>
+                      <div style = {{marginBottom: '12px'}}/>
+                      <label id="aria-label" className = 'aria-focus' htmlFor="aria-example-input">
+                        
+                      </label>
+                      <div style={{ padding: 10 }}/>
+                      <Select 
+                      aria-labelledby="aria-label"
+                      inputId="aria-example-input"
+                      name="aria-live-color"
+                      //ariaLiveMessages={{
+                      //  onFocus,
+                      //}}
                       styles={listoptions}
                       value = {multiVariable}
                       menuIsOpen={true}
+                      //openMenuOnFocus={true}
                       options = {variables}
                       onChange = {changeList}
                       isSearchable = {false}
                       tabIndex={null}/>
-                      <div style={{ padding: 10 }} />
+                    </form>
+                    <form>
+                      <div style = {{marginBottom: '12px'}}/>
+                      <label id="aria-label" className = 'aria-focus' htmlFor="aria-example-input">
+                      </label>
+                      <div style={{ padding: 10 }}/>
                       <Select 
-                        styles={select_attribution}
-                        value = {multi_attribution}
-                        menuIsOpen={true}
-                        isMulti={true}
-                        closeMenuOnSelect={false}
-                        hideSelectedOptions={false}
-                        maxMenuHeight={200}
-                        components={{
-                          Option
-                        }}
-                        options = {attributions.filter(attributions => attributions.variable === selected_attributions)}
-                        isSearchable = {false}
-                        onChange = {changeAttribution_A}
-                        tabIndex={null}
-                      />
+                      aria-labelledby="aria-label"
+                      inputId="aria-example-input"
+                      name="aria-live-color"
+                      styles={select_attribution}
+                      value = {multi_attribution}
+                      //tabIndex = {tabindex_acc}
+                      menuIsOpen={true}
+                      //openMenuOnFocus={true}
+                      isMulti={true}
+                      closeMenuOnSelect={false}
+                      hideSelectedOptions={false}
+                      maxMenuHeight={200}
+                      components={{
+                        Option
+                      }}
+                      options = {attributions.filter(attributions => attributions.variable === selected_attributions)}
+                      isSearchable = {false}
+                      onChange = {changeAttribution_A}/>
+                    </form>
                     </div>
                   </div>
                 </div>
@@ -1560,7 +1378,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                       clickedId = {clickedId1}
                       symbol = {symbol1}
                       content = {content1}
-                      background = '#f0f0f0'
+                      background = '#ffffff'
                       your_color = '#008e84'
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}
@@ -1583,7 +1401,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                       clickedId = {clickedId1}
                       symbol = {symbol1}
                       content = {content1}
-                      background = '#f0f0f0'
+                      background = '#ffffff'
                       your_color = '#008e84'
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}

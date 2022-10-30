@@ -10,6 +10,7 @@ import citation from './citation.js'
 
 //Data
 import most_recent_year from './assets/acs_year.json';
+import most_recent_year1 from './assets/acs_5_year.json';
 import employment from './assets/employment.json';
 import usmap from './assets/usmap.json';
 
@@ -188,6 +189,13 @@ const Option = (props) => {
     </div>
   );
 };
+
+//Demographic text
+const demo_age = ['16-24 years old','25-34 years old','35-44 years old','45-54 years old','55-64 years old']
+const demo_rac = ['Asian','Black','Latinx','Native American','multiracial','white']
+const demo_gen = ['women','men']
+const deaf_dis = ['deafblind','deafdisabled','deaf with no additional disabilities']
+const hear_dis = ['hearing blind','hearing disabled','hearing with no additional disabilities']
 
 // For Education Data
 let edulist = ["doctoral degree or equivalent","master’s degree or higher","bachelor’s degree or higher",
@@ -1043,13 +1051,13 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setYear(most_recent_year)
     }else{
       setIn_The(' In ')
-      setYear((most_recent_year-4)+'-'+(most_recent_year))
+      setYear((most_recent_year1-4)+'-'+(most_recent_year1))
     }
   }
 
   useLayoutEffect(()=>{
     if(chosen_state !== 'United States'){
-      setYear((most_recent_year-4)+'-'+(most_recent_year))
+      setYear((most_recent_year1-4)+'-'+(most_recent_year1))
       setIn_The(' In ')
     }else{
       setYear(most_recent_year)
@@ -1060,7 +1068,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
 
   const [chosen_state1, setChosenState1] = useState('Texas');
   const [multi_state1, setMultiState1] = useState([  {label: 'Texas', value: 'Texas'}])
-  const [year1, setYear1] = useState((most_recent_year-4)+'-'+(most_recent_year));
+  const [year1, setYear1] = useState((most_recent_year1-4)+'-'+(most_recent_year1));
   const [in_the1, setIn_The1] = useState(' In ');
 
   const changeEmpState1 = (e) => {
@@ -1071,7 +1079,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setYear1(most_recent_year)
     }else{
       setIn_The1(' In ')
-      setYear1((most_recent_year-4)+'-'+(most_recent_year))
+      setYear1((most_recent_year1-4)+'-'+(most_recent_year1))
     }
   }
 
@@ -1184,7 +1192,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
 
   useEffect(()=> {
     if(a_tab === 2){
-      setYear((most_recent_year-4)+'-'+(most_recent_year))
+      setYear((most_recent_year1-4)+'-'+(most_recent_year1))
     }else{
       setYear(most_recent_year)
     }
@@ -1242,10 +1250,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     chart:{
       type: 'pie',
       width: HCwidth,
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       labelFormat: '{name}',
@@ -1308,23 +1313,79 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         endAngle: 0
     }],
     exporting: {
-      enabled: false 
+      width: 2000,
+      sourceHeight: '350px',
+      buttons: {
+        contextButton: {
+          text: 'Download',
+          symbol: 'download'
+        }
+      },
+      chartOptions: { // specific options for the exported image
+        title: {
+          text: 'Deaf Demographics '+in_the.toLowerCase()+chosen_state+', '+year,
+          align: 'left',
+          widthadjust: -200,
+          style: {
+            color: '#787878',
+            fontWeight: 700,
+            fontFamily: 'Roboto',
+            marginRight: 20,
+          }
+        },
+        subtitle: {
+          text: 'Among people aged 16-64, an estimated '+
+          employment.filter(employment => employment.type === 'population' & 
+            employment.variable === 'overall' & employment.state === chosen_state &
+            employment.attribution === 'deaf').map(
+            employment => employment.percentage)+'% of the population'+in_the.toLowerCase()+chosen_state+
+          ' is deaf. In other words, there are '+
+          employment.filter(employment => employment.type === 'population' & 
+            employment.variable === 'overall' & employment.state === chosen_state &
+            employment.attribution === 'deaf').map(
+            employment => employment.n).toLocaleString('en-US')+' deaf people living'+
+            in_the.toLowerCase()+chosen_state+'.',
+          style: {
+            fontSize: '11px'
+          },
+          verticalAlign: 'bottom',
+          align: 'left',
+          y: -10
+        },
+        caption: {
+          text: citation,
+          style: {
+            fontSize: '8.5px'
+          },
+          y: 20
+        },
+        chart: {
+          events: {
+            render() {
+              const chart = this,
+                width = 100;
+                chart.renderer.image(thelogo,
+                  chart.plotLeft + chart.plotSizeX - width, //x
+                  10, //y
+                  2.37216657881*35, //width
+                  35//height
+              ).add();
+            }
+          }
+        }
+      }
     }
   }
-
   let deaf_demographics = {
     chart:{
       type: 'pie',
       height: 330,
-      width: pie_width,
-      animation: {
-        duration: 1000
-      }
+      width: pie_width
     },
     legend: {
       labelFormat: '<span style="color:#949494">{y}%</span> {name}',
       align: 'center',
-      verticalAlign: 'top'
+      verticalAlign: 'bottom'
     },
     title: {
       text: ""
@@ -1778,15 +1839,12 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     chart:{
       type: 'pie',
       height: 330,
-      width: pie_width,
-      animation: {
-        duration: 1000
-      }
+      width: pie_width
     },
     legend: {
       labelFormat: '<span style="color:#949494">{y}%</span> {name}',
       align: 'center',
-      verticalAlign: 'top',
+      verticalAlign: 'bottom',
     },
     title: {
       text: ""
@@ -1946,10 +2004,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     chart:{
       type: 'column',
       width: HCwidth,
-      height: 330,
-      animation: {
-        duration: 1000
-      },
+      height: 330
       /*resetZoomButton: {
         theme: {
           fill: '#f0f0f0',
@@ -2100,7 +2155,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people age '+state_age+', an estimated '+
+          text: 'In the United States, among people aged '+state_age+', an estimated '+
           employment.filter(employment => employment.attribution === attribute[0] & 
             employment.status === stateLevel &  
             employment.type === stateType & 
@@ -2162,10 +2217,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     chart:{
       type: 'column',
       width: HCwidth,
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -2286,7 +2338,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people age '+state_age+', an estimated'+
+          text: 'In the United States, among people aged '+state_age+', an estimated'+
           employment.filter(employment => employment.type === stateType & 
             employment.variable === selected_attributions & employment.state === 'United States' &
             employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -2366,10 +2418,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     chart:{
       type: 'column',
       width: HCwidth,
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -2493,7 +2542,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           }
         },
         subtitle: {
-          text: 'In the United States, among people age '+state_age+', an estimated'+
+          text: 'In the United States, among people aged '+state_age+', an estimated'+
           employment.filter(employment => employment.attribution === 'deaf' & 
           employment.status !== 'no HS diploma' &  
           employment.type === 'education' & 
@@ -2587,10 +2636,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   let state = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      },
+      height: 330
       /*resetZoomButton: {
         theme: {
           fill: '#f0f0f0',
@@ -2721,17 +2767,14 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         employment.type === stateType & 
         employment.state === chosen_state).map(employment => [0,employment.percentage])
     }],
-    exporting: { 
+    exporting: {
       enabled: false 
     }
   };
   let state_variable_only = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -2839,10 +2882,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   let state1 = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      },
+      height: 330
       /*resetZoomButton: {
         theme: {
           fill: '#f0f0f0',
@@ -2980,10 +3020,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   let state_variable_only1 = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -3091,10 +3128,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   let stateall = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -3211,10 +3245,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   let stateall1 = {
     chart:{
       type: 'column',
-      height: 330,
-      animation: {
-        duration: 1000
-      }
+      height: 330
     },
     legend: {
       align: 'center',
@@ -3328,7 +3359,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false 
     }
   };
-
+  
   // USMap function
   const translate = {x: 0,y: 5};
 
@@ -3410,7 +3441,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       {
                         map: 
                           <>
-                          <button className='usmap-close' onClick={switchtoUSMap} aria-hidden="true">
+                          <button className='usmap-close' onClick={switchtoUSMap}>
                             X
                           </button>
                           <div style={{marginLeft: 'auto',marginRight: 'auto',marginTop: '20px',
@@ -3419,20 +3450,20 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               <svg viewBox={[0, 0, svgViewportWidth, svgViewportHeight].join(' ')} width={containerWidth}
                                 height={containerHeight} style={{transform: `translateX(${translate.x}px) translateY(${translate.y}px)`}}>
                                   {usmap.map((stateData, index) =>
-                                    <a href="/#">
+                                    <a href={'/#location: '+chosen_state}>
                                       <path
                                       className="map_path"
                                       style={{cursor: "pointer"}}
-                                      key={index}
+                                      key={index+'a'}
                                       stroke="#fff"
-                                      strokeWidth="1px"
+                                      strokeWidth="3px"
                                       d={stateData.shape}
                                       onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
-                                    />
+                                      />
                                     <rect style={{cursor: "pointer", display: stateData.display}}
                                     className = "map_rect"
                                     rx='5' ry='5'
-                                    key = {index}
+                                    key = {index+'b'}
                                     onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])} 
                                     x={stateData.xend} y={stateData.yend} 
                                     height="30" width="55"/>
@@ -3449,7 +3480,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     x2={stateData.fourthx} y2={stateData.fourthy}
                                     style={{cursor: "pointer", display: stateData.display1,strokeWidth:"3"}}/>
                                     <text className = 'map_text'
-                                    key = {index}
+                                    key = {index+'c'}
                                     onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
                                     style={{cursor: "pointer"}}
                                     x={stateData.X} 
@@ -3465,9 +3496,11 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                         notmap: 
                         {
                           overall: 
-                            <div style={{displays:'contents'}}>
-                              <HighchartsReact highcharts={Highcharts} options={overall_demographics}/>
-                            </div>,
+                            <>
+                              <div style={{displays:'contents'}}>
+                                <HighchartsReact highcharts={Highcharts} options={overall_demographics}/>
+                              </div>
+                            </>,
                           age:
                             <div className='subgrid'>
                               <div className='subgrid_a'>
@@ -3518,17 +3551,92 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}
                       textContent = {
-                        'Among people age 16-64, an estimated '+
-                        employment.filter(employment => employment.type === 'population' & 
-                          employment.variable === 'overall' & employment.state === chosen_state &
-                          employment.attribution === 'deaf').map(
-                          employment => employment.percentage)+'% of the population'+in_the.toLowerCase()+chosen_state+
-                        ' is deaf or has serious difficulty hearing. In other words, there are '+
-                        employment.filter(employment => employment.type === 'population' & 
-                          employment.variable === 'overall' & employment.state === chosen_state &
-                          employment.attribution === 'deaf').map(
-                          employment => employment.n).toLocaleString('en-US')+' deaf people living'+
-                          in_the.toLowerCase()+chosen_state+'.'
+                        {
+                          overall:
+                            'Among people aged 16-64, an estimated '+
+                            employment.filter(employment => employment.type === 'population' & 
+                              employment.variable === 'overall' & employment.state === chosen_state &
+                              employment.attribution === 'deaf').map(
+                              employment => employment.percentage)+'% of the population'+in_the.toLowerCase()+chosen_state+
+                            ' is deaf. In other words, there are '+
+                            employment.filter(employment => employment.type === 'population' & 
+                              employment.variable === 'overall' & employment.state === chosen_state &
+                              employment.attribution === 'deaf').map(
+                              employment => employment.n).toLocaleString('en-US')+' deaf people living'+
+                              in_the.toLowerCase()+chosen_state+'.',
+                          age:
+                            in_the+chosen_state+', among deaf people aged 16-64, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'age' & employment.state === chosen_state &
+                            employment.attribution.includes('deaf')).map(
+                              function(employment,index){ return (demo_age[demo_age.length-1] === demo_age[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_age[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_age[employment.index]
+                              }
+                            )+'. Among hearing people, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'age' & employment.state === chosen_state &
+                            employment.attribution.includes('hearing')).map(
+                              function(employment,index){ return (demo_age[demo_age.length-1] === demo_age[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_age[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_age[employment.index]
+                              }
+                            )+'.',
+                          race:
+                            in_the+chosen_state+', among deaf people aged 16-64, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'race' & employment.state === chosen_state &
+                            employment.attribution.includes('deaf')).map(
+                              function(employment,index){ return (demo_rac[demo_rac.length-1] === demo_rac[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_rac[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_rac[employment.index]
+                              }
+                            )+'. Among hearing people, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'race' & employment.state === chosen_state &
+                            employment.attribution.includes('hearing')).map(
+                              function(employment,index){ return (demo_rac[demo_rac.length-1] === demo_rac[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_rac[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_rac[employment.index]
+                              }
+                            )+'.',
+                          gender:
+                            in_the+chosen_state+', among deaf people aged 16-64, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'gender' & employment.state === chosen_state &
+                            employment.attribution.includes('deaf')).map(
+                              function(employment,index){ return (demo_gen[demo_gen.length-1] === demo_gen[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_gen[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_gen[employment.index]
+                              }
+                            )+'. Among hearing people, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'gender' & employment.state === chosen_state &
+                            employment.attribution.includes('hearing')).map(
+                              function(employment,index){ return (demo_gen[demo_gen.length-1] === demo_gen[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+demo_gen[employment.index] :
+                                ' '+employment.percentage+'% are '+demo_gen[employment.index]
+                              }
+                            )+'.',
+                          disability:
+                            in_the+chosen_state+', among deaf people aged 16-64, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'disability' & employment.state === chosen_state &
+                            employment.attribution.includes('deaf')).map(
+                              function(employment,index){ return (deaf_dis[deaf_dis.length-1] === deaf_dis[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+deaf_dis[employment.index] :
+                                ' '+employment.percentage+'% are '+deaf_dis[employment.index]
+                              }
+                            )+'. Among hearing people, an estimated '+
+                            employment.filter(employment => employment.type === 'population' &
+                            employment.variable === 'disability' & employment.state === chosen_state &
+                            employment.attribution.includes('hearing')).map(
+                              function(employment,index){ return (hear_dis[hear_dis.length-1] === hear_dis[employment.index]) ?
+                                ' and '+employment.percentage+'% are '+hear_dis[employment.index] :
+                                ' '+employment.percentage+'% are '+hear_dis[employment.index]
+                              }
+                            )+'.'
+                        }[selected_attributions]
                       }
                     />
                   </div>
@@ -3704,7 +3812,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                       }
                       textContent={
                         {
-                          accordionBtn: 'In the United States, among people age '+state_age+', an estimated'+
+                          accordionBtn: 'In the United States, among people aged '+state_age+', an estimated'+
                             employment.filter(employment => employment.type === stateType & 
                               employment.variable === selected_attributions & employment.state === 'United States' &
                               employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -3725,7 +3833,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                               hear_labels[employment.index]})+
                             '.',
-                          accordionBtnActive: 'In the United States, among people age '+state_age+', an estimated '+
+                          accordionBtnActive: 'In the United States, among people aged '+state_age+', an estimated '+
                             employment.filter(employment => employment.attribution === attribute[0] & 
                               employment.status === stateLevel &  
                               employment.type === stateType & 
@@ -3741,7 +3849,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                 function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                               )+
                             words[1]+'.',
-                          AllLevels: 'In the United States, among people age '+state_age+', an estimated'+
+                          AllLevels: 'In the United States, among people aged '+state_age+', an estimated'+
                             employment.filter(employment => employment.attribution === 'deaf' & 
                             employment.status !== 'no HS diploma' &  
                             employment.type === 'education' & 
@@ -4111,7 +4219,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                           }
                           textContent={
                               {
-                                accordionBtn: in_the+chosen_state+', among people age '+state_age+', an estimated'+
+                                accordionBtn: in_the+chosen_state+', among people aged '+state_age+', an estimated'+
                                   employment.filter(employment => employment.type === stateType & 
                                     employment.variable === selected_attributions & employment.state === chosen_state &
                                     employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -4131,7 +4239,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     hear_labels[employment.index] : ' '+
                                     (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                     hear_labels[employment.index]})+
-                                  '. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
+                                  '. While '+in_the1.toLowerCase()+chosen_state1+', among people aged '+state_age+', an estimated'+
                                   employment.filter(employment => employment.type === stateType & 
                                     employment.variable === selected_attributions & employment.state === chosen_state1 &
                                     employment.status === stateLevel & employment.attribution.includes('deaf')).map(
@@ -4152,7 +4260,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                     hear_labels[employment.index]})+
                                   '.',
-                                accordionBtnActive: in_the+chosen_state+', among people age '+state_age+', an estimated '+
+                                accordionBtnActive: in_the+chosen_state+', among people aged '+state_age+', an estimated '+
                                   employment.filter(employment => employment.attribution === attribute[0] & 
                                     employment.status === stateLevel &  
                                     employment.type === stateType & 
@@ -4167,7 +4275,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     employment.state === chosen_state).map(employment => [employment.margin_errors,employment.percentage]).map(
                                       function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                     )+
-                                  words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated '+
+                                  words[1]+'. While '+in_the1.toLowerCase()+chosen_state1+', among people aged '+state_age+', an estimated '+
                                   employment.filter(employment => employment.attribution === attribute[0] & 
                                     employment.status === stateLevel &  
                                     employment.type === stateType & 
@@ -4183,7 +4291,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                       function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                     )+
                                   words[1]+'.',
-                                AllLevels: in_the+chosen_state+', among people age '+state_age+', an estimated'+
+                                AllLevels: in_the+chosen_state+', among people aged '+state_age+', an estimated'+
                                   employment.filter(employment => employment.attribution === 'deaf' & 
                                   employment.status !== 'no HS diploma' &  
                                   employment.type === 'education' & 
@@ -4207,7 +4315,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                                     edulist[index] :
                                     ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-                                  '. While'+in_the1.toLowerCase()+chosen_state1+', among people age '+state_age+', an estimated'+
+                                  '. While'+in_the1.toLowerCase()+chosen_state1+', among people aged '+state_age+', an estimated'+
                                   employment.filter(employment => employment.attribution === 'deaf' & 
                                   employment.status !== 'no HS diploma' &  
                                   employment.type === 'education' & 
