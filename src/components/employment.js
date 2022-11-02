@@ -628,23 +628,23 @@ const Employment = ({colors, justcolor, colorfill}) => {
     setDeafLabels(e.deaf)
     setHearLabels(e.hearing)
     if(e.variable === 'overall'){
-      setExportHeight('450px')
+      setExportHeight('500px')
       setMoreOptions(' ')
       setEmpTitleBy('')
     }else if(e.variable === 'race'){
-      setExportHeight('590px')
+      setExportHeight('640px')
       setMoreOptions(' Race ')
       setEmpTitleBy(' By Race')
     }else if(e.variable === 'gender'){
-      setExportHeight('466px')
+      setExportHeight('516px')
       setMoreOptions(' Gender ')
       setEmpTitleBy(' By Gender')
     }else if(e.variable === 'disability'){
-      setExportHeight('498px')
+      setExportHeight('548px')
       setMoreOptions(' Disability ')
       setEmpTitleBy(' By Disability')
     }else if(e.variable === 'age'){
-      setExportHeight('600px')
+      setExportHeight('650px')
       setMoreOptions(' Age ')
       setEmpTitleBy(' By Age')
     }
@@ -943,6 +943,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: button_group_a+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1140,6 +1142,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: button_group_a+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1345,6 +1349,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: button_group_selfEmp+' in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1543,6 +1549,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: button_group_selfEmp+' in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1753,6 +1761,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: 'Median Salary in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1975,6 +1985,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
         title: {
           text: 'Median Salary in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,

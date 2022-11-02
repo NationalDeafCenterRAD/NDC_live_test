@@ -220,7 +220,8 @@ position: static;
     -webkit-transition: all 0.5s ease-out;
 }
 .popup-close {
-    display: none;
+    z-index: -9999;
+    position:fixed;
 }
 .popup-open {
     position:fixed;

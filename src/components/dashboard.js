@@ -953,7 +953,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [multiVariable, setMultiVariable] = useState([{label: 'Overall', value: 'Overall', variable: 'overall', variables: [''],
                                                        deaf: ['deaf people'], hearing: ['hearing people']}])
   const [categories, setCategories] = useState([''])
-  const [export_height,setExportHeight] = useState('450px')
+  const [export_height,setExportHeight] = useState('500px')
   const [more_options, setMoreOptions] = useState(' ')
   const [title_by,setTitleBy] = useState('')
   const changeList = (e) => {
@@ -963,23 +963,23 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     setDeafLabels(e.deaf)
     setHearLabels(e.hearing)
     if(e.variable === 'overall'){
-      setExportHeight('450px')
+      setExportHeight('500px')
       setMoreOptions(' ')
       setTitleBy('')
     }else if(e.variable === 'race'){
-      setExportHeight('590px')
+      setExportHeight('640px')
       setMoreOptions(' Race ')
       setTitleBy(' By Race')
     }else if(e.variable === 'gender'){
-      setExportHeight('466px')
+      setExportHeight('516px')
       setMoreOptions(' Gender ')
       setTitleBy(' By Gender')
     }else if(e.variable === 'disability'){
-      setExportHeight('498px')
+      setExportHeight('548px')
       setMoreOptions(' Disability ')
       setTitleBy(' By Disability')
     }else if(e.variable === 'age'){
-      setExportHeight('600px')
+      setExportHeight('650px')
       setMoreOptions(' Age ')
       setTitleBy(' By Age')
     }
@@ -1261,7 +1261,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       text: ""
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+       return this.point.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -1290,7 +1292,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
-        name: 'Percentage',
         innerSize: '77%',
         keys: ['name', 'y', 'color','borderColor','borderWidth'],
         data:
@@ -1325,6 +1326,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         title: {
           text: 'Deaf Demographics '+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           widthadjust: -200,
           style: {
             color: '#787878',
@@ -1391,7 +1394,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       text: ""
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.point.name+': <b>'+this.y+'%</b>'
+      },      
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -1748,11 +1753,10 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
-        name: 'Percentage',
-        innerSize: '77%',
-        keys: ['name', 'y', 'color','borderColor','borderWidth'],
-        data: {
-          age:
+      innerSize: '77%',
+      keys: ['name', 'y', 'color','borderColor','borderWidth'],
+      data: {
+        age:
           [['deaf: ages 16-24', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 16-24').map(
@@ -1773,7 +1777,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'deaf: ages 55-64').map(
               employment => employment.percentage)[0], colorfill[4],colorfill[0],1]],
-          race:
+        race:
           [['deaf Asian', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf Asian').map(
@@ -1798,7 +1802,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'deaf white').map(
               employment => employment.percentage)[0], colorfill[5],colorfill[0],1]],
-          gender:
+        gender:
           [['deaf women', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'deaf women').map(
@@ -1807,7 +1811,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'deaf women').map(
               employment => employment.percentage)[0], colorfill[1],colorfill[0],1]],
-          disability:
+        disability:
           [['deaf with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deaf with no additional disabilities').map(
@@ -1820,7 +1824,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'deafblind').map(
               employment => employment.percentage)[0], colorfill[2],colorfill[0],1]]
-
         }[selected_attributions],
         dataLabels: {
             enabled: false,
@@ -1850,7 +1853,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       text: ""
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.point.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -1911,11 +1916,11 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       enabled: false
     },
     series: [{
-        name: 'Percentage',
-        innerSize: '77%',
-        keys: ['name', 'y', 'color','borderColor','borderWidth'],
-        data: {
-          age:
+      name: 'Percentage',
+      innerSize: '77%',
+      keys: ['name', 'y', 'color','borderColor','borderWidth'],
+      data: {
+        age:
           [['hearing: ages 16-24', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 16-24').map(
@@ -1936,7 +1941,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'age' & employment.state === chosen_state &
               employment.attribution === 'hearing: ages 55-64').map(
               employment => employment.percentage)[0], 'url(#black1)',colorfill[6],1]],
-          race:
+        race:
           [['hearing Asian', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing Asian').map(
@@ -1961,7 +1966,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'race' & employment.state === chosen_state &
               employment.attribution === 'hearing white').map(
               employment => employment.percentage)[0], 'url(#black2)',colorfill[6],1]],
-          gender:
+        gender:
           [['hearing women', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'hearing women').map(
@@ -1970,7 +1975,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
               employment.variable === 'gender' & employment.state === chosen_state &
               employment.attribution === 'hearing women').map(
               employment => employment.percentage)[0], colorfill[7],colorfill[6],1]],
-          disability:
+        disability:
           [['hearing with no additional disabilities', employment.filter(employment => employment.type === 'population' & 
               employment.variable === 'disability' & employment.state === chosen_state &
               employment.attribution === 'hearing with no additional disabilities').map(
@@ -2146,6 +2151,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           widthadjust: -200,
           style: {
             color: '#787878',
@@ -2259,7 +2266,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -2329,6 +2338,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           widthadjust: -200,
           style: {
             color: '#787878',
@@ -2460,7 +2471,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.x+'<br><br>'+this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -2522,6 +2535,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     }],
     exporting: {
       width: 2000,
+      allowHTML: true,
       sourceHeight:export_height,
       buttons: {
         contextButton: {
@@ -2533,6 +2547,8 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           widthadjust: -200,
           style: {
             color: '#787878',
@@ -2707,7 +2723,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -2817,7 +2835,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -2953,7 +2973,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -3063,7 +3085,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -3170,7 +3194,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.x+'<br><br>'+this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -3287,7 +3313,9 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       }
     },
     tooltip: {
-      pointFormat: '{categories}<br>{series.name}: <b>{point.y:.1f}%</b></br>',
+      formatter: function () {
+        return this.x+'<br><br>'+this.series.name+': <b>'+this.y+'%</b>'
+      },
       shared: false,
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -3571,7 +3599,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             employment.attribution.includes('deaf')).map(
                               function(employment,index){ return (demo_age[demo_age.length-1] === demo_age[employment.index]) ?
                                 ' and '+employment.percentage+'% are '+demo_age[employment.index] :
-                                ' '+employment.percentage+'% are '+demo_age[employment.index]
+                                ' '+employment.percentage+'% are '+demo_age[employment.index+1]
                               }
                             )+'. Among hearing people, an estimated '+
                             employment.filter(employment => employment.type === 'population' &
@@ -4117,10 +4145,11 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                     <div style={{marginBottom:60}}></div>
                   </div>
                 </div>
-                <div className = 'state_title'>{stateLevelTitle.toUpperCase()+edutitle_by.toUpperCase()+': '+chosen_state.toUpperCase()+
-                ' AND '+chosen_state1.toUpperCase()}</div>
                 <div className={data_grid}>
                   <div className = 'a'>
+                    <div className = 'state_title'>{stateLevelTitle.toUpperCase()+edutitle_by.toUpperCase()+': '+chosen_state.toUpperCase()+
+                      ' AND '+chosen_state1.toUpperCase()}
+                    </div>
                     <div className='state_grid'>
                       <div className='state_a'>
                       <div className = 'aria-text'>{'Chart Title - '+stateLevelTitle+edutitle_by+': '+chosen_state+' and '+chosen_state1}</div>
@@ -4480,6 +4509,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               }[chart_edcomp1]
                             }
                         />
+                        <div style = {{marginBottom: '20px'}}/>
                       </div>
                     </div>
                   </div>

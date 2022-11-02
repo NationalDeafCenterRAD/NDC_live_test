@@ -1385,6 +1385,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: eduLevelTitle+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1596,6 +1598,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: eduLevelTitle+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -1806,6 +1810,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: 'Education Attainment'+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -2034,6 +2040,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: 'Enrollment Rate in the United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -2247,6 +2255,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: 'Enrollment Rate in the United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -2473,6 +2483,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: button_group_a+' 5 Most Popular Majors in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
@@ -2719,6 +2731,8 @@ function Education({colors, justcolor, colorfill}) {
         title: {
           text: button_group_a+' Field of Degree'+in_the.toLowerCase()+'United States, '+year,
           align: 'left',
+          y: 50,
+          margin:50,
           style: {
             color: '#787878',
             fontWeight: 700,
