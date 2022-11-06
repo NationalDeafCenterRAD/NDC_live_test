@@ -620,7 +620,7 @@ const Navbar = () => {
             General
           </div>
         </Link>
-        <Link to='/Education' style = {linkStyle} tabIndex = {-1} aria-hidden="true">
+        <Link to='/Education' style = {disableLink} tabIndex = {-1} aria-hidden="true">
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'graduation-cap'/>
             &nbsp;&nbsp;&nbsp; 
