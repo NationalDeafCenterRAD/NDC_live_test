@@ -1139,7 +1139,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [edutitle_by,setEduTitleBy] = useState('')
 
   // State Comparison Selection
-  //const [stateLabel, setStateLabel] = useState("Bachelor's")
   const [stateLevelTitle, setStateLevelTitle] = useState("Bachelor's Degree Attainment")
   const [stateLevel, setStateLevel] = useState("bachelor")
   const [stateType, setStateType] = useState('education')
@@ -3291,7 +3290,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               <svg viewBox={[0, 0, svgViewportWidth, svgViewportHeight].join(' ')} width={containerWidth}
                                 height={containerHeight} style={{transform: `translateX(${translate.x}px) translateY(${translate.y}px)`}}>
                                   {usmap.map((stateData, index) =>
-                                    <a href={'/#location: '+state_label}>
+                                    <a href={'/#location: '+stateData.id}>
                                       <path
                                       className="map_path"
                                       style={{cursor: "pointer"}}
@@ -3299,13 +3298,21 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                       stroke="#fff"
                                       strokeWidth="3px"
                                       d={stateData.shape}
-                                      onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
+                                      onClick={() => {
+                                        setLabel_State(usmap.map(usmap => usmap.name)[index])
+                                        setChosenState(usmap.map(usmap => usmap.name)[index])
+                                        }
+                                      }
                                       />
                                     <rect style={{cursor: "pointer", display: stateData.display}}
                                     className = "map_rect"
                                     rx='5' ry='5'
                                     key = {index+'b'}
-                                    onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])} 
+                                    onClick={() => {
+                                      setLabel_State(usmap.map(usmap => usmap.name)[index])
+                                      setChosenState(usmap.map(usmap => usmap.name)[index])
+                                      }
+                                    }
                                     x={stateData.xend} y={stateData.yend} 
                                     height="30" width="55"/>
                                     <line className = "map_line"
@@ -3322,7 +3329,11 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     style={{cursor: "pointer", display: stateData.display1,strokeWidth:"3"}}/>
                                     <text className = 'map_text'
                                     key = {index+'c'}
-                                    onClick={() => setChosenState(usmap.map(usmap => usmap.name)[index])}
+                                    onClick={() => {
+                                      setLabel_State(usmap.map(usmap => usmap.name)[index])
+                                      setChosenState(usmap.map(usmap => usmap.name)[index])
+                                      }
+                                    }
                                     style={{cursor: "pointer"}}
                                     x={stateData.X} 
                                     y={stateData.Y}>
