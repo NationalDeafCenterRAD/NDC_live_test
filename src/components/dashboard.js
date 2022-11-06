@@ -2086,6 +2086,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '16px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -2261,6 +2262,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '16px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -2457,6 +2459,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '16px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -3417,7 +3420,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             employment.attribution.includes('hearing')).map(
                               function(employment,index){ return (demo_age[demo_age.length-1] === demo_age[employment.index]) ?
                                 ' and '+employment.percentage+'% are '+demo_age[employment.index] :
-                                ' '+employment.percentage+'% are '+demo_age[employment.index]
+                                ' '+employment.percentage+'% are '+demo_age[employment.index+1]
                               }
                             )+'.',
                           race:
