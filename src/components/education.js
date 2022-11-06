@@ -1006,15 +1006,15 @@ function Education({colors, justcolor, colorfill}) {
   // More Options - Sidebar
   const [clickedId, setClickedId] = useState('accordion-btn');
   const [symbol, setSymbol] = useState('icon');
-  const [content, setContent] = useState('accordion-content');
+  const [content, setContent] = useState('data-accordion-content');
   const [chart, setChart] = useState('accordionBtn')
   const [chart_ed, setChart_ed] = useState('accordionBtn')
   const [tabindex_acc, setTabIndex_Acc] = useState('-1')
   const clickAccordion = () => {
     clickedId === 'accordion-btn active' ? setClickedId('accordion-btn') : setClickedId('accordion-btn active');
     symbol === 'icon' ? setSymbol('icon-active') : setSymbol('icon');
-    content === 'accordion-content-active' ? setContent('accordion-content') : setContent('accordion-content-active');
-    if(content === 'accordion-content'){
+    content === 'data-accordion-content-active' ? setContent('data-accordion-content') : setContent('data-accordion-content-active');
+    if(content === 'data-accordion-content'){
       setChart('accordionBtnActive')   
       setTabIndex_Acc('0')
     }else{
@@ -1026,11 +1026,11 @@ function Education({colors, justcolor, colorfill}) {
   // Text Description
   const [clickedId1, setClickedId1] = useState('accordion-btn active');
   const [symbol1, setSymbol1] = useState('icon-active');
-  const [content1, setContent1] = useState('accordion-content-active');
+  const [content1, setContent1] = useState('data-accordion-content-active');
   const clickAccordion1 = () => {
     clickedId1 === 'accordion-btn active' ? setClickedId1('accordion-btn') : setClickedId1('accordion-btn active');
     symbol1 === 'icon' ? setSymbol1('icon-active') : setSymbol1('icon');
-    content1 === 'accordion-content-active' ? setContent1('accordion-content') : setContent1('accordion-content-active');
+    content1 === 'data-accordion-content-active' ? setContent1('data-accordion-content') : setContent1('data-accordion-content-active');
   }
 
   // Effect of Attributions under React Selection
@@ -1062,7 +1062,7 @@ function Education({colors, justcolor, colorfill}) {
     if(actions === 'clear'){
       setClickedId('accordion-btn');
       setSymbol('icon');
-      setContent('accordion-content');
+      setContent('data-accordion-content');
       setTabIndex_Acc('-1');
       setAttribution(['deaf','hearing'])
       setActions('...')
@@ -1153,11 +1153,11 @@ function Education({colors, justcolor, colorfill}) {
   }
 
   useEffect(()=> {
-    if(content === 'accordion-content' && eduLevel !== 'all'){
+    if(content === 'data-accordion-content' && eduLevel !== 'all'){
       setChart_ed('accordionBtn')
       setEduTitleBy(title_by)
       setDisabled(false)
-    }else if(content === 'accordion-content-active' && eduLevel !== 'all'){
+    }else if(content === 'data-accordion-content-active' && eduLevel !== 'all'){
       setChart_ed('accordionBtnActive')
       setEduTitleBy('')
       setDisabled(false)
@@ -1272,12 +1272,6 @@ function Education({colors, justcolor, colorfill}) {
       visible: false,
       title: {
         text: null
-      },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
       },
       crosshair: true,
       gridLineColor: '#ffffff',
@@ -1481,16 +1475,10 @@ function Education({colors, justcolor, colorfill}) {
       text: ""
     },
     xAxis: {
-      categories: categories,
+      categories: categories.map(word => word.charAt(0).toUpperCase()+word.substring(1)),
       visible: true,
       title: {
         text: null
-      },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
       },
       crosshair: true,
       gridLineColor: '#ffffff',
@@ -1701,12 +1689,6 @@ function Education({colors, justcolor, colorfill}) {
       visible: true,
       title: {
         text: null
-      },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
       },
       crosshair: true,
       gridLineColor: '#ffffff',
@@ -1928,12 +1910,6 @@ function Education({colors, justcolor, colorfill}) {
       title: {
         text: null
       },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
-      },
       crosshair: true,
       gridLineColor: '#ffffff',
       gridLineWidth: 0,
@@ -2139,16 +2115,10 @@ function Education({colors, justcolor, colorfill}) {
       text: ""
     },
     xAxis: {
-      categories: categories,
+      categories: categories.map(word => word.charAt(0).toUpperCase()+word.substring(1)),
       visible: true,
       title: {
         text: null
-      },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
       },
       crosshair: true,
       gridLineColor: '#ffffff',
@@ -2371,12 +2341,6 @@ function Education({colors, justcolor, colorfill}) {
       visible: true,
       title: {
         text: null
-      },
-      labels: {
-        style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto'
-        }
       },
       crosshair: true,
       gridLineColor: '#ffffff',
@@ -2608,8 +2572,6 @@ function Education({colors, justcolor, colorfill}) {
       },
       labels: {
         style: {
-          fontSize: '16px',
-          fontFamily: 'Roboto',
           wordBreak: 'break-all',
           textOverflow: 'allow'
         },

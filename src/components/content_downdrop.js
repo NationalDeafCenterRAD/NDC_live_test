@@ -21,7 +21,7 @@ const ContentDowndrop = ({ buttonLabel, content, symbol, tabindex, clickedId, te
   
   return (
     <>
-      <div className = 'accordion'>
+      <div className = 'jonah-accordion'>
         <div className= 'accordion-item' style = {{ borderTop: '1.5px dotted '+your_color }}>
           <div className={content} style = {{ background: background }}>
             <div className={textwidth}>

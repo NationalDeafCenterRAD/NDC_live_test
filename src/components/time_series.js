@@ -537,11 +537,11 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   // Text Description
   const [clickedId1, setClickedId1] = useState('accordion-btn active');
   const [symbol1, setSymbol1] = useState('icon-active');
-  const [content1, setContent1] = useState('accordion-content-active');
+  const [content1, setContent1] = useState('data-accordion-content-active');
   const clickAccordion1 = () => {
     clickedId1 === 'accordion-btn active' ? setClickedId1('accordion-btn') : setClickedId1('accordion-btn active');
     symbol1 === 'icon' ? setSymbol1('icon-active') : setSymbol1('icon');
-    content1 === 'accordion-content-active' ? setContent1('accordion-content') : setContent1('accordion-content-active');
+    content1 === 'data-accordion-content-active' ? setContent1('data-accordion-content') : setContent1('data-accordion-content-active');
   }
 
   // Effect of Attributions under React Selection
