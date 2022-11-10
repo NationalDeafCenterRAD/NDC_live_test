@@ -3,7 +3,7 @@ const current_year = new Date().getFullYear()
 
 function Citation(){
   return(['Bloom, C.L, Palmer, J.L., & Winninghoff, J. ('+current_year+
-  '). Deaf Postsecondary Data from the American Community Survey [Data visualization tool]. National Deaf Center on Postsecondary Outcomes, University of Texas at Austin. ', 'www.nationaldeafcenter.org/datadashboard'])
+  '). Deaf Postsecondary Data from the American Community Survey [Data visualization tool]. National Deaf Center on Postsecondary Outcomes, University of Texas at Austin. ', 'wwww.nationaldeafcenter.org/resources/research-data/dashboard/'])
 }
 
 export default Citation();

@@ -202,29 +202,6 @@ let edulist = ["doctoral degree or equivalent","master’s degree or higher","ba
                "an associate’s degree or higher",'some college or higher','high school or higher']
 
 const Dashboard = ({colors, justcolor, colorfill}) => {
-  // Screen Reader Support
-  // First Selection
-  //const [ariaFocusMessage, setAriaFocusMessage] = useState('');
-  //const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  /*const onFocus = ({ focused, isDisabled }) => {
-    const msg = `${focused.label}${
-      isDisabled ? ', disabled' : ''
-    }`;
-    setAriaFocusMessage(msg);
-    return msg;
-  };
-
-  const onMenuOpen = () => setIsMenuOpen(true);
-  const onMenuClose = () => setIsMenuOpen(false);
-
-
-  // Second Selection - State
-  const [isMenuOpen1, setIsMenuOpen1] = useState(false);
-
-  const onMenuOpen1 = () => setIsMenuOpen1(true);
-  const onMenuClose1 = () => setIsMenuOpen1(false);*/
-
   //Width Screen Size Listener
   const [size, setSize] = useState([0,0]);
   useLayoutEffect(() => {
@@ -1108,13 +1085,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     }
   },[actions])
 
-
-  // Math Round
-  /*function round(num) {
-    var m = Number((Math.abs(num) * 100).toPrecision(15));
-    return Math.round(m) / 100 * Math.sign(num);
-  }*/
-
   // Svg download symbol
   Highcharts.SVGRenderer.prototype.symbols.download = function (x, y, w, h) {
     var path = [
@@ -1943,34 +1913,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       type: 'column',
       width: HCwidth,
       height: 330
-      /*resetZoomButton: {
-        theme: {
-          fill: '#f0f0f0',
-          stroke: 'silver',
-          style: {
-            color: '#838383',
-            fontFamily: 'Roboto',
-            align: 'center',
-            fontSize: '16px'
-          },
-          r: 0,
-          states: {
-              hover: {
-                  fill: '#008e84',
-                  stroke: '#008e84',
-                  style: {
-                      color: 'white'
-                  }
-              }
-          }
-        },
-        position: {
-            //align: 'right' by default
-            verticalAlign: 'bottom',
-            x: -10,
-            y: -40
-        }
-      }*/
     },
     legend: {
       align: 'center',
@@ -2076,6 +2018,16 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
@@ -2085,7 +2037,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
-            fontSize: '16px',
+            fontSize: '23px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -2117,7 +2069,21 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           employment.state === 'United States' &
           employment.status === stateLevel).map(employment => employment.n).reduce(
             (sum, a) => sum + a, 0)).toLocaleString('en-US')+' '+words[1]+
-          ' in the United States who participated in the '+year+' American Community Survey.<br><br><br>'+citation[0]+' '+citation[1],
+          ' in the United States who participated in the '+year+' American Community Survey. The margin of errors are '+
+          employment.filter(employment =>
+            employment.attribution === attribute[0] & 
+            employment.status === stateLevel & 
+            employment.type === stateType & 
+            employment.state === 'United States').map(
+            employment => employment.margin_errors)+
+          '% for '+words[0]+' and '+
+          employment.filter(employment =>
+            employment.attribution === attribute[1] & 
+            employment.status === stateLevel & 
+            employment.type === stateType & 
+            employment.state === 'United States').map(
+            employment => employment.margin_errors)+
+          '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
             fontSize: '12px'
           },
@@ -2252,6 +2218,16 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
@@ -2261,7 +2237,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
-            fontSize: '16px',
+            fontSize: '23px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -2449,6 +2425,16 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: stateLevelTitle+edutitle_by+' in the United States, '+year,
           align: 'left',
@@ -2458,7 +2444,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           style: {
             color: '#787878',
             fontWeight: 700,
-            fontSize: '16px',
+            fontSize: '23px',
             fontFamily: 'Roboto',
             marginRight: 20,
           }
@@ -2498,7 +2484,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
             employment.state === 'United States').map(employment => employment.n).reduce(
               (sum, a) => sum + a, 0)).toLocaleString('en-US')+
           ' hearing people in the United States who participated in the American Community '+year+
-          ' American Community Survey. The margin of errors are '+
+          ' American Community Survey. The margin of errors are between '+
           employment.filter(employment => employment.attribution === 'deaf' & 
             employment.status === 'phd/dr' & 
             employment.type === 'education' & 
@@ -3766,7 +3752,21 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                             employment.state === 'United States' &
                             employment.status === stateLevel).map(employment => employment.n).reduce(
                               (sum, a) => sum + a, 0)).toLocaleString('en-US')+' '+words[1]+
-                            ' in the United States who participated in the '+year+' American Community Survey.',
+                            ' in the United States who participated in the '+year+' American Community Survey. The margin of errors are '+
+                            employment.filter(employment =>
+                              employment.attribution === attribute[0] & 
+                              employment.status === stateLevel & 
+                              employment.type === stateType & 
+                              employment.state === 'United States').map(
+                              employment => employment.margin_errors)+
+                            '% for '+words[0]+' and '+
+                            employment.filter(employment =>
+                              employment.attribution === attribute[1] & 
+                              employment.status === stateLevel & 
+                              employment.type === stateType & 
+                              employment.state === 'United States').map(
+                              employment => employment.margin_errors)+
+                            '% for '+words[1]+'.',
                           AllLevels: 'In this chart, estimates are based on a sample size of '+
                             size_checker(employment.filter(employment => employment.attribution === 'deaf' & 
                               employment.status === 'no HS diploma' & employment.type === 'education' & 
@@ -3777,7 +3777,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                               employment.state === 'United States').map(employment => employment.n).reduce(
                                 (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                             ' hearing people in the United States who participated in the American Community '+year+
-                            ' American Community Survey. The margin of errors are '+
+                            ' American Community Survey. The margin of errors are between '+
                             employment.filter(employment => employment.attribution === 'deaf' & 
                               employment.status === 'phd/dr' & 
                               employment.type === 'education' & 
@@ -4279,7 +4279,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                       (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                   ' people'+in_the1.toLowerCase()+chosen_state1+' who participated'+
                                   in_the.toLowerCase()+year1+
-                                  ' American Community Survey.'+in_the+state_label+', the margin of errors are '+
+                                  ' American Community Survey.'+in_the+state_label+', the margin of errors are between '+
                                   employment.filter(employment => employment.attribution === 'deaf' & 
                                     employment.status === 'phd/dr' & 
                                     employment.type === 'education' & 
@@ -4302,7 +4302,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                                     employment.type === 'education' & 
                                     employment.state === chosen_state).map(employment => employment.margin_errors)+
                                   '% for hearing people while'+in_the1.toLowerCase()+chosen_state1+
-                                  ', the margin of errors are '+
+                                  ', the margin of errors are between '+
                                   employment.filter(employment => employment.attribution === 'deaf' & 
                                     employment.status === 'phd/dr' & 
                                     employment.type === 'education' & 
@@ -4464,7 +4464,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                   </div>
                   <div className = 'thep' style={{textIndent: '-26px', paddingLeft: '26px'}}>
                     {citation[0]}
-                    <a href = 'https://www.nationaldeafcenter.org/datadashboard' style = {{textDecoration: 'none', color: '#0B7373'}}>
+                    <a href = 'https://nationaldeafcenter.org/resources/research-data/dashboard/' style = {{textDecoration: 'none', color: '#0B7373'}}>
                       <b>{citation[1]}</b>
                     </a>
                   </div>
