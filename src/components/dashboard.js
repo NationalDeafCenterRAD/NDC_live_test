@@ -1028,17 +1028,6 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     }
   }
 
-  useLayoutEffect(()=>{
-    if(state_label !== 'United States'){
-      setYear((most_recent_year1-4)+'-'+(most_recent_year1))
-      setIn_The(' In ')
-    }else{
-      setYear(most_recent_year)
-      setIn_The(' In the ')
-    }
-    setMultiState({label: state_label, value: state_label, variable: chosen_state})
-  },[chosen_state,state_label])
-
   const [chosen_state1, setChosenState1] = useState('Texas');
   const [multi_state1, setMultiState1] = useState([  {label: 'Texas', value: 'Texas'}])
   const [year1, setYear1] = useState((most_recent_year1-4)+'-'+(most_recent_year1));
@@ -1155,13 +1144,22 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
     }  
   }, [chosen_state,chosen_state1,chart_edcomp])
 
-  useEffect(()=> {
-    if(a_tab === 2){
+    useLayoutEffect(()=>{
+    if(a_tab === 1){
+      setYear(most_recent_year)
+      setIn_The(' In the ')
+    }else if(state_label !== 'United States'){
       setYear((most_recent_year1-4)+'-'+(most_recent_year1))
+      setIn_The(' In ')
+    }else if(a_tab === 2){
+      setYear((most_recent_year1-4)+'-'+(most_recent_year1))
+      setIn_The(' In ')
     }else{
       setYear(most_recent_year)
+      setIn_The(' In the ')
     }
-  },[a_tab,selected_attributions,stateType])
+    setMultiState({label: state_label, value: state_label, variable: chosen_state})
+  },[chosen_state,state_label,a_tab])
 
   useEffect(()=> {
     if(content === 'data-accordion-content' & stateType === 'education' & selected_attributions === 'age'){
