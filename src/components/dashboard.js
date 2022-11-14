@@ -1034,7 +1034,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   const [in_the1, setIn_The1] = useState(' In ');
 
   const changeEmpState1 = (e) => {
-    setChosenState1(e.value)
+    setChosenState1(e.variable)
     setMultiState1(e)
     if(e.value === 'United States'){
       setIn_The1(' In the ')

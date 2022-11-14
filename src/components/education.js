@@ -967,7 +967,6 @@ function Education({colors, justcolor, colorfill}) {
   const [multiVariable, setMultiVariable] = useState([{label: 'Overall', value: 'Overall', variable: 'overall', variables: [''],
                                                        deaf: ['deaf people'], hearing: ['hearing people']}])
   const [categories, setCategories] = useState([''])
-  const [export_height,setExportHeight] = useState('450px')
   const [more_options, setMoreOptions] = useState(' ')
   const [title_by,setTitleBy] = useState('')
   const changeList = (e) => {
@@ -977,23 +976,18 @@ function Education({colors, justcolor, colorfill}) {
     setDeafLabels(e.deaf)
     setHearLabels(e.hearing)
     if(e.variable === 'overall'){
-      setExportHeight('450px')
       setMoreOptions(' ')
       setTitleBy('')
     }else if(e.variable === 'race'){
-      setExportHeight('590px')
       setMoreOptions(' Race ')
       setTitleBy(' By Race')
     }else if(e.variable === 'gender'){
-      setExportHeight('466px')
       setMoreOptions(' Gender ')
       setTitleBy(' By Gender')
     }else if(e.variable === 'disability'){
-      setExportHeight('498px')
       setMoreOptions(' Disability ')
       setTitleBy(' By Disability')
     }else if(e.variable === 'age'){
-      setExportHeight('600px')
       setMoreOptions(' Age ')
       setTitleBy(' By Age')
     }
@@ -1367,8 +1361,9 @@ function Education({colors, justcolor, colorfill}) {
         employment.state === chosen_state).map(employment => [0,employment.percentage])
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '450px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1376,14 +1371,26 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: eduLevelTitle+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
             marginRight: 20
           }
@@ -1426,31 +1433,24 @@ function Education({colors, justcolor, colorfill}) {
             employment.status === eduLevel & 
             employment.type === 'education' & 
             employment.state === chosen_state).map(employment => employment.margin_errors)+
-          '% for '+words[1]+'.<br><br>',
+          '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
             fontSize: '11px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1566,16 +1566,10 @@ function Education({colors, justcolor, colorfill}) {
       employment.status === eduLevel & employment.attribution.includes('hearing')).map(
       employment => [employment.index,employment.percentage])
     }],
-    accessibility: {
-      description:
-      employment.filter(employment => employment.type === 'education' & 
-      employment.variable === selected_attributions & employment.state === chosen_state &
-      employment.status === eduLevel).map(
-      employment => employment.attribution+': '+employment.percentage+'%; ')
-    },
     exporting: {
-      width: 2000,
-      sourceHeight: export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1583,16 +1577,28 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: eduLevelTitle+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1636,31 +1642,24 @@ function Education({colors, justcolor, colorfill}) {
             employment.status === eduLevel & 
             employment.type === 'education' & 
             employment.state === chosen_state).map(employment => employment.margin_errors)+
-          '% for hearing people.',
+          '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1780,8 +1779,9 @@ function Education({colors, justcolor, colorfill}) {
         employment.state === chosen_state).map(employment => employment.percentage).reverse()
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '550px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1789,16 +1789,28 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
-          text: 'Education Attainment'+in_the.toLowerCase()+chosen_state+', '+year,
+          text: 'Education Attainment - High School, Some College, AA, BA, MA, PHD'+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1854,31 +1866,24 @@ function Education({colors, justcolor, colorfill}) {
             employment.status === 'HS diploma' & 
             employment.type === 'education' & 
             employment.state === chosen_state).map(employment => employment.margin_errors)+
-          '% for hearing people.<br><br>',
+          '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -2004,8 +2009,9 @@ function Education({colors, justcolor, colorfill}) {
         employment.state === 'United States').map(employment => employment.percentage)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '450px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -2013,16 +2019,28 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: 'Enrollment Rate in the United States, '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -2066,31 +2084,24 @@ function Education({colors, justcolor, colorfill}) {
             employment.status === 'Enrolled' &  
             employment.type === 'enrollment' & 
             employment.state === 'United States').map(employment => employment.margin_errors)+
-          '% for '+words[1]+'.',
+          '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -2213,8 +2224,9 @@ function Education({colors, justcolor, colorfill}) {
         employment => employment.percentage)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -2222,16 +2234,28 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: 'Enrollment Rate in the United States, '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -2280,31 +2304,24 @@ function Education({colors, justcolor, colorfill}) {
             employment.status === 'Enrolled' &  
             employment.type === 'enrollment' & 
             employment.state === 'United States').map(employment => employment.margin_errors)+
-          '% for hearing people.',
+          '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -2435,8 +2452,9 @@ function Education({colors, justcolor, colorfill}) {
       }).map(el => el[1]).slice(0,5)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -2444,16 +2462,28 @@ function Education({colors, justcolor, colorfill}) {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: button_group_a+' 5 Most Popular Majors in the United States, '+most_recent_year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -2508,31 +2538,24 @@ function Education({colors, justcolor, colorfill}) {
               employment.variable ===  type_a &
               employment.state === 'United States' &
               employment.attribution.includes('hearing')).map(employment => employment.margin_errors))+
-            '% for hearing people.',
+            '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -2672,7 +2695,9 @@ function Education({colors, justcolor, colorfill}) {
         }).map(el => el[1])
     }],
     exporting: {
-      width: 2000,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 1200,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -2687,6 +2712,9 @@ function Education({colors, justcolor, colorfill}) {
             formatter: function () {
               return this.y + '%';
             },
+            style: {
+              fontSize: '12px'
+            }
             }
           }
         },
@@ -2695,39 +2723,33 @@ function Education({colors, justcolor, colorfill}) {
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
-          text: '',
+          text: '<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
-              const chart = this,
-                width = 100;
+              const chart = this;
                 chart.renderer.image(thelogo,
-                  chart.plotLeft + chart.plotSizeX - width, //x
+                  1200-140, //y
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
