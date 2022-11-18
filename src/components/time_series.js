@@ -91,9 +91,9 @@ let state_comparison = [
   {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher",range: [0,30], sentence: "master's degree attainments"},
   {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent',range: [0,10], sentence: "doctoral attainments"},
   {label: 'Employment Status', value: 'Employment Status', disabled: true},
-  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed',range: [0,100], sentence: 'employment rate'},
-  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed',range: [0,15], sentence: 'unemployment rate'},
-  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force',range: [0,100], sentence: 'labor force participation rate'}
+  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed',range: [0,100], sentence: 'employment rates'},
+  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed',range: [0,15], sentence: 'unemployment rates'},
+  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force',range: [0,100], sentence: 'non-labor force participation rates'}
 ]
 //Stylize Inner Menu in React Select 
 const Option = (props) => {
@@ -613,6 +613,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
 
   // Education Attainment Selection
   const [stateLevelTitle, setStateLevelTitle] = useState("Bachelor's Degree Attainment");
+  const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher')
   const [stateLevel, setStateLevel] = useState("bachelor");
   const [stateType, setStateType] = useState('education');
   const [multi_comp_state, setMultiCompState] = useState([{label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor'}]);
@@ -620,8 +621,6 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   const [state_age, setStateAge] = useState('25-64');
   const [crease, setCrease] = useState('increased slightly more')
   const [sentence, setSentence] = useState("bachelor's degree attainment")
-  //const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher');
-  //const [state_descript1, setStateDescript1] = useState(' have completed a bachelor’s degree or higher');
 
   const changeState = (e) => {
     setMultiCompState(e)
@@ -629,13 +628,12 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     setStateLevel(e.variable)
     setStateType(e.type)
     setStateAge(e.age)
-    //setStateDescript(e.description)
-    //setStateDescript1(e.description1)
+    setStateDescript(e.description)
     setRange(e.range)
     setSentence(e.sentence)
   }
 
-  // Find two slopes of time series
+  // Find two change percentages of time series, not slope
   const min_year = Math.min(...timeseries.filter(timeseries => timeseries.type === 'education' &
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
@@ -643,49 +641,34 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
 
-  const mean = (arr) => {
-    return(arr.reduce((a,b) => a + b, 0)/arr.length)
+  const slope = (thenew, old) => {
+    return((thenew - old)/Math.abs(old))
   }
-  const around_mean = (arr1,arr2) => {
-    const mx = mean(arr1)
-    const my = mean(arr2)
-    return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
-  }
-  const slope = (x,y) => {
-    return(around_mean(x,y)/around_mean(x,x))
-  }
+  
   const [slope1, setSlope1] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
-    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf' & timeseries.year === max_year).map(
+    timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf' & timeseries.year === min_year).map(
     timeseries => timeseries['percentage'])))
   const [slope2, setSlope2] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
-    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing' & timeseries.year === max_year).map(
+    timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing' & timeseries.year === min_year).map(
     timeseries => timeseries['percentage'])))
 
   useEffect(()=>{
-    const mean = (arr) => {
-      return(arr.reduce((a,b) => a + b, 0)/arr.length)
-    }
-    const around_mean = (arr1,arr2) => {
-      const mx = mean(arr1)
-      const my = mean(arr2)
-      return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
-    }
-    const slope = (x,y) => {
-      return(around_mean(x,y)/around_mean(x,x))
+    const slope = (thenew, old) => {
+      return((thenew - old)/Math.abs(old))
     }
     setSlope1(slope(timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
-      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0] & timeseries.year === max_year).map(
+      timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0] & timeseries.year === min_year).map(
       timeseries => timeseries['percentage'])))
     setSlope2(slope(timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
-      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1] & timeseries.year === max_year).map(
+      timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1] & timeseries.year === min_year).map(
       timeseries => timeseries['percentage'])))
     if((slope1 > 0) & (slope2 < 0)){
       setCrease('increased for '+words[0]+' while it has decreased for '+words[1])
@@ -704,7 +687,7 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     }else{
       setCrease('neither decreased slightly more nor less')
     }
-  },[stateType,stateLevel,attribute,slope1,slope2, words])
+  },[stateType,stateLevel,attribute,slope1,slope2, max_year, min_year, words])
 
   // Levels of Education Chart
   let eduyear = {
@@ -1199,7 +1182,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
 
   return (
       <>
-      {slope1}
+      {words[0]+': '+slope1}<br></br>
+      {words[1]+': '+slope2}
         <div className="body">
           <div className = 'container'>
             <div className = 'main-grid'>
@@ -1281,11 +1265,11 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                           timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === min_year &
                             timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
                             timeseries => timeseries['percentage'])+
-                          '% of deaf people were employed. In '+most_recent_year+', an estimated '+
+                          '% of '+words[0]+' '+state_descript+' while in '+most_recent_year+', this estimation was then '+
                           timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === max_year &
                             timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
                             timeseries => timeseries['percentage'])+
-                          '% of deaf people were employed, an average increase of '+
+                          '%, which was a percentage change equal to '+
                           round(slope1)+'%.'
                         }
                       />

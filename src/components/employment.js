@@ -618,9 +618,8 @@ const Employment = ({colors, justcolor, colorfill}) => {
   const [multiVariable, setMultiVariable] = useState([{label: 'Overall', value: 'Overall', variable: 'overall', variables: [''],
                                                        deaf: ['deaf people'], hearing: ['hearing people']}])
   const [categories, setCategories] = useState([''])
-  const [export_height,setExportHeight] = useState('450px')
   const [more_options, setMoreOptions] = useState(' ')
-  const [emptitle_by,setEmpTitleBy] = useState('')
+  const [title_by,setTitleBy] = useState('')
   const changeList = (e) => {
     setAttributions(e.variable)
     setMultiVariable(e)
@@ -628,25 +627,20 @@ const Employment = ({colors, justcolor, colorfill}) => {
     setDeafLabels(e.deaf)
     setHearLabels(e.hearing)
     if(e.variable === 'overall'){
-      setExportHeight('500px')
       setMoreOptions(' ')
-      setEmpTitleBy('')
+      setTitleBy('')
     }else if(e.variable === 'race'){
-      setExportHeight('640px')
       setMoreOptions(' Race ')
-      setEmpTitleBy(' By Race')
+      setTitleBy(' By Race')
     }else if(e.variable === 'gender'){
-      setExportHeight('516px')
       setMoreOptions(' Gender ')
-      setEmpTitleBy(' By Gender')
+      setTitleBy(' By Gender')
     }else if(e.variable === 'disability'){
-      setExportHeight('548px')
       setMoreOptions(' Disability ')
-      setEmpTitleBy(' By Disability')
+      setTitleBy(' By Disability')
     }else if(e.variable === 'age'){
-      setExportHeight('650px')
       setMoreOptions(' Age ')
-      setEmpTitleBy(' By Age')
+      setTitleBy(' By Age')
     }
   }
 
@@ -681,10 +675,13 @@ const Employment = ({colors, justcolor, colorfill}) => {
       setSymbol('icon');
       setContent('data-accordion-content');
       setTabIndex_Acc('-1');
-      setAttribution(['deaf','hearing'])
-      setActions('...')
+      setAttribution(['deaf','hearing']);
+      setNumCol([0,6]);
+      setBarColor(['teal', 'black']);
+      setWords(['deaf people','hearing people']);
+      setActions('...');
       setMultiAttribution([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
-      {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
+      {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}]);
     }
   },[actions])
 
@@ -753,6 +750,21 @@ const Employment = ({colors, justcolor, colorfill}) => {
     }
   }
 
+  // Click X on selection function in dropdown
+  const [emptitle_by,setEmpTitleBy] = useState('')
+  
+  useEffect(()=> {
+    if(content === 'data-accordion-content'){
+      setChart('accordionBtn')
+      setEmpTitleBy(title_by)
+    }else if(content === 'data-accordion-content-active'){
+      setChart('accordionBtnActive')
+      setEmpTitleBy('')
+    }else{
+      setEmpTitleBy(title_by)
+    }
+  }, [content,status_a,title_by, status_a, selected_attributions])
+
   // Math Round
   function round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
@@ -799,35 +811,7 @@ const Employment = ({colors, justcolor, colorfill}) => {
       height: 330,
       animation: {
         duration: 1000
-      },
-      /*resetZoomButton: {
-        theme: {
-          fill: '#f0f0f0',
-          stroke: 'silver',
-          style: {
-            color: '#838383',
-            fontFamily: 'Roboto',
-            align: 'center',
-            fontSize: '16px'
-          },
-          r: 0,
-          states: {
-              hover: {
-                  fill: '#008e84',
-                  stroke: '#008e84',
-                  style: {
-                      color: 'white'
-                  }
-              }
-          }
-        },
-        position: {
-            //align: 'right' by default
-            verticalAlign: 'bottom',
-            x: -10,
-            y: -40
-        }
-      }*/
+      }
     },
     legend: {
       align: 'center',
@@ -925,8 +909,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment.state === chosen_state).map(employment => [0,employment.percentage])
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '450px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -934,14 +919,26 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: button_group_a+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
             marginRight: 20
           }
@@ -985,31 +982,25 @@ const Employment = ({colors, justcolor, colorfill}) => {
             employment.status === status_a & 
             employment.type === 'employment' & 
             employment.state === chosen_state).map(employment => employment.margin_errors)+
-          '% for '+words[1]+'.',
+          '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
+          y: 12
         },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
-        },
+
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1118,8 +1109,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment => [employment.index,employment.percentage])
     }],
     exporting: {
-      width: 2000,
-      sourceHeight:export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1127,16 +1119,28 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
-          text: button_group_a+in_the.toLowerCase()+chosen_state+', '+year,
+          text: button_group_a+emptitle_by+in_the.toLowerCase()+chosen_state+', '+year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1180,31 +1184,24 @@ const Employment = ({colors, justcolor, colorfill}) => {
             employment.status === status_a & 
             employment.type === 'employment' & 
             employment.state === chosen_state).map(employment => employment.margin_errors)+
-          '% for hearing people.',
+          '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1319,8 +1316,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment.state === 'United States').map(employment => employment.percentage)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '450px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1328,16 +1326,28 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: button_group_selfEmp+' in the United States, '+most_recent_year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1378,31 +1388,24 @@ const Employment = ({colors, justcolor, colorfill}) => {
             employment.status === status_selfEmp & 
             employment.type === 'self-employment' & 
             employment.state === 'United States').map(employment => employment.margin_errors)+
-          '% for '+words[1]+'.',
+          '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1513,8 +1516,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment => employment.percentage)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight:export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1522,16 +1526,28 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
-          text: button_group_selfEmp+' in the United States, '+most_recent_year,
+          text: button_group_selfEmp+emptitle_by+' in the United States, '+most_recent_year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1577,31 +1593,24 @@ const Employment = ({colors, justcolor, colorfill}) => {
             employment.status === status_selfEmp & 
             employment.type === 'self-employment' & 
             employment.state === 'United States').map(employment => employment.margin_errors)+
-          '% for hearing people.',
+          '% for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1719,8 +1728,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment.state === 'United States').map(employment => employment.median_income)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight: '450px',
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1728,16 +1738,28 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
           text: 'Median Salary in the United States, '+most_recent_year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -1781,31 +1803,24 @@ const Employment = ({colors, justcolor, colorfill}) => {
                   employment.type === 'salary-range' & 
                   employment.state === 'United States' &  
                   employment.attribution === attribute[1]).map(employment => employment.margin_errors)))+
-                ' for '+words[1]+'.',
+                ' for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1937,8 +1952,9 @@ const Employment = ({colors, justcolor, colorfill}) => {
         employment => employment.median_income)
     }],
     exporting: {
-      width: 2000,
-      sourceHeight:export_height,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1946,16 +1962,28 @@ const Employment = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
         title: {
-          text: 'Median Salary in the United States, '+most_recent_year,
+          text: 'Median Salary'+emptitle_by+' in the United States, '+most_recent_year,
           align: 'left',
           y: 50,
           margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
         subtitle: {
@@ -2011,31 +2039,24 @@ const Employment = ({colors, justcolor, colorfill}) => {
                 employment.type === 'salary-range' & 
                 employment.state === 'United States' &  
                 employment.attribution === 'hearing').map(employment => employment.margin_errors)))+
-              ' for hearing people.<br><br>',
+              ' for hearing people.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
-          y: -10
-        },
-        caption: {
-          text: citation,
-          style: {
-            fontSize: '8.5px'
-          },
-          y: 20
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }

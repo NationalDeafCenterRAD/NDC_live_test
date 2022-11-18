@@ -3200,7 +3200,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           <div className = 'main-grid'>
             <div className = 'main-a'>
               <div id = 'title'>
-                Deaf Postsecondary Data from the American Community Survey ({year}) <i id = 'beta'>BETA</i>
+                Deaf Postsecondary Data from the American Community Survey ({year})
               </div>
             </div>  
             <div className = 'main-b'>                
