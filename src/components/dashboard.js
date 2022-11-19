@@ -24,16 +24,13 @@ import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 import FontAwesome from 'react-fontawesome';
-//import warning_sign from './images/warning_sign.svg';
 
 //Charts
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HC_exporting from 'highcharts/modules/exporting';
-//import HCMore from 'highcharts/highcharts-more';
 import HC_accessible from "highcharts/modules/accessibility";
 import HCItem from 'highcharts/modules/item-series';
-//import HCPattern from 'highcharts-pattern-fill';
 
 // Add pattern in Highcharts
 HC_exporting(Highcharts);
@@ -4462,7 +4459,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                   </div>
                   <div className = 'thep' style={{textIndent: '-26px', paddingLeft: '26px'}}>
                     {citation[0]}
-                    <a href = 'https://nationaldeafcenter.org/resources/research-data/dashboard/' style = {{textDecoration: 'none', color: '#0B7373'}}>
+                    <a href = 'https://www.nationaldeafcenter.org/dashboard' style = {{textDecoration: 'none', color: '#0B7373'}}>
                       <b>{citation[1]}</b>
                     </a>
                   </div>
