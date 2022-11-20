@@ -18,6 +18,10 @@ import usmap from './assets/usmap.json';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Select, { components } from 'react-select';
 import ContentDowndrop from "./content_downdrop";
+import {
+  Link
+} from 'react-router-dom';
+
 
 /*Icons and fonts*/
 import 'font-awesome/css/font-awesome.min.css';
@@ -199,6 +203,14 @@ let edulist = ["doctoral degree or equivalent","master’s degree or higher","ba
                "an associate’s degree or higher",'some college or higher','high school or higher']
 
 const Dashboard = ({colors, justcolor, colorfill}) => {
+  // LinkStyle
+  const linkStyle = {
+    textDecoration: "none",
+    color: '#0B7373',
+    fontWeight: 600,
+    fontSize: '16px'
+  };
+
   //Width Screen Size Listener
   const [size, setSize] = useState([0,0]);
   useLayoutEffect(() => {
@@ -4452,7 +4464,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                         employment.status === 'notinLF')).map(employment => employment.n).reduce(
                         (sum, a) => sum + a, 0).toLocaleString('en-US')
                     } deaf people. 
-                    {/*For more information, see our Method page.*/}
+                    For more information, see our <Link to='/FAQs' style = {linkStyle} aria-hidden="true">FAQs page</Link>.
                   </div>
                   <div className = 'thep'>
                     <b>Recommended Citation</b>
