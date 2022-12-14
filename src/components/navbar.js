@@ -563,13 +563,13 @@ const Navbar = () => {
     fontSize: '16px'
   };
 
-  /*const disableLink = {
+  const disableLink = {
     textDecoration: "none",
     color: '#8f8f8f',
     fontWeight: 600,
     fontSize: '16px',
     pointerEvents: 'none'
-  }*/
+  }
 
   return (
   <>
@@ -620,28 +620,28 @@ const Navbar = () => {
             General
           </div>
         </Link>
-        <Link to='/Education' style = {linkStyle} aria-hidden="true">
+        <Link to='/Education' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'graduation-cap'/>
             &nbsp;&nbsp;&nbsp; 
             Education
           </div>
         </Link>
-        <Link to='/Employment' style={linkStyle} aria-hidden="true">
+        <Link to='/Employment' style={disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'briefcase'/>
             &nbsp;&nbsp;&nbsp; 
             Employment
           </div>
         </Link>
-        <Link to='/Time-Series' style={linkStyle} aria-hidden="true">
+        <Link to='/Time-Series' style={disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'line-chart'/>
             &nbsp;&nbsp;&nbsp; 
             Time Series
           </div>
         </Link>
-        <Link to='/FAQs' style = {linkStyle} aria-hidden="true">
+        <Link to='/FAQs' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'book'/>
             &nbsp;&nbsp;&nbsp; 
