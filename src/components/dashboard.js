@@ -18,22 +18,23 @@ import usmap from './assets/usmap.json';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Select, { components } from 'react-select';
 import ContentDowndrop from "./content_downdrop";
+import {
+  Link
+} from 'react-router-dom';
+
 
 /*Icons and fonts*/
 import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 import FontAwesome from 'react-fontawesome';
-//import warning_sign from './images/warning_sign.svg';
 
 //Charts
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HC_exporting from 'highcharts/modules/exporting';
-//import HCMore from 'highcharts/highcharts-more';
 import HC_accessible from "highcharts/modules/accessibility";
 import HCItem from 'highcharts/modules/item-series';
-//import HCPattern from 'highcharts-pattern-fill';
 
 // Add pattern in Highcharts
 HC_exporting(Highcharts);
@@ -202,6 +203,14 @@ let edulist = ["doctoral degree or equivalent","master’s degree or higher","ba
                "an associate’s degree or higher",'some college or higher','high school or higher']
 
 const Dashboard = ({colors, justcolor, colorfill}) => {
+  // LinkStyle
+  const linkStyle = {
+    textDecoration: "none",
+    color: '#0B7373',
+    fontWeight: 600,
+    fontSize: '16px'
+  };
+
   //Width Screen Size Listener
   const [size, setSize] = useState([0,0]);
   useLayoutEffect(() => {
@@ -3200,7 +3209,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           <div className = 'main-grid'>
             <div className = 'main-a'>
               <div id = 'title'>
-                Deaf Postsecondary Data from the American Community Survey ({year}) <i id = 'beta'>BETA</i>
+                Deaf Postsecondary Data from the American Community Survey ({year})
               </div>
             </div>  
             <div className = 'main-b'>                
@@ -4455,14 +4464,14 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
                         employment.status === 'notinLF')).map(employment => employment.n).reduce(
                         (sum, a) => sum + a, 0).toLocaleString('en-US')
                     } deaf people. 
-                    {/*For more information, see our Method page.*/}
+                    For more information, see our <Link to='/FAQs' style = {linkStyle} aria-hidden="true">FAQs page</Link>.
                   </div>
                   <div className = 'thep'>
                     <b>Recommended Citation</b>
                   </div>
                   <div className = 'thep' style={{textIndent: '-26px', paddingLeft: '26px'}}>
                     {citation[0]}
-                    <a href = 'https://nationaldeafcenter.org/resources/research-data/dashboard/' style = {{textDecoration: 'none', color: '#0B7373'}}>
+                    <a href = 'https://www.nationaldeafcenter.org/dashboard' style = {{textDecoration: 'none', color: '#0B7373'}}>
                       <b>{citation[1]}</b>
                     </a>
                   </div>

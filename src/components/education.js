@@ -1058,12 +1058,16 @@ function Education({colors, justcolor, colorfill}) {
       setSymbol('icon');
       setContent('data-accordion-content');
       setTabIndex_Acc('-1');
-      setAttribution(['deaf','hearing'])
+      setAttribution(['deaf','hearing']);
+      setNumCol([0,6]);
+      setBarColor(['teal', 'black']);
+      setWords(['deaf people','hearing people']);
       setActions('...')
       setMultiAttribution([{label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
       {label: 'hearing', value: 'hearing', variable: 'overall', color: 'black', words: 'hearing people'}])
     }
   },[actions])
+
 
   // Change colors based on hearing status: hearing = black; deaf = teal
   useEffect(() => {
@@ -1149,14 +1153,17 @@ function Education({colors, justcolor, colorfill}) {
   useEffect(()=> {
     if(content === 'data-accordion-content' && eduLevel !== 'all'){
       setChart_ed('accordionBtn')
+      setChart('accordionBtn')
       setEduTitleBy(title_by)
       setDisabled(false)
     }else if(content === 'data-accordion-content-active' && eduLevel !== 'all'){
       setChart_ed('accordionBtnActive')
+      setChart('accordionBtnActive')
       setEduTitleBy('')
       setDisabled(false)
     }else{
       setChart_ed('AllLevels')
+      setChart('accordionBtn')
       setDisabled(true)
       setEduTitleBy('')
     }  
@@ -1435,7 +1442,7 @@ function Education({colors, justcolor, colorfill}) {
             employment.state === chosen_state).map(employment => employment.margin_errors)+
           '% for '+words[1]+'.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '11px'
+            fontSize: '12px'
           },
           verticalAlign: 'bottom',
           align: 'left',
@@ -2354,7 +2361,13 @@ function Education({colors, justcolor, colorfill}) {
         employment.attribution.includes('deaf')).map(
         employment => [employment.status,employment.percentage]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
-        }).map(el => el[0]).slice(0,5),
+        }).map(el => el[0]).slice(0,5).map(function(x,i){
+          if(x === 'Science and\nEngineering Related\nFields'){
+            return('Science and Engineering Related Fields')
+          }else{
+            return(x)
+          }
+        }),
       visible: true,
       title: {
         text: null
@@ -2587,7 +2600,13 @@ function Education({colors, justcolor, colorfill}) {
         employment.attribution.includes('deaf')).map(
         employment => [employment.status,employment.percentage]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
-        }).map(el => el[0]),
+        }).map(el => el[0]).map(function(x,i){
+          if(x === 'Science and\nEngineering Related\nFields'){
+            return('Science and Engineering Related Fields')
+          }else{
+            return(x)
+          }
+        }),
       visible: true,
       opposite: true,
       title: {

@@ -4,6 +4,7 @@
 //////////
 import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';import './dashboard.css';
 import thelogo from './logo_export.js'
+import citation from './citation.js'
 
 //Data
 import most_recent_year from './assets/acs_year.json';
@@ -26,12 +27,13 @@ import FontAwesome from 'react-fontawesome';
 import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import HCMore from 'highcharts/highcharts-more';
-import HCPattern from 'highcharts-pattern-fill';
+//import HCPattern from 'highcharts-pattern-fill';
 import HC_exporting from 'highcharts/modules/exporting';
+import HC_accessible from "highcharts/modules/accessibility";
 //import HCxrange from 'highcharts/modules/xrange';
 
 // Add pattern in Highcharts
-HCPattern(Highcharts);
+HC_accessible(Highcharts);
 HC_exporting(Highcharts);
 HCMore(Highcharts);
 
@@ -84,16 +86,16 @@ let attributions = [
 // State Comparison List
 let state_comparison = [
   {label: 'Education Attainment',value: 'Education Attainment', disabled: true,},
-  {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher',range: [0,100], sentence: "high school's attainments"},
-  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college',range: [0,90], sentence: 'some college attainment'},
-  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher",range: [0,80], sentence: "associate's degree attainments"},
-  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher",range: [0,70], sentence: "bachelor's degree attainments"},
-  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher",range: [0,30], sentence: "master's degree attainments"},
-  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent',range: [0,10], sentence: "doctoral attainments"},
+  {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "high school's attainment"},
+  {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college', sentence: 'some college attainment'},
+  {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher", sentence: "associate's degree attainment"},
+  {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: "bachelor's degree attainment"},
+  {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher", sentence: "master's degree attainment"},
+  {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent', sentence: "doctoral attainment"},
   {label: 'Employment Status', value: 'Employment Status', disabled: true},
-  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed',range: [0,100], sentence: 'employment rate'},
-  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed',range: [0,15], sentence: 'unemployment rate'},
-  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force',range: [0,100], sentence: 'labor force participation rate'}
+  {label: 'Employment Rate', value: 'Employment Rate', title: 'Employment Rate', variable: 'employed',type: 'employment',age: '16-64', description: ' are employed',description1: ' are employed', sentence: 'employment rate'},
+  {label: 'Unemployment Rate', value: 'Unemployment Rate', title: 'Unemployment Rate', variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed', sentence: 'unemployment rate'},
+  {label: 'Not in Labor Force', value: 'Not in Labor Force', title: 'Not in Labor Force', variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work',description1: ' are not in the labor force', sentence: 'non-labor force participation rate'}
 ]
 //Stylize Inner Menu in React Select 
 const Option = (props) => {
@@ -570,18 +572,18 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
   const [button_group_a, setButtonGroup_a] = useState('Employment Rates')
   const [status_a, setStatus_A] = useState('employed')
   const [variable_a, setVariable_A] = useState('percentage')
-  const [limit_a, setLimit_A] = useState([0,100])
+  const [earn_text, setEarnText] = useState('employment rates')
 
   const changeButton_A = (e) => {
     setButtonGroup_a(e.target.name)
     if(e.target.name === 'Employment Rates'){
       setStatus_A('employed')
       setVariable_A('percentage')
-      setLimit_A([0,100])
+      setEarnText('employment rate')
     }else if(e.target.name === 'Earnings'){
       setStatus_A('earning')
       setVariable_A('median_income')
-      setLimit_A([0,100000])
+      setEarnText('median earning')
     }
   }
 
@@ -613,15 +615,14 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
 
   // Education Attainment Selection
   const [stateLevelTitle, setStateLevelTitle] = useState("Bachelor's Degree Attainment");
+  const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher')
   const [stateLevel, setStateLevel] = useState("bachelor");
   const [stateType, setStateType] = useState('education');
   const [multi_comp_state, setMultiCompState] = useState([{label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor'}]);
-  const [range, setRange] = useState([0,100]);
   const [state_age, setStateAge] = useState('25-64');
   const [crease, setCrease] = useState('increased slightly more')
+  const [crease_word,setCreaseWord] = useState('increase')
   const [sentence, setSentence] = useState("bachelor's degree attainment")
-  //const [state_descript, setStateDescript] = useState(' have completed a bachelor’s degree or higher');
-  //const [state_descript1, setStateDescript1] = useState(' have completed a bachelor’s degree or higher');
 
   const changeState = (e) => {
     setMultiCompState(e)
@@ -629,13 +630,11 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     setStateLevel(e.variable)
     setStateType(e.type)
     setStateAge(e.age)
-    //setStateDescript(e.description)
-    //setStateDescript1(e.description1)
-    setRange(e.range)
+    setStateDescript(e.description)
     setSentence(e.sentence)
   }
 
-  // Find two slopes of time series
+  // Find two change percentages of time series, not slope
   const min_year = Math.min(...timeseries.filter(timeseries => timeseries.type === 'education' &
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
@@ -643,68 +642,83 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
 
-  const mean = (arr) => {
-    return(arr.reduce((a,b) => a + b, 0)/arr.length)
+  const slope = (thenew, old) => {
+    return((thenew - old)/Math.abs(old))
   }
-  const around_mean = (arr1,arr2) => {
-    const mx = mean(arr1)
-    const my = mean(arr2)
-    return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
-  }
-  const slope = (x,y) => {
-    return(around_mean(x,y)/around_mean(x,x))
-  }
+  
   const [slope1, setSlope1] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
-    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf' & timeseries.year === max_year).map(
+    timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'deaf' & timeseries.year === min_year).map(
     timeseries => timeseries['percentage'])))
   const [slope2, setSlope2] = useState(slope(timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
-    timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === 'education' &
-    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing').map(
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing' & timeseries.year === max_year).map(
+    timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === 'education' &
+    timeseries.status === 'bachelor' & timeseries.attribution === 'hearing' & timeseries.year === min_year).map(
     timeseries => timeseries['percentage'])))
 
   useEffect(()=>{
-    const mean = (arr) => {
-      return(arr.reduce((a,b) => a + b, 0)/arr.length)
-    }
-    const around_mean = (arr1,arr2) => {
-      const mx = mean(arr1)
-      const my = mean(arr2)
-      return(arr1.reduce((p, c, i) => p + (c-mx)*(arr2[i]-my),0))
-    }
-    const slope = (x,y) => {
-      return(around_mean(x,y)/around_mean(x,x))
+    const slope = (thenew, old) => {
+      return((thenew - old)/Math.abs(old))
     }
     setSlope1(slope(timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
-      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0] & timeseries.year === max_year).map(
+      timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[0] & timeseries.year === min_year).map(
       timeseries => timeseries['percentage'])))
     setSlope2(slope(timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
-      timeseries => timeseries['year']),timeseries.filter(timeseries => timeseries.type === stateType &
-      timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1] & timeseries.year === max_year).map(
+      timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === stateType &
+      timeseries.status === stateLevel & timeseries.attribution === attribute[1] & timeseries.year === min_year).map(
       timeseries => timeseries['percentage'])))
     if((slope1 > 0) & (slope2 < 0)){
       setCrease('increased for '+words[0]+' while it has decreased for '+words[1])
+      setCreaseWord('increase')
     }else if((slope1 < 0) & (slope2 > 0)){
       setCrease('decreased for '+words[0]+' while it has increased for '+words[1])
+      setCreaseWord('decrease')
     }else if((slope1 > slope2) & (slope1 > 0) & (slope2 > 0)){
       setCrease('increased slightly more for '+words[0]+' than '+words[1])
+      setCreaseWord('increase')
     }else if((slope1 < slope2) & (slope1 > 0) & (slope2 > 0)){
       setCrease('increased slightly less for '+words[0]+' than '+words[1])
+      setCreaseWord('increase')
     }else if((slope1 > slope2) & (slope1 < 0) & (slope2 < 0)){
       setCrease('decreased slightly less for '+words[0]+' than '+words[1])
+      setCreaseWord('decrease')
     }else if((slope1 < slope2) & (slope1 < 0) & (slope2 > 0)){
       setCrease('decreased slightly more for '+words[0]+' than '+words[1])
+      setCreaseWord('decrease')
     }else if((slope1 === slope2) & (slope1 > 0) & (slope2 > 0)){
       setCrease('neither increased slightly more nor less for '+words[0]+' than '+words[1])
+      setCreaseWord('change of rate')
     }else{
       setCrease('neither decreased slightly more nor less')
+      setCreaseWord('change of rate')
     }
-  },[stateType,stateLevel,attribute,slope1,slope2, words])
+  },[stateType,stateLevel,attribute,slope1,slope2, max_year, min_year, words])
+
+  // Strict Positive Minimum function
+  const spm = (x) => {
+    const result = Math.min(...x)-1
+    if(result < 0){
+      return(0)
+    }else{
+      return(result)
+    }
+  }
+
+  // Set Year
+  const [a_tab, set_A_Tab] = useState(0)
+  const [year,setYear] = useState((most_recent_year-4)+'-'+most_recent_year)
+
+  useEffect(()=>{
+    if(a_tab === 0){
+      setYear((most_recent_year-4)+'-'+most_recent_year)
+    }else{
+      setYear(most_recent_year)
+    }
+  },[year,a_tab])
 
   // Levels of Education Chart
   let eduyear = {
@@ -719,8 +733,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       categories: ["Less than high school","High school diploma/GED","Some college", "Associate's degree","Bachelor's degree","Master's degree","Ph.D., J.D. or M.D."]
     },
     yAxis: {
-      min: limit_a[0],
-      max: limit_a[1],
+      min: 0,
+      max: Math.max(...employment.filter(employment => employment.type === 'levels of education' &
+      employment.status === status_a & (employment.attribution === 'deaf' | employment.attribution === 'hearing')).map(
+      employment => employment[variable_a])),
       gridLineColor: '#ffffff',
       gridLineWidth: 0,
       title: {
@@ -741,9 +757,9 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       shared: false,
       formatter: function(){
         if(variable_a === 'percentage'){
-          return this.x+'<br>Employment rate: '+this.y+'%'
+          return this.x+'<br>'+this.series.name+': '+this.y+'%'
         }else{
-          return this.x+'<br>Earning: $'+this.y/1000+'K'
+          return this.x+'<br>'+this.series.name+': $'+this.y/1000+'K'
         }
       },
       backgroundColor: 'rgba(0,0,0,0.6)',
@@ -790,7 +806,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       employment => [employment.level,round(employment[variable_a]-employment.margin_errors),
       round(employment[variable_a]+employment.margin_errors)]),
       enableMouseTracking: false,
-      showInLegend:false
+      showInLegend:false,
+      dataLabels: {
+        enabled: false
+      }
     },
     {
       name: 'hearing: 95% confidence interval',
@@ -801,7 +820,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       employment => [employment.level,round(employment[variable_a]-employment.margin_errors),
       round(employment[variable_a]+employment.margin_errors)]),
       enableMouseTracking: false,
-      showInLegend:false
+      showInLegend:false,
+      dataLabels: {
+        enabled: false
+      }
     },
     {
       name: 'deaf',
@@ -809,7 +831,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       color: colorfill[0],
       data: employment.filter(employment => employment.type === 'levels of education' &
       employment.status === status_a & employment.attribution === 'deaf').map(
-      employment => [employment.level,employment[variable_a]])
+      employment => [employment.level,employment[variable_a]]),
+      dataLabels: {
+        enabled: true
+      }
     },
     {
       name: 'hearing',
@@ -818,10 +843,15 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       dashStyle: 'dot',
       data: employment.filter(employment => employment.type === 'levels of education' &
       employment.status === status_a & employment.attribution === 'hearing').map(
-      employment => [employment.level,employment[variable_a]])
+      employment => [employment.level,employment[variable_a]]),
+      dataLabels: {
+        enabled: true
+      }
     }],
     exporting: {
-      width: 2000,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -832,39 +862,63 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
         plotOptions: {
           series: {
             dataLabels: {
-            enabled: false,
-            formatter: function () {
-              return this.y + '%';
-            },
+              style: {
+                fontSize: '18px'
+              }
             }
           }
         },
         title: {
-          text: 'National '+button_group_a+' by Levels of Education',
+          text: button_group_a+' by Levels of Education in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
-        caption: {
-          text: '...',
+        subtitle: {
+          text: 'In the United States from '+(most_recent_year-4)+' to '+most_recent_year+', among deaf people ages 16-64, the '+earn_text+
+          ' increases as their educational attainment increases, from '+
+          employment.filter(employment => employment.type === 'levels of education' &
+            employment.status === status_a & employment.attribution === 'deaf' && employment.level === 'no HS diploma').map(
+            employment => employment[variable_a]).map(function(x){
+            if(status_a === 'earning'){
+              return '$'+x/1000+'K'
+            }else{
+              return x+'%'
+            }})+
+          ' for those who did not complete a high school education, to '+
+          employment.filter(employment => employment.type === 'levels of education' &
+            employment.status === status_a & employment.attribution === 'deaf' && employment.level === 'master').map(
+            employment => employment[variable_a]).map(function(x){
+            if(status_a === 'earning'){
+              return '$'+x/1000+'K'
+            }else{
+              return x+'%'
+            }})+' for those with a master’s degree.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '10px'
-          }
+            fontSize: '12px'
+          },
+          verticalAlign: 'bottom',
+          align: 'left',
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -883,8 +937,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       verticalAlign: 'top',
     },
     yAxis: {
-      min: limit_a[0],
-      max: limit_a[1],
+      min: 0,
+      max: Math.max(...employment.filter(employment => employment.type === 'age' &
+      employment.status === status_a & (employment.attribution === 'deaf' | employment.attribution === 'hearing')).map(
+      employment => employment[variable_a])),
       gridLineColor: '#ffffff',
       gridLineWidth: 0,
       title: {
@@ -905,9 +961,9 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       shared: false,
       formatter: function(){
         if(variable_a === 'percentage'){
-          return 'Age: '+this.x+' (in year)<br>Employment rate: '+this.y+'%'
+          return 'Age: '+this.x+' (in year)<br>'+this.series.name+': '+this.y+'%'
         }else{
-          return 'Age: '+this.x+' (in year)<br>Earning: $'+this.y/1000+'K'
+          return 'Age: '+this.x+' (in year)<br>'+this.series.name+': $'+this.y/1000+'K'
         }
       },
       backgroundColor: 'rgba(0,0,0,0.6)',
@@ -986,7 +1042,9 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       employment => [employment.level,employment[variable_a]])
     }],
     exporting: {
-      width: 2000,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -994,42 +1052,58 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
         }
       },
       chartOptions: { // specific options for the exported image
-        plotOptions: {
-          series: {
-            dataLabels: {
-            enabled: false,
-            formatter: function () {
-              return this.y + '%';
-            },
-            }
-          }
-        },
         title: {
-          text: 'National '+button_group_a+' by Age',
+          text: button_group_a+' by Year in the United States, '+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
-        caption: {
-          text: '...',
+        subtitle: {
+          text: 'In the United States from '+(most_recent_year-4)+'-'+most_recent_year+
+            ', among people aged 16-64, the '+earn_text+' of deaf people increases as their age increases, from '+
+            employment.filter(employment => employment.type === 'age' &
+              employment.status === status_a & employment.attribution === 'deaf' & employment.level === '18').map(
+              employment => employment[variable_a]).map(function(x){
+                if(status_a === 'earning'){
+                  return '$'+x/1000+'K'
+                }else{
+                  return x+'%'
+                }
+              })+' for 18 year old, to '+
+            employment.filter(employment => employment.type === 'age' &
+              employment.status === status_a & employment.attribution === 'deaf' & employment.level === '45').map(
+              employment => employment[variable_a]).map(function(x){
+                if(status_a === 'earning'){
+                  return '$'+x/1000+'K'
+                }else{
+                  return x+'%'
+                }
+              })+' for 45 year old.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '10px'
-          }
+            fontSize: '12px'
+          },
+          verticalAlign: 'bottom',
+          align: 'left',
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1054,8 +1128,12 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       allowDecimals: false
     },
     yAxis: {
-      min: range[0],
-      max: range[1],
+      min: spm(timeseries.filter(timeseries => timeseries.type === stateType &
+        timeseries.status === stateLevel & (timeseries.attribution === attribute[0] | timeseries.attribution === attribute[1])).map(
+        timeseries => timeseries['percentage']))-1,
+      max: Math.max(...timeseries.filter(timeseries => timeseries.type === stateType &
+        timeseries.status === stateLevel & (timeseries.attribution === attribute[0] | timeseries.attribution === attribute[1])).map(
+        timeseries => timeseries['percentage']))+1,
       gridLineColor: '#ffffff',
       gridLineWidth: 0,
       title: {
@@ -1070,8 +1148,8 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
     },
     tooltip: {
       shared: false,
-      formatter: function(){
-        return this.series.name+'<br>Year: '+this.x+'<br>'+stateLevelTitle+': '+this.y+'%'
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
       },
       backgroundColor: 'rgba(0,0,0,0.6)',
       borderWidth: 0,
@@ -1097,7 +1175,6 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
           enabled: false
         },
         dataLabels: {
-        enabled: false,
         formatter: function(){
           return this.y+'%'
         },
@@ -1114,7 +1191,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
       round(timeseries['percentage']+timeseries.margin_errors)]),
       enableMouseTracking: false,
-      showInLegend: false
+      showInLegend: false,
+      dataLabels: {
+        enabled: false
+      }
     },
     {
       name: 'hearing: 95% confidence interval',
@@ -1125,7 +1205,10 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       timeseries => [timeseries.year,round(timeseries['percentage']-timeseries.margin_errors),
       round(timeseries['percentage']+timeseries.margin_errors)]),
       enableMouseTracking: false,
-      showInLegend: false
+      showInLegend: false,
+      dataLabels: {
+       enabled: false
+      }
     },
     {
       name: attribute[0],
@@ -1134,6 +1217,9 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       data: timeseries.filter(timeseries => timeseries.type === stateType &
       timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
         timeseries => [timeseries.year,timeseries['percentage']]),
+      dataLabels: {
+        enabled: true
+      }
     },
     {
       name: attribute[1],
@@ -1142,10 +1228,15 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
       dashStyle: 'dot',
       data: timeseries.filter(timeseries => timeseries.type === stateType &
       timeseries.status === stateLevel & timeseries.attribution === attribute[1]).map(
-        timeseries => [timeseries.year,timeseries['percentage']])
+        timeseries => [timeseries.year,timeseries['percentage']]),
+      dataLabels: {
+       enabled: true
+      }
     }],
     exporting: {
-      width: 2000,
+      allowHTML: true,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: 'Download',
@@ -1156,39 +1247,59 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
         plotOptions: {
           series: {
             dataLabels: {
-            enabled: false,
-            formatter: function () {
-              return this.y + '%';
-            },
+              enabled: true,
+              formatter: function () {
+                return this.y + '%';
+              },
+              style: {
+                fontSize: '18px'
+              }
             }
           }
         },
         title: {
-          text: 'National Employment Rate by Year',
+          text: stateLevelTitle+' by Year in the United States, '+(most_recent_year-4)+'-'+most_recent_year,
           align: 'left',
+          y: 50,
+          margin:50,
+          widthadjust: -200,
           style: {
             color: '#787878',
             fontWeight: 700,
+            fontSize: '23px',
             fontFamily: 'Roboto',
-            marginRight: 20
+            marginRight: 20,
           }
         },
-        caption: {
-          text: '...',
+        subtitle: {
+          text: 'In the United States from '+(most_recent_year-4)+'-'+most_recent_year+
+          ', among people aged '+state_age+', '+sentence+' has '+crease+'. In '+(most_recent_year-4)+', an estimated '+
+          timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === min_year &
+            timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+            timeseries => timeseries['percentage'])+
+          '% of '+words[0]+' '+state_descript+' while in '+most_recent_year+', this estimation increased to '+
+          timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === max_year &
+            timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
+            timeseries => timeseries['percentage'])+
+          '%, an average '+crease_word+' of '+
+          Math.abs(round(slope1))+'%.<br><br><br>'+citation[0]+' '+citation[1],
           style: {
-            fontSize: '10px'
-          }
+            fontSize: '12px'
+          },
+          verticalAlign: 'bottom',
+          align: 'left',
+          y: 12
         },
         chart: {
           events: {
             render() {
               const chart = this,
-                width = 100;
+                width = 130;
                 chart.renderer.image(thelogo,
                   chart.plotLeft + chart.plotSizeX - width, //x
                   10, //y
-                  2.37216657881*35, //width
-                  35//height
+                  2.37216657881*50, //width
+                  50//height
               ).add();
             }
           }
@@ -1199,17 +1310,16 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
 
   return (
       <>
-      {slope1}
         <div className="body">
           <div className = 'container'>
             <div className = 'main-grid'>
               <div className = 'main-a'>
                 <div id = 'title'>
-                  Deaf Postsecondary Data from the American Community Survey ({(most_recent_year-4)+'-'+most_recent_year})
+                  Deaf Postsecondary Data from the American Community Survey ({year})
                 </div>
               </div>
             </div>
-            <Tabs aria-label="A set of charts">
+            <Tabs onSelect={tabIndex => set_A_Tab(tabIndex)}>
               <TabList>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'Over Time'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'By Age'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
@@ -1277,16 +1387,16 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                         onClick = {clickAccordion1}
                         textContent={
                           'In the United States from '+(most_recent_year-4)+'-'+most_recent_year+
-                          ', among people aged '+state_age+', '+sentence+' have '+crease+'. In '+(most_recent_year-4)+', an estimated '+
+                          ', among people aged '+state_age+', '+sentence+' has '+crease+'. In '+(most_recent_year-4)+', an estimated '+
                           timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === min_year &
                             timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
                             timeseries => timeseries['percentage'])+
-                          '% of deaf people were employed. In '+most_recent_year+', an estimated '+
+                          '% of '+words[0]+' '+state_descript+' while in '+most_recent_year+', this estimation increased to '+
                           timeseries.filter(timeseries => timeseries.type === stateType & timeseries.year === max_year &
                             timeseries.status === stateLevel & timeseries.attribution === attribute[0]).map(
                             timeseries => timeseries['percentage'])+
-                          '% of deaf people were employed, an average increase of '+
-                          round(slope1)+'%.'
+                          '%, an average '+crease_word+' of '+
+                          Math.abs(round(slope1))+'%.'
                         }
                       />
                     </div>
@@ -1382,7 +1492,28 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                       your_color = '#008e84'
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}
-                      textContent={'...'}
+                      textContent={
+                        'In the United States from '+(most_recent_year-4)+'-'+most_recent_year+
+                        ', among people aged 16-64, the '+earn_text+' of deaf people increases as their age increases, from '+
+                        employment.filter(employment => employment.type === 'age' &
+                          employment.status === status_a & employment.attribution === 'deaf' & employment.level === '18').map(
+                          employment => employment[variable_a]).map(function(x){
+                            if(status_a === 'earning'){
+                              return '$'+x/1000+'K'
+                            }else{
+                              return x+'%'
+                            }
+                          })+' for 18 year old, to '+
+                        employment.filter(employment => employment.type === 'age' &
+                          employment.status === status_a & employment.attribution === 'deaf' & employment.level === '45').map(
+                          employment => employment[variable_a]).map(function(x){
+                            if(status_a === 'earning'){
+                              return '$'+x/1000+'K'
+                            }else{
+                              return x+'%'
+                            }
+                          })+' for 45 year old.'
+                      }
                     />
                   </div>
                 </div>
@@ -1405,7 +1536,28 @@ const TimeSeries = ({colors, justcolor, colorfill}) => {
                       your_color = '#008e84'
                       textwidth = 'text-contain'
                       onClick = {clickAccordion1}
-                      textContent={'...'}
+                      textContent={
+                        'In the United States from '+(most_recent_year-4)+' to '+most_recent_year+', among deaf people ages 16-64, the '+earn_text+
+                        ' increases as their educational attainment increases, from '+
+                        employment.filter(employment => employment.type === 'levels of education' &
+                          employment.status === status_a & employment.attribution === 'deaf' && employment.level === 'no HS diploma').map(
+                          employment => employment[variable_a]).map(function(x){
+                          if(status_a === 'earning'){
+                            return '$'+x/1000+'K'
+                          }else{
+                            return x+'%'
+                          }})+
+                        ' for those who did not complete a high school education, to '+
+                        employment.filter(employment => employment.type === 'levels of education' &
+                          employment.status === status_a & employment.attribution === 'deaf' && employment.level === 'master').map(
+                          employment => employment[variable_a]).map(function(x){
+                          if(status_a === 'earning'){
+                            return '$'+x/1000+'K'
+                          }else{
+                            return x+'%'
+                          }})+' for those with a master’s degree.'
+
+                      }
                     />
                   </div>
                 </div>

@@ -620,32 +620,32 @@ const Navbar = () => {
             General
           </div>
         </Link>
-        <Link to='/Education' style = {disableLink} tabIndex = {-1} aria-hidden="true">
+        <Link to='/Education' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'graduation-cap'/>
             &nbsp;&nbsp;&nbsp; 
             Education
           </div>
         </Link>
-        <Link to='/Employment' style={disableLink} tabIndex = {-1} aria-hidden="true">
+        <Link to='/Employment' style={disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'briefcase'/>
             &nbsp;&nbsp;&nbsp; 
             Employment
           </div>
         </Link>
-        <Link to='/Time-Series' style={disableLink} tabIndex = {-1} aria-hidden="true">
+        <Link to='/Time-Series' style={disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'line-chart'/>
             &nbsp;&nbsp;&nbsp; 
             Time Series
           </div>
         </Link>
-        <Link to='/FAQ' style = {disableLink} tabIndex = {-1} aria-hidden="true">
+        <Link to='/FAQs' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'book'/>
             &nbsp;&nbsp;&nbsp; 
-            FAQ
+            FAQs
           </div>
         </Link>
       </div>
@@ -663,7 +663,7 @@ const Navbar = () => {
         <Route exact path='/Time-Series' element={<TimeSeries colors={colors} 
                                                   justcolor={justcolor} 
                                                   colorfill={colorfill}/>}/>
-        <Route exact path='/FAQ' element={<Method />}/>
+        <Route exact path='/FAQs' element={<Method />}/>
       </Routes>
       </Suspense>
     </Router>
