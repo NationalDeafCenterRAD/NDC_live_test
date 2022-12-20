@@ -239,7 +239,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setData_Grid('ungrid')
       setSearchable(false)
       setHC_Width(size[0]/1.2)
-      setSliceString([5,'.'])
+      setSliceString([3,'.'])
       setPaddingSide('10px')
     }else if(size[1] < 500){
       setSearchable(false)
@@ -250,7 +250,7 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setData_Grid('ungrid')
       setSearchable(false)
       setHC_Width(size[0]/1.2)
-      setSliceString([4,'.'])
+      setSliceString([2,'.'])
       setPaddingSide('10px')
     }else if(size[0] < 1070){
       setPieWidth(300)
@@ -1154,13 +1154,13 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
   }, [chosen_state,chosen_state1,chart_edcomp])
 
     useLayoutEffect(()=>{
-    if(a_tab === 1){
+    if(a_tab === 2){
       setYear(most_recent_year)
       setIn_The(' In the ')
     }else if(state_label !== 'United States'){
       setYear((most_recent_year1-4)+'-'+(most_recent_year1))
       setIn_The(' In ')
-    }else if(a_tab === 2){
+    }else if(a_tab === 3){
       setYear((most_recent_year1-4)+'-'+(most_recent_year1))
       setIn_The(' In ')
     }else{
@@ -1214,6 +1214,642 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
       setUSmap('map')
     }else{
       setUSmap('notmap')
+    }
+  }
+
+  // Main Page
+  let education_attainment = {
+    chart:{
+      type: 'column',
+      width: HCwidth,
+      height: 330
+    },
+    legend: {
+      align: 'center',
+      verticalAlign: 'top',
+    },
+    title: {
+      text: ""
+    },
+    xAxis: {
+      categories: ['Asian','Black','Latinx','Native American','Multiracial','White'],
+      visible: true,
+      title: {
+        text: null
+      },
+      crosshair: true,
+      gridLineColor: '#ffffff',
+      gridLineWidth: 0
+    },
+    yAxis: {
+      min: 0,
+      max: 1+Math.max(...employment.filter(employment => employment.type === 'education' & 
+        employment.variable === 'race' & employment.state === 'United States' &
+        employment.status === 'bachelor').map(
+        employment => employment.percentage)),
+      gridLineColor: '#ffffff',
+      gridLineWidth: 0,
+      title: {
+        text: ''
+      },
+      labels: {
+        overflow: 'justify',
+        format: '{value}%'
+      }
+    },
+    tooltip: {
+      formatter: function () {
+        return this.series.name+': <b>'+this.y+'%</b>'
+      },
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0,
+        borderWidth: 0,
+      },
+      series: {
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            if(
+              (employment.filter(employment => employment.type === 'education' & 
+                employment.variable === 'race' & employment.state === 'United States' &
+                employment.status === 'bachelor' & employment.percentage === this.y & employment.attribution.includes(this.series.name)).map(
+                function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
+            ){
+              return '\u26a0'+this.y + '%'
+            }else{
+              return this.y + '%';
+            }
+            //return '<img src=''></img>'
+          },
+        }
+      }
+    },
+    series: [{
+      name: 'deaf',
+      color: colorfill[0],
+      borderColor: colorfill[0],
+      borderWidth: 1,
+      data: employment.filter(employment => employment.type === 'education' & 
+        employment.variable === 'race' & employment.state === 'United States' &
+        employment.status === 'bachelor' & employment.attribution.includes('deaf')).map(
+        employment => [employment.index,employment.percentage])
+    },
+    { name: 'hearing',
+      color: colorfill[6],
+      borderColor: colorfill[6],
+      borderWidth: 1,
+      data: employment.filter(employment => employment.type === 'education' & 
+        employment.variable === 'race' & employment.state === 'United States' &
+        employment.status === 'bachelor' & employment.attribution.includes('hearing')).map(
+        employment => [employment.index,employment.percentage])
+    }],
+    exporting: {
+      enabled: false
+    }
+  };
+  let deaf_emp = {
+    chart:{
+      type: 'pie',
+      height: 330,
+      width: pie_width
+    },
+    legend: {
+      labelFormat: '<span style="color:#949494">{y}%</span> {name}',
+      align: 'center',
+      verticalAlign: 'bottom'
+    },
+    title: {
+      useHTML: true,
+      text: "deaf",
+      verticalAlign: 'middle',
+      floating: true,
+      y:-15,
+      style: {
+        fontFamily: 'Roboto Slab, serif',
+        fontSize: '20px'
+      },
+    },
+    tooltip: {
+      formatter: function () {
+        return this.point.name+': <b>'+this.y+'%</b>'
+      },      
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    defs: {
+      patterns: [
+        {
+          id: "purple",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#7140BF',
+              icon: <div />
+            }
+        },
+        {
+          id: "purple1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#7140BF',
+            fill: '#dbc4ff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "purple2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#b485ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "pink",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#d100d1',
+              icon: <div />
+            }
+        },
+        {
+          id: "pink1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#d100d1',
+            fill: '#ffccff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "pink2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff69ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "maroon",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a3004f',
+              icon: <div />
+            }
+        },
+        {
+          id: "maroon1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a3004f',
+            fill: '#ff94c8',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "maroon2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff007c',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "red",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a80b00',
+              icon: <div />
+            }
+        },
+        {
+          id: "red1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a80b00',
+            fill: '#ffa099',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "red2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#eb4034',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "orange",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#cc7904',
+              icon: <div />
+            }
+        },
+        {
+          id: "orange1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#cc7904',
+            fill: '#ffc778',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "orange2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ff990a',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "yellow",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#c99400',
+              icon: <div />
+            }
+        },
+        {
+          id: "yellow1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#c99400',
+            fill: '#ffe18f',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "yellow2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#ffbe0a',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "gold",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#a19100',
+              icon: <div />
+            }
+        },
+        {
+          id: "gold1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#a19100',
+            fill: '#fff491',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "gold2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#e3cc00',
+            strokeWidth: 3
+          }
+        },
+      {
+          id: "green",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#2e7800',
+            icon: <div />
+          }
+        },
+        {
+          id: "green1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#2e7800',
+            fill: '#a9ff73',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "green2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#48bd00',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "teal",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#00A79D',
+            icon: <div />
+          }
+        },
+        {
+          id: "teal1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#00A79D',
+            fill: '#D6EEF0',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "teal2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#43C9C8',
+            strokeWidth: 3
+          }
+        },
+      {
+          id: "blue",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#00c9c3',
+            icon: <div />
+          }
+        },
+        {
+          id: "blue1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#00c9c3',
+            fill: '#ccfffd',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "blue2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#24fff8',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "sky",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#009ac9',
+            icon: <div />
+          }
+        },
+        {
+          id: "sky1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#009ac9',
+            fill: '#adecff',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "sky2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#45d3ff',
+            strokeWidth: 3
+          }
+        },
+        {
+          id: "brown",
+          path: {
+            d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            fill: '#856c3a',
+            icon: <div />
+          }
+        },
+        {
+          id: "brown1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#856c3a',
+            fill: '#dbccad',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "brown2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#b39862',
+            strokeWidth: 3
+          }
+        }
+      ]
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        innerSize: "auto",
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          formatter:function(){
+            return this.y + '%'
+          },
+        },
+      showInLegend: true,
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    series: [{
+      innerSize: '77%',
+      keys: ['name', 'y', 'color','borderColor','borderWidth'],
+      data:
+          [['Employed', employment.filter(employment => employment.type === 'employment' & 
+              employment.variable === 'overall' & employment.state === 'United States' &
+              employment.status === 'employed' &
+              employment.attribution === 'deaf').map(
+              employment => employment.percentage)[0], colorfill[0],colorfill[0],1],
+           ['Unemployed', employment.filter(employment => employment.type === 'employment' & 
+              employment.variable === 'overall' & employment.state === 'United States' &
+              employment.status === 'unemployed' &
+              employment.attribution === 'deaf').map(
+              employment => employment.percentage)[0], colorfill[1],colorfill[0],1],
+           ['Not in Labor Force', employment.filter(employment => employment.type === 'employment' & 
+              employment.variable === 'overall' & employment.state === 'United States' &
+              employment.status === 'notinLF' &
+              employment.attribution === 'deaf').map(
+              employment => employment.percentage)[0], colorfill[2],colorfill[0],1]],
+        dataLabels: {
+            enabled: false,
+            format: '{point.y}%'
+        },
+        center: ['50%', '48%'],
+        size: '100%',
+        startAngle: 0,
+        endAngle: 0
+    }],
+    exporting: {
+      enabled: false 
+    }
+  }
+  let hearing_emp = {
+    chart:{
+      type: 'pie',
+      height: 330,
+      width: pie_width
+    },
+    legend: {
+      labelFormat: '<span style="color:#949494">{y}%</span> {name}',
+      align: 'center',
+      verticalAlign: 'bottom',
+    },
+    title: {
+      useHTML: true,
+      text: "hearing",
+      verticalAlign: 'middle',
+      floating: true,
+      y:-15,
+      style: {
+        fontFamily: 'Roboto Slab, serif',
+        fontSize: '20px'
+      },
+    },
+    tooltip: {
+      formatter: function () {
+        return this.point.name+': <b>'+this.y+'%</b>'
+      },
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    defs: {
+      patterns: [
+        {
+          id: "black",
+          path: {
+              d:'M 2, 2.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0, M 6.5, 6.5 a 0.75,0.75 0 0,0 1.50,0 a 0.75,0.75 0 0,0 -1.50,0',
+              stroke: "#FFFFFF",
+              strokeWidth: 1,
+              fill: '#282729',
+              icon: <div />
+            }
+        },
+        {
+          id: "black1",
+          path: {
+            d: 'M 0 0 L 10 10 M 10 0 L 0 10',
+            stroke: '#282729',
+            fill: '#949494',
+            strokeWidth: 2,
+          }
+        },
+        {
+          id: "black2",
+          path: {
+            d: 'M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11',
+            stroke: '#dbdbdb',
+            fill: '#282729',
+            strokeWidth: 3
+          }
+        }
+      ]
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        innerSize: "auto",
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false,
+          formatter:function(){
+            return this.y + '%'
+          },
+        },
+      showInLegend: true,
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    series: [{
+      name: 'Percentage',
+      innerSize: '77%',
+      keys: ['name', 'y', 'color','borderColor','borderWidth'],
+      data:
+          [['Employed', employment.filter(employment => employment.type === 'employment' & 
+            employment.variable === 'overall' & employment.state === 'United States' &
+            employment.status === 'employed' &
+            employment.attribution === 'hearing').map(
+            employment => employment.percentage)[0], colorfill[6],colorfill[6],1],
+          ['Unemployed', employment.filter(employment => employment.type === 'employment' & 
+            employment.variable === 'overall' & employment.state === 'United States' &
+            employment.status === 'unemployed' &
+            employment.attribution === 'hearing').map(
+            employment => employment.percentage)[0], colorfill[7],colorfill[6],1],
+          ['Not in Labor Force', employment.filter(employment => employment.type === 'employment' & 
+            employment.variable === 'overall' & employment.state === 'United States' &
+            employment.status === 'notinLF' &
+            employment.attribution === 'hearing').map(
+            employment => employment.percentage)[0], colorfill[8],colorfill[6],1]],
+        dataLabels: {
+            enabled: false,
+            format: '{point.y}%'
+        },
+        center: ['50%', '48%'],
+        size: '100%',
+        startAngle: 0,
+        endAngle: 0
+    }],
+    exporting: {
+      enabled: false 
     }
   }
 
@@ -3217,11 +3853,77 @@ const Dashboard = ({colors, justcolor, colorfill}) => {
           </div>
           <Tabs onSelect={tabIndex => set_A_Tab(tabIndex)}>
             <TabList aria-label="Education and Employment Tabs">
+              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Main Page'>{'Main'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Demographics Interactive Statistics'>{'Demographics'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='National Level Interactive Chart'>{'National Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Level Interactive Charts'>{'State Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'About Dashboard'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
             </TabList>
+            <TabPanel>
+              <div className='inside_container'>
+                <div className = 'title'>{'GENERAL INTRODUCTION'}</div>
+                <div className='text-contain'>
+                  <div className = 'thep'>
+                    Postsecondary experiences of deaf people vary widely across the nation. This dashboard provides current 
+                    estimates for employment and educational attainment in the United States based on data from the U.S. Census Bureau.  
+                  </div>
+                  <div className = 'thep'>
+                    <b>Educational Attainment</b>
+                  </div>
+                  <div className = 'thep'>
+                    Fewer deaf people completed high school or college degrees than their hearing peers in {most_recent_year}. Educational attainment 
+                    varies across gender, race, and ethnicity. For example, 
+                    {' '+employment.filter(employment => employment.type === 'education' & 
+                      employment.state === 'United States' &
+                      employment.attribution === 'deaf white' &
+                      employment.status === 'bachelor').map(
+                      employment => employment.percentage)}
+                    % of white deaf people have a bachelor's degree or higher 
+                    compared to 
+                    {' '+employment.filter(employment => employment.type === 'education' & 
+                      employment.state === 'United States' &
+                      employment.attribution === 'deaf Black' &
+                      employment.status === 'bachelor').map(
+                      employment => employment.percentage)}
+                    % of Black deaf and 
+                    {' '+employment.filter(employment => employment.type === 'education' & 
+                      employment.state === 'United States' &
+                      employment.attribution === 'deaf Latinx' &
+                      employment.status === 'bachelor').map(
+                      employment => employment.percentage)}
+                    % of Latinx deaf people. To learn more, explore the education section.
+                  </div>
+                  <HighchartsReact highcharts={Highcharts} options={education_attainment}/>
+                  <div className = 'thep'>
+                    <b>Employment Rates</b>
+                  </div>
+                  <div className = 'thep'>
+                    National employment statistics show lower employment rates among deaf people. Almost half of deaf people are not in the labor force. 
+                    Employment rates vary by gender, race and ethnicity. For example, 
+                    {' '+employment.filter(employment => employment.type === 'employment' & 
+                      employment.state === 'United States' &
+                      employment.attribution === 'deafdisabled' &
+                      employment.status === 'employed').map(
+                      employment => employment.percentage)}
+                    % of deafdisabled people are employed compared to 
+                    {' '+employment.filter(employment => employment.type === 'employment' & 
+                      employment.state === 'United States' &
+                      employment.attribution === 'deaf with no additional disabilities' &
+                      employment.status === 'employed').map(
+                      employment => employment.percentage)}
+                    % of deaf people without additional disabilities. To learn more, explore the employment section.
+                  </div>
+                  <div className='subgrid'>
+                    <div className='subgrid_a'>
+                      <HighchartsReact highcharts={Highcharts} options={deaf_emp}/>
+                    </div>
+                    <div className = 'subgrid_b'>
+                      <HighchartsReact highcharts={Highcharts} options={hearing_emp}/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabPanel>
             <TabPanel>
               <div className='inside_container'>
                 <p className='aria-text'>Left Content</p>
