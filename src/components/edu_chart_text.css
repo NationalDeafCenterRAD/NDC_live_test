@@ -1,0 +1,58 @@
+.body{
+    position: absolute; 
+    background: white;
+    height: 100vh;
+    top: 0px;
+    z-index: 100;
+}
+
+.width-of-textchart{
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    border-radius: 10px 10px 10px 10px;
+    max-width: 1000px;
+}
+
+.grid-of-textchart{
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.title-for-chart{
+    font-family: 'Roboto slab';
+    margin-bottom: 10px;
+    font-size: 20px;
+	padding-right: 80px;
+    font-weight: 900;
+}
+
+.text-for-chart{
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-template-rows: 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 20px;
+    font-family:'Roboto';
+    font-size: 16px;
+    line-height: 24px;
+}
+.chart-for-text{
+    grid-column-start: 4;
+    grid-column-end: 7;
+    grid-template-rows: 1;
+}
+
+@media only screen and (max-width: 900px){
+    .text-for-chart{
+        grid-column-start: 1;
+        grid-column-end: 7;
+        grid-template-rows: 1;
+    }
+    .chart-for-text{
+        grid-column-start: 1;
+        grid-column-end: 7;
+        grid-template-rows: 2;
+    }
+}

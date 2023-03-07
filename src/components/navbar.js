@@ -49,6 +49,9 @@ const Education = lazy(() => import('./education.js'));
 const Employment = lazy(() => import('./employment.js'));
 const TimeSeries = lazy(() => import('./time_series.js'));
 const Method = lazy(() => import('./method.js'));
+const EducationChartText = lazy(() => import('./educationcharttext.js'));
+const EmploymentChartText = lazy(() => import('./employmentcharttext.js'));
+const AboutData = lazy(() => import('./aboutdata.js'));
 
 const Navbar = () => {
   // Color Accessibility Options
@@ -664,6 +667,9 @@ const Navbar = () => {
                                                   justcolor={justcolor} 
                                                   colorfill={colorfill}/>}/>
         <Route exact path='/FAQs' element={<Method />}/>
+        <Route exact path='/EducationChartText' element={<EducationChartText />}/>
+        <Route exact path='/EmploymentChartText' element={<EmploymentChartText />}/>
+        <Route exact path='/AboutData' element={<AboutData />}/>
       </Routes>
       </Suspense>
     </Router>
