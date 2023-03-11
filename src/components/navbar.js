@@ -50,7 +50,9 @@ const Employment = lazy(() => import('./employment.js'));
 const TimeSeries = lazy(() => import('./time_series.js'));
 const Method = lazy(() => import('./method.js'));
 const EducationChartText = lazy(() => import('./educationcharttext.js'));
+const EducationChart = lazy(() => import('./educationchart.js'));
 const EmploymentChartText = lazy(() => import('./employmentcharttext.js'));
+const EmploymentChart = lazy(() => import('./employmentchart.js'));
 const AboutData = lazy(() => import('./aboutdata.js'));
 
 const Navbar = () => {
@@ -668,7 +670,9 @@ const Navbar = () => {
                                                   colorfill={colorfill}/>}/>
         <Route exact path='/FAQs' element={<Method />}/>
         <Route exact path='/EducationChartText' element={<EducationChartText />}/>
+        <Route exact path='/EducationChart' element={<EducationChart />}/>
         <Route exact path='/EmploymentChartText' element={<EmploymentChartText />}/>
+        <Route exact path='/EmploymentChart' element={<EmploymentChart />}/>
         <Route exact path='/AboutData' element={<AboutData />}/>
       </Routes>
       </Suspense>
