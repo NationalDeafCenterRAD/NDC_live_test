@@ -164,6 +164,42 @@ position: static;
     background:#535254;
 }
 
+.nav-dropdown{
+    background: #F6F6F7;
+    border-radius: 10px;
+    border: 0.5px #008e85 solid;
+    z-index:9999;
+}
+
+.nav-text {
+    text-align: left;
+    font-size: 16px;
+    padding: 15px 5px 15px 25px;
+    margin:0;
+    cursor: pointer;
+}
+
+.nav-text:hover{
+    background: #ECEDF0;
+}
+.nav-text:hover > .nav-item {
+    rotate: 10deg;
+    background: #ECEDF0;
+    transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+}
+
+.nav-text > .nav-item {
+    rotate: 0deg;
+    transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+}
+
+
 /*Accessibility Color*/
 .main-grid {
     display: grid;

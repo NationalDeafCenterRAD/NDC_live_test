@@ -1,11 +1,16 @@
 // High level functions
-import React, {useState} from "react";
+import React, {useState, useEffect, useLayoutEffect, useRef} from "react";
 import most_recent_year from './assets/acs_year.json';
 import most_recent_year1 from './assets/acs_5_year.json';
 import './dashboard.css'
 
 //Widget This faq.js is developed by Tyler Potts who provided "Easy React JS Accordion" tutorial through https://www.youtube.com/watch?v=jwp-cYZbgic
 import FAQ from './faq.js'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'font-awesome/css/font-awesome.min.css';
+import "@fontsource/roboto-slab";
+import "@fontsource/roboto";
+import FontAwesome from 'react-fontawesome';
 
 // Data
 import employment from './assets/employment.json';
@@ -41,6 +46,80 @@ The R syntax for all the statistical estimates in the paper can be accessed at u
 
 
 const Method = () => {
+  //Width Screen Size Listener
+  const [size, setSize] = useState([0,0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  //Change sidebar width in container
+  const [data_sidebar, setData_SideBar] = useState('None')
+  const [interface_side, setInterface_Side] = useState('unset')
+  const [data_grid, setData_Grid] = useState('grid')
+  const [paddingSide, setPaddingSide] = useState(null)
+  useEffect(() => {
+    if(size[0] < 900 & size[0] > 550 ){
+      setData_SideBar('grid')
+      setInterface_Side('None')
+      setData_Grid('ungrid')
+      setPaddingSide('10px')
+    }else if(size[0] < 551){
+      setData_SideBar('grid')
+      setInterface_Side('None')
+      setData_Grid('ungrid')
+      setPaddingSide('6px')
+    }else{
+      setData_SideBar('None')
+      setInterface_Side('unset')
+      setData_Grid('grid')
+      setPaddingSide(null)
+    };
+  }, [size])
+
+  //SideBar Width
+  const [sidebarWidth, setSideBarWidth] = useState('-290px');
+  const [icon_rotate, setIcon_Rotate] = useState('rotate3d(0, 1, 0, 0deg)')
+  const buttonRef = useRef()
+  const sidebarRef = useRef()
+  const [tabindex, setTabIndex] = useState('-1')
+  const [tabindex1, setTabIndex1] = useState('0')
+
+  const changeSideBarWidth = () => {
+    if(sidebarWidth === '-290px'){
+      setSideBarWidth('0px')
+      setIcon_Rotate('rotate3d(0, 1, 0, 180deg)')
+      setTabIndex('0')
+      setTabIndex1('-1')
+    }else{
+      setSideBarWidth('-290px')
+      setIcon_Rotate('rotate3d(0, 1, 0, 0deg)')
+      setTabIndex('-1')
+      setTabIndex1('0')
+    }
+  }; 
+
+  useEffect(() => {
+    const outsideDetection = e => {
+      if ( buttonRef.current && !buttonRef.current.contains(e.target) &&
+           sidebarRef.current && !sidebarRef.current.contains(e.target)){
+        setSideBarWidth('-290px')
+        setIcon_Rotate('rotate3d(0, 1, 0, 0deg)')
+      }
+    }
+
+    document.addEventListener('mousedown', outsideDetection)
+
+    return () => {
+      // Clean up the event listener
+      document.removeEventListener('mousedown', outsideDetection)
+    }
+  }, [sidebarWidth])
+
   const [items, setItems] = useState([
     {question: 'What kind of data did we use?', 
      answer: 
@@ -113,14 +192,52 @@ const Method = () => {
   return(
   <div className = 'body'>
     <div className = 'container'>
-      <div className = 'head_faq'>FAQs</div>
-      <div className = 'full_faq'>Frequently asked questions</div>
-      <div className = 'faq_remark'>Any questions? We're here to help.</div>
-      <div className = 'faqs'>
-        {items.map((value, index)=>{
-          return <FAQ value = {value} index = {index} toggleFAQ = {toggleFAQ}/>
-        })}
+      <div className = 'main-grid'>
+        <div className = 'main-a'>
+          <div id = 'title'>
+            Deaf Postsecondary Data from the American Community Survey
+          </div>
+        </div>  
       </div>
+      <Tabs aria-label="A set of charts">
+        <TabList>
+          <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'FAQs'}</Tab>
+        </TabList>
+        <TabPanel>
+          <div className='inside_container'>
+            <p className='aria-text'>Left Content</p>
+            <p className='aria-text'>
+              This content contains a list of common questions to ask.
+            </p>
+            <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
+                <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+            </button>
+            <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
+              <div className='data_sidebar_interface'>
+                <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
+                  <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                </button>
+              </div>
+            </div>
+            <div className={data_grid}>
+              <div className='a'>
+                <div className = 'title'>{'FREQUENTLY ASKED QUESTIONS'}</div>
+                <div className = 'faqs'>
+                  {items.map((value, index)=>{
+                    return <FAQ value = {value} index = {index} toggleFAQ = {toggleFAQ}/>
+                  })}
+                </div>
+              </div>
+              <div className='b' style={{display:interface_side}}>
+                <p className='aria-text'>Right Content</p>
+                <p className='aria-text'>
+                  This content consists of one selection that sends you to different sections (i.e., General section, Employment section)
+                </p>
+              </div>
+            </div>
+        </div>
+      </TabPanel>
+    </Tabs>
     </div>
   </div>
   );

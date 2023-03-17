@@ -5,7 +5,7 @@
 // npm run build; serve -s build;
 /*JS works with CSS*/
 import './navbar.css';
-import './dashboard.css'
+import './dashboard.css';
 import Loading from './Loading.js';
 //import copyright from './images/CC_BY-NC-ND.svg';
 
@@ -44,16 +44,15 @@ HC_exporting(Highcharts);
 HC_accessible(Highcharts)
 
 /*Functional Pages*/
-const Dashboard = lazy(() => import('./dashboard.js'));
-const Education = lazy(() => import('./education.js'));
-const Employment = lazy(() => import('./employment.js'));
-const TimeSeries = lazy(() => import('./time_series.js'));
+const Faster = lazy(() => import('./fasterone.js'));
+//const ReportGenerator = lazy(() => import('./report_generator.js'))
 const Method = lazy(() => import('./method.js'));
 const EducationChartText = lazy(() => import('./educationcharttext.js'));
 const EducationChart = lazy(() => import('./educationchart.js'));
 const EmploymentChartText = lazy(() => import('./employmentcharttext.js'));
 const EmploymentChart = lazy(() => import('./employmentchart.js'));
 const AboutData = lazy(() => import('./aboutdata.js'));
+
 
 const Navbar = () => {
   // Color Accessibility Options
@@ -568,13 +567,13 @@ const Navbar = () => {
     fontSize: '16px'
   };
 
-  const disableLink = {
+  /*const disableLink = {
     textDecoration: "none",
     color: '#8f8f8f',
     fontWeight: 600,
     fontSize: '16px',
     pointerEvents: 'none'
-  }
+  }*/
 
   return (
   <>
@@ -582,11 +581,11 @@ const Navbar = () => {
     <div className='body'>
       <div className = 'main-grid'>
         <div className = 'main-a'>
-          <nav className = 'top-nav'>
+          {/*<nav className = 'top-nav'>
             <button className = 'for-column' onClick={changeWidth} ref = {buttonRef} aria-hidden="true">
               <FontAwesome className = 'for-column-icon' name = 'list' style = {{fontSize: '20px'}}/>
             </button>
-          </nav>
+          </nav>*/}
         </div>
         <div className = 'main-b'>
           <button className = 'invisible-button' value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
@@ -625,28 +624,14 @@ const Navbar = () => {
             General
           </div>
         </Link>
-        <Link to='/Education' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
+        {/*<Link to='/ReportGenerator' style = {linkStyle}>
           <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'graduation-cap'/>
+            <FontAwesome className='column-item' name = 'paperclip'/>
             &nbsp;&nbsp;&nbsp; 
-            Education
+            Report Generator
           </div>
-        </Link>
-        <Link to='/Employment' style={disableLink} aria-hidden="true" tabIndex = '-1'>
-          <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'briefcase'/>
-            &nbsp;&nbsp;&nbsp; 
-            Employment
-          </div>
-        </Link>
-        <Link to='/Time-Series' style={disableLink} aria-hidden="true" tabIndex = '-1'>
-          <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'line-chart'/>
-            &nbsp;&nbsp;&nbsp; 
-            Time Series
-          </div>
-        </Link>
-        <Link to='/FAQs' style = {disableLink} aria-hidden="true" tabIndex = '-1'>
+        </Link>*/}
+        <Link to='/FAQs' style = {linkStyle} /*aria-hidden="true"*/>
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'book'/>
             &nbsp;&nbsp;&nbsp; 
@@ -656,18 +641,12 @@ const Navbar = () => {
       </div>
       <Suspense fallback={<Loading/>}>
       <Routes>
-        <Route exact path='/' element={<Dashboard colors={colors} 
+        <Route exact path='/' element={<Faster colors={colors} 
                                                   justcolor={justcolor} 
                                                   colorfill={colorfill}/>}/>
-        <Route exact path='/Education' element={<Education colors={colors} 
+        {/*<Route exact path='/ReportGenerator' element={<ReportGenerator colors={colors} 
                                                   justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>
-        <Route exact path='/Employment' element={<Employment colors={colors} 
-                                                  justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>
-        <Route exact path='/Time-Series' element={<TimeSeries colors={colors} 
-                                                  justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>
+                                                  colorfill={colorfill}/>}/>*/}                                         
         <Route exact path='/FAQs' element={<Method />}/>
         <Route exact path='/EducationChartText' element={<EducationChartText />}/>
         <Route exact path='/EducationChart' element={<EducationChart />}/>

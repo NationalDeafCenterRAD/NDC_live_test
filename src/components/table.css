@@ -127,12 +127,31 @@ tbody{
     background: linear-gradient(to top,var(--selected_tab) 7px, var(--boxbackground) 7px);
 	position: sticky;
 	position: -webkit-sticky;
+	top: 39px;
+	z-index: 0;
+    text-align: left;
+    font-size: 16px;
+    font-family: 'Roboto';
+    padding: 10px 20px 20px 20px;
+    border: none;
+    white-space: nowrap;
+    overflow-x:hidden;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+}
+.superheader{
+    color: var(--unselected_tab_color);
+    position: sticky;
+	position: -webkit-sticky;
+    background: var(--boxbackground);
 	top: 0px;
 	z-index: 0;
     text-align: left;
     font-size: 16px;
     font-family: 'Roboto';
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
     border: none;
     white-space: nowrap;
     overflow-x:hidden;
@@ -167,11 +186,17 @@ tbody{
     -moz-box-shadow: inset 0 2px 2px 0 rgba(0, 0, 0, 0.5);
     overflow: hidden;
     margin-top: 2px;
+    width: 100px;
+    height: 16px;
+}
+.td-percentage-hearing{
+    background: #414042;
+    border-radius: 10px;
     width: 100%;
     height: 16px;
 }
-.td-percentage{
-    background: #DD938A;
+.td-percentage-deaf{
+    background: #00A79D;
     border-radius: 10px;
     width: 100%;
     height: 16px;

@@ -17,7 +17,7 @@ const ButtonGroup = ({ buttons, AfterClick, thewidth }) => {
             key={i}
             name={buttonLabel}
             onClick={(event) => handleClick(event, i)}
-            className={i === clickedId ? "btn active" : "btn"}
+            className={i === clickedId ? "btn-active" : "btn"}
             style={{width:thewidth}}
           >
             {buttonLabel}

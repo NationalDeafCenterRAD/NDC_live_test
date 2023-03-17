@@ -1,7 +1,6 @@
 import React, {useMemo, useState} from 'react';
 //Widget
 import { useTable, useSortBy, useFilters, useGlobalFilter, useAsyncDebounce} from 'react-table';
-import {CSVLink} from 'react-csv';
 // Data
 import occupation from './assets/occupation.json'
 //Table Style
@@ -55,41 +54,76 @@ function Table() {
   const columns = useMemo(
     () => [
       {
-        Header: 'Attribution',
-        accessor: 'attribution', // accessor is the "key" in the data
-      },
-      {
-        Header: 'Occupation',
+        Header: "Occupation",
         accessor: 'occupation',
       },
       {
-        Header: 'Total Employed',
-        accessor: row => row['percent of total employed'], // accessor is the "key" in the data
-        Cell: prop => {
-            return (
-              <>
-                {prop.value === 0 ? '— —' : prop.value+'%'}
-              </>
-            )
-          }
-      },
-      {
-        Header: 'BA or Higher',
-        accessor: row => row['BA'],
+        Header: ' deaf',
+        accessor: row => row['percent of total employed'],
         Cell: prop => {
             return (
               <>
                 {prop.value === 0 ? '' : prop.value+'%'}
-                <div class = 'td-percentage-container'>
-                  <div class = 'td-percentage' style = {{width: prop.value}}/>
+                <div className = 'td-percentage-container'>
+                  <div className = 'td-percentage-deaf' style = {{width: prop.value}}/>
                 </div> 
               </>
               );
           }
       },
       {
-        Header: 'Median Salary',
+        Header: ' hearing',
+        accessor: row => row['percent of total employed_hearing'],
+        Cell: prop => {
+            return (
+              <>
+                {prop.value === 0 ? '' : prop.value+'%'}
+                <div className = 'td-percentage-container'>
+                  <div className = 'td-percentage-hearing' style = {{width: prop.value}}/>
+                </div> 
+              </>
+              );
+          }
+      },
+      {
+        Header: 'deaf',
+        accessor: row => row['BA'],
+        Cell: prop => {
+            return (
+              <>
+                {prop.value === 0 ? '' : prop.value+'%'}
+                <div className = 'td-percentage-container'>
+                  <div className = 'td-percentage-deaf' style = {{width: prop.value}}/>
+                </div> 
+              </>
+              );
+          }
+      },
+      {
+        Header: 'hearing',
+        accessor: row => row['BA_hearing'],
+        Cell: prop => {
+            return (
+              <>
+                {prop.value === 0 ? '' : prop.value+'%'}
+                <div className = 'td-percentage-container'>
+                  <div className = 'td-percentage-hearing' style = {{width: prop.value}}/>
+                </div> 
+              </>
+              );
+          }
+      },
+      {
+        Header: 'deaf ',
         accessor: row => row['median salary'].toLocaleString('en-US', {
+            style: 'currency',currency: 'USD',
+            maximumFractionDigits: 0, 
+            minimumFractionDigits: 0
+        }),
+      },
+      {
+        Header: 'hearing ',
+        accessor: row => row['median salary_hearing'].toLocaleString('en-US', {
             style: 'currency',currency: 'USD',
             maximumFractionDigits: 0, 
             minimumFractionDigits: 0
@@ -119,24 +153,22 @@ function Table() {
 
  return (
      <div>
-      <div class = 'table_interface'>
+      <div className = 'table_interface'>
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
           setGlobalFilter={setGlobalFilter}
         />
-        <svg width="50px" height="50px" viewBox="0 0 260 236" preserveAspectRatio="xMidYMax meet" className = 'svg-container'>
-          <g transform="translate(0.000000,236.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
-            <CSVLink filename={"NDC_employment.csv"} data={data} style = {{padding: 50}}>
-              <rect width="2500" height="2000" className = 'svg-rect'/>
-              <path className = 'svg-download' d="M 1224 1506 c -47 -21 -55 -9 -54 -261 l 0 -183 l -37 19 c -63 32 -123 -4 -123 -74 c 0 -37 8 -47 125 -166 l 125 -126 l 125 126 c 117 119 125 129 125 166 c 0 70 -60 106 -123 74 l -37 -19 l 0 183 c -4 261 -7 240 -56 261 c -34 7 -36 8 -70 0 z M 783 736 c -26 -23 -28 -28 -31 -130 l -4 -106 l 512 0 l 512 0 l -4 106 c -3 102 -5 107 -31 130 c -16 13 -41 24 -56 24 c -35 0 -81 -35 -81 -61 c 0 -18 -11 -19 -340 -19 c -329 0 -340 1 -340 19 c 0 26 -46 61 -81 61 c -15 0 -40 -11 -56 -24 z"/>
-            </CSVLink>
-          </g>
-        </svg>
       </div>
 
       <table {...getTableProps()}>
         <thead>
+          <tr>
+            <th colSpan="1" className = 'superheader'></th>
+            <th colSpan="2" className = 'superheader'>Total employed</th>
+            <th colSpan="2" className = 'superheader'>Bachelor's or higher</th>
+            <th colSpan="2" className = 'superheader'>Median earning</th>
+          </tr>
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
@@ -179,3 +211,7 @@ function Table() {
 }
 
 export default Table;
+
+export function Profile() {
+  // ...
+}
