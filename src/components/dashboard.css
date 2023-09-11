@@ -514,6 +514,59 @@ a:hover .map_line{
     background: var(--selected_tab);
 }
 
+/*Report Tab Style*/
+.state_report_grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 75px);
+    grid-template-rows: auto;
+}
+.state_report_a{
+    position:static;
+    text-align: right;
+    padding: 10px;
+    margin-top: 100px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+.state_report_b{
+    text-align: left;
+    margin-left: 0;
+    margin-right: auto;
+    padding: 10px;
+    margin-top: 100px;
+    grid-column-start: 3;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+@media only screen and (max-width: 560px){
+    .state_report_grid{
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, 75px);
+    }
+    .state_report_a{
+        margin-top: 0;
+        text-align: center;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row-start: 3;
+        grid-row-end: 5;
+    }
+    .state_report_b{
+        margin-top: 0;
+        margin-left: auto;
+        text-align: center;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        grid-row-start: 1;
+        grid-row-end: 2;
+    }
+} 
+
 /*Stylize widgets*/
 .react-tabs__tab-list { 
     margin: 0; 

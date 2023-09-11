@@ -10,7 +10,6 @@ import acs_one_year from './assets/acs_year.json';
 import acs_five_year from './assets/acs_5_year.json';
 import employment from './assets/employment.json';
 import timeseries from './assets/timeseries.json';
-//import usmap from './assets/usmap.json';
 
 //Widgets
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -30,6 +29,14 @@ import HighchartsReact from 'highcharts-react-official';
 import HC_exporting from 'highcharts/modules/exporting';
 import HC_accessible from "highcharts/modules/accessibility";
 import HCMore from 'highcharts/highcharts-more';
+
+// Import multiple PDFs
+function importAll(r) {
+  let files = {};
+   r.keys().forEach((item, index) => { files[item.replace('./', '')] = r(item); });
+  return files
+ }
+ const PDFs = importAll(require.context('./assets/Reports', false, /\.pdf$/));
 
 // Extensive Version of Highcharts
 HC_exporting(Highcharts);          //exporting function
@@ -80,18 +87,18 @@ let variables = [
    hearing: ['hearing people in 16-24 age people','hearing people in 25-34 age group','hearing people in 35-44 age group','hearing people in 45-54 age group','hearing people in 55-64 age people'],
    more_options: ' Age ', title_by: ' by Age', age: '16-64'
   },
-  {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white'],
-   deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people'],
-   hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people'],
+  {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white','BIPOC'],
+   deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people','deaf BIPOC'],
+   hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people','hearing BIPOC'],
    more_options: ' Race ', title_by: ' by Race', age: '16-64'
   },
   {label: 'Gender', value: 'Gender', variable: 'gender', variables: ['women','men'],
    deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men'],
    more_options: ' Gender ', title_by: ' by Gender', age: '16-64'
   },
-  {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
-   deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
-   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities'],
+  {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities','with additional disabilities'],
+   deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities','deaf with additional disabilities'], 
+   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities','hearing with additional disabilities'],
    more_options: ' Disability ', title_by: ' by Disability', age: '16-64'
   },
   {label: 'Overall', value: 'Overall', variable: 'overall', variables: [''],
@@ -102,18 +109,18 @@ let variables = [
   hearing: ['hearing people in 25-34 age group','hearing people in 35-44 age group','hearing people in 45-54 age group','hearing people in 55-64 age people'],
   more_options: ' Age ', title_by: ' by Age', age: '25-64'
  },
- {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white'],
-  deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people'],
-  hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people'],
+ {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white','BIPOC'],
+  deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people','deaf BIPOC'],
+  hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people','hearing BIPOC'],
   more_options: ' Race ', title_by: ' by Race', age: '25-64'
  },
  {label: 'Gender', value: 'Gender', variable: 'gender', variables: ['women','men'],
   deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men'],
   more_options: ' Gender ', title_by: ' by Gender', age: '25-64'
  },
- {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
-  deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
-  hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities'],
+ {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities','additional disabilities'],
+  deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities','deaf people with additional disabilities'], 
+  hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities','hearing people with additional disabilities'],
   more_options: ' Disability ', title_by: ' by Disability', age: '25-64'
  }
 ]
@@ -173,18 +180,22 @@ let attributions = [
   {label: 'deaf Native American', value: 'deaf Native American', variable: 'race', color: 'teal', words: 'deaf Native Americans'},
   {label: 'deaf multiracial', value: 'deaf multiracial', variable: 'race', color: 'teal', words: 'deaf multiracial people'},
   {label: 'deaf white', value: 'deaf white', variable: 'race', color: 'teal', words: 'deaf white people'},
+  {label: 'deaf BIPOC', value: 'deaf BIPOC', variable: 'race', color: 'teal', words: 'deaf BIPOC'},
   {label: 'hearing Asian', value: 'hearing Asian', variable: 'race', color: 'black', words: 'hearing Asians'},
   {label: 'hearing Black', value: 'hearing Black', variable: 'race', color: 'black', words: 'hearing Black'},
   {label: 'hearing Latinx', value: 'hearing Latinx', variable: 'race', color: 'black', words: 'hearing Latinx'},
   {label: 'hearing Native American', value: 'hearing Native American', variable: 'race', color: 'black', words: 'hearing Native Americans'},
   {label: 'hearing multiracial', value: 'hearing multiracial', variable: 'race', color: 'black', words: 'hearing multiracial people'},
   {label: 'hearing white', value: 'hearing white', variable: 'race', color: 'black', words: 'hearing white people'},
+  {label: 'hearing BIPOC', value: 'hearing BIPOC', variable: 'race', color: 'black', words: 'hearing BIPOC'},
   {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
+  {label: 'deaf with additional disabilities', value: 'deaf with additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with additional disabilities'},  
   {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
   {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
-  {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'}
+  {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'},
+  {label: 'hearing with additional disabilities', value: 'hearing with additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with additional disabilities'}
 ]
 
 // State Option List
@@ -265,6 +276,59 @@ let geographics = [
   {label: 'Wisconsin', value: 'Wisconsin', variable: 'Wisconsin'},
   {label: 'Wyoming', value: 'Wyoming', variable: 'Wyoming'}
 ]
+let geographics_wo_US = [
+  {label: 'Alabama', value: 'Alabama', variable: 'Alabama'},
+  {label: 'Alaska', value: 'Alaska', variable: 'Alaska'},
+  {label: 'Arizona', value: 'Arizona', variable: 'Arizona'},
+  {label: 'Arkansas', value: 'Arkansas', variable: 'Arkansas'},
+  {label: 'California', value: 'California', variable: 'California'},
+  {label: 'Colorado', value: 'Colorado', variable: 'Colorado'},
+  {label: 'Connecticut', value: 'Connecticut', variable: 'Connecticut'},
+  {label: 'Delaware', value: 'Delaware', variable: 'Delaware'},
+  {label: 'District of Columbia', value: 'District of Columbia', variable: 'District of Columbia'},
+  {label: 'Florida', value: 'Florida', variable: 'Florida'},
+  {label: 'Georgia', value: 'Georgia', variable: 'Georgia'},
+  {label: 'Hawaii', value: 'Hawaii', variable: 'Hawaii'},
+  {label: 'Idaho', value: 'Idaho', variable: 'Idaho'},
+  {label: 'Illinois', value: 'Illinois', variable: 'Illinois'},
+  {label: 'Indiana', value: 'Indiana', variable: 'Indiana'},
+  {label: 'Iowa', value: 'Iowa', variable: 'Iowa'},
+  {label: 'Kansas', value: 'Kansas', variable: 'Kansas'},
+  {label: 'Kentucky', value: 'Kentucky', variable: 'Kentucky'},
+  {label: 'Louisiana', value: 'Louisiana', variable: 'Louisiana'},
+  {label: 'Maine', value: 'Maine', variable: 'Maine'},
+  {label: 'Maryland', value: 'Maryland', variable: 'Maryland'},
+  {label: 'Massachusetts', value: 'Massachusetts', variable: 'Massachusetts'},
+  {label: 'Michigan', value: 'Michigan', variable: 'Michigan'},
+  {label: 'Minnesota', value: 'Minnesota', variable: 'Minnesota'},
+  {label: 'Mississippi', value: 'Mississippi', variable: 'Mississippi'},
+  {label: 'Missouri', value: 'Missouri', variable: 'Missouri'},
+  {label: 'Montana', value: 'Montana', variable: 'Montana'},
+  {label: 'Nebraska', value: 'Nebraska', variable: 'Nebraska'},
+  {label: 'Nevada', value: 'Nevada', variable: 'Nevada'},
+  {label: 'New Hampshire', value: 'New Hampshire', variable: 'New Hampshire'},
+  {label: 'New Jersey', value: 'New Jersey', variable: 'New Jersey'},
+  {label: 'New Mexico', value: 'New Mexico', variable: 'New Mexico'},
+  {label: 'New York', value: 'New York', variable: 'New York'},
+  {label: 'North Carolina', value: 'North Carolina', variable: 'North Carolina'},
+  {label: 'North Dakota', value: 'North Dakota', variable: 'North Dakota'},
+  {label: 'Ohio', value: 'Ohio', variable: 'Ohio'},
+  {label: 'Oklahoma', value: 'Oklahoma', variable: 'Oklahoma'},
+  {label: 'Oregon', value: 'Oregon', variable: 'Oregon'},
+  {label: 'Pennsylvania', value: 'Pennsylvania', variable: 'Pennsylvania'},
+  {label: 'Rhode Island', value: 'Rhode Island', variable: 'Rhode Island'},
+  {label: 'South Carolina', value: 'South Carolina', variable: 'South Carolina'},
+  {label: 'South Dakota', value: 'South Dakota', variable: 'South Dakota'},
+  {label: 'Tennessee', value: 'Tennessee', variable: 'Tennessee'},
+  {label: 'Texas', value: 'Texas', variable: 'Texas'},
+  {label: 'Utah', value: 'Utah', variable: 'Utah'},
+  {label: 'Vermont', value: 'Vermont', variable: 'Vermont'},
+  {label: 'Virginia', value: 'Virginia', variable: 'Virginia'},
+  {label: 'Washington', value: 'Washington', variable: 'Washington'},
+  {label: 'West Virginia', value: 'West Virginia', variable: 'West Virginia'},
+  {label: 'Wisconsin', value: 'Wisconsin', variable: 'Wisconsin'},
+  {label: 'Wyoming', value: 'Wyoming', variable: 'Wyoming'}
+]
 
 // Categories
 let edulist = ["doctoral degree or equivalent","master’s degree or higher","bachelor’s degree or higher",
@@ -293,20 +357,23 @@ const Option = (props) => {
 };
 
 const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
-  // Functions
+  // Round up function
   function round(num) {
     var m = Number((Math.abs(num) * 100).toPrecision(15));
     return Math.round(m) / 100 * Math.sign(num);
   }
+  // This function prevents users from seeing true number if sample size is too small.
   const size_checker = function(n){
     if(n < 100){return 'less than 100'}else{return n}
   }
+  // Dollar format function
   function formatDollar(num) {
     var p = num.toFixed(2).split(".");
     return ["$", p[0].split("").reverse().reduce(function(acc, num, i) {
         return num + (i && !(i % 3) ? "," : "") + acc;
     }, "."), p[1]].join("");
   }
+  // This function is to set up the Y-Axis limit range in HighChart's Trend and Education line plots
   const spm = (x) => {
     const result = Math.min(...x)-1
     if(result < 0){
@@ -315,16 +382,19 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       return(result)
     }
   }
+
+  // This function is to make sure that percentage format looks good after subtraction
   const percentage_difference = (x1,x2) => {
     return(Math.abs(round((x2 - x1)))+'%')
   }
+  // This function is to sort array of Fields of Degrees nothing more.
   const sortarray = employment.filter(employment => employment.type === 'Field of Degree' & // Sorting by another array
    employment.variable ===  'Graduate' &
    employment.state === 'United States' &
    employment.attribution.includes('deaf')).map(
    employment => employment.status)
 
-  // Paint styles
+  // Stylize selection styles
   const chart_option_style = {
     option: (provided, state) => ({
       ...provided,
@@ -724,7 +794,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }),
   }
 
-  // Size Effects
+  // Screen Size Responsive Effects
   const [HCwidth, setHC_Width] = useState(null)
   const [paddingSide, setPaddingSide] = useState('10px')
   const [slice_string, setSliceString] = useState([20,''])
@@ -738,7 +808,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   useLayoutEffect(() => {
     function updateSize() {
       setPaddingSide(round(3+10*Math.pow(1.01, -650+window.innerWidth)/(1+Math.pow(1.01, -650+window.innerWidth)),2)+'px');
-      setSliceString([round(20-15*Math.pow(1.01, 500-window.innerWidth)/(1+Math.pow(1.01, 500-window.innerWidth)),2),'']);
+      setSliceString([round(20-16*Math.pow(1.01, 500-window.innerWidth)/(1+Math.pow(1.01, 500-window.innerWidth)),2),'']);
       if(window.innerWidth < 800){
         setHC_Width(window.innerWidth/1.2)
         setInterface_Side('None')
@@ -760,7 +830,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  //SideBar Width
+  //Screen Screen Responsive Effect: Mobile Size SideBar Open-Close function
   const [sidebarWidth, setSideBarWidth] = useState('-290px');
   const [icon_rotate, setIcon_Rotate] = useState('rotate3d(0, 1, 0, 0deg)')
   const buttonRef = useRef()
@@ -799,7 +869,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }
   }, [sidebarWidth])
 
-  // Dropdown content
+  // Dropdown text content under Highchart's plots
   const [accordion_is, setAccordionIs] = useState('accordion-is');
   const [textaccordion_is, setTextAccordionIs] = useState('accordion-is-open');
   const clickButton = () => {
@@ -809,11 +879,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     textaccordion_is === 'accordion-is-open' ? setTextAccordionIs('accordion-is') : setTextAccordionIs('accordion-is-open');
   }
 
-
   // Tab Function
   const [tab_num, setTabNumber] = useState(0)
 
-  // Data
+  // Data: Trend over Time - Set limit x-axis range
   const min_year = Math.min(...timeseries.filter(timeseries => timeseries.type === 'education' &
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
@@ -821,7 +890,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     timeseries.status === 'bachelor' & timeseries.attribution === 'deaf').map(
     timeseries => timeseries['year']))
 
-  // Chart Option Change Function
+  // Chart Option Change Function - first selection options
   const [selected_attributions, setAttributions] = useState('overall')
   const [maintitle, setMainTitle] = useState('Education Attainment')
   const [nationDisabled, setnationDisabled] = useState(false)
@@ -937,7 +1006,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     setTitleBy(e.title_by)
   }
 
-  // Change Information inside Chart using Inside Chart Option
+  // Change Information inside Chart using Inside Chart Option - third selection options
   const changeInsideChart = (e) => {
     setInsideChartSchema(e)
     setInsideChartType(e.type)
@@ -1006,7 +1075,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }
   }
 
-  // Change geographic locations
+  // Change geographic locations - first selection options on top of Highcharts plots in "State" tab
   const [chosen_state_a, setChosenStateA] = useState('US');
   const [state_label_a, setLabel_StateA] = useState('United States')
   const [multi_state_a, setMultiStateA] = useState([{label: 'United States', value: 'United States'}])
@@ -1017,15 +1086,16 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     setChosenStateA(e.variable)
     setLabel_StateA(e.value)
     setMultiStateA(e)
-    if(e.value === 'United States'){
+    if(e.value === 'United States' | e.value === 'District of Columbia'){
       setIn_TheA(' In the ')
     }else{
       setIn_TheA(' In ')
     }
   }
 
+  // Change geographic locations - second selection options on top of Highcharts plots in "State" tab
   const [chosen_state_b, setChosenStateB] = useState('Texas');
-    const [state_label_b, setLabel_StateB] = useState('Texas')
+  const [state_label_b, setLabel_StateB] = useState('Texas');
   const [multi_state_b, setMultiStateB] = useState([  {label: 'Texas', value: 'Texas'}])
   const [in_the_b, setIn_TheB] = useState(' In ');
 
@@ -1033,14 +1103,26 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     setChosenStateB(e.variable)
     setLabel_StateB(e.value)
     setMultiStateB(e)
-    if(e.value === 'United States'){
+    if(e.value === 'United States' | e.value === 'District of Columbia'){
       setIn_TheB(' In the ')
     }else{
       setIn_TheB(' In ')
     }
   }
 
-  // Change Information inside More Option Interface
+  // Functions for "Report" tab
+  const [report_state, setReportState] = useState('State...');
+  const [when_you_select, setWhenYouSelect] = useState('Before')
+  const [report_multi_state, setReportMultiState] = useState([  {label: 'State...', value: 'State...'}])
+  const [reportPDF, setReportPDF] = useState('NDC_Texas_report.pdf')
+  const changeReportGeoState = (e) => {
+    setReportState(e.variable)
+    setReportMultiState(e)
+    setReportPDF('NDC_'+e.variable+'_report.pdf')
+    setWhenYouSelect('After')
+  }
+
+  // Change information inside "More Option" interface when interacting
   const [num_col, setNumCol] = useState([0,6])
   const [attribute, setAttribution] = useState(['deaf','hearing'])
   const [words, setWords] = useState(['deaf people','hearing people'])
@@ -1214,7 +1296,34 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         employment.status === 'phd/dr' & employment.type === 'education' & 
         employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
           function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
-        )) > 0.3 & chartType === 'all')
+        )) > 0.3 & chartType === 'all') |
+      (Math.min(...employment.filter(employment => employment.type === insidechartType & 
+        employment.variable === selected_attributions & employment.state === 'United States' &
+        employment.status === insidechartStatus).map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & accordion_is === 'accordion-is' & chartType === 'column') |
+      (Math.min(...employment.filter(employment => (employment.attribution === attribute[0] | 
+        employment.attribution === attribute[1]) & 
+        employment.status === insidechartStatus & 
+        employment.type === insidechartType & 
+        employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & accordion_is === 'accordion-is' & chartType === 'column')  |
+      (Math.min(...employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
+        employment.status === 'phd/dr' & employment.type === 'education' & 
+        employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & chartType === 'all') |
+      (Math.min(...employment.filter(employment => employment.type === insidechartType & 
+        employment.variable === selected_attributions & employment.state === 'United States' &
+        employment.status === insidechartStatus).map(employment => [employment.margin_errors,employment.median_income]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & accordion_is === 'accordion-is' & chartType === 'column') |
+      (Math.max(...employment.filter(employment => employment.type === insidechartType & 
+        employment.variable === selected_attributions & employment.state === 'United States' &
+        employment.status === insidechartStatus).map(employment => [employment.margin_errors,employment.median_income]).map(
+          function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
+        )) > 0.3 & accordion_is === 'accordion-is' & chartType === 'column')
     ){
       setWarningSty('shown-warning')
     }else{
@@ -1243,7 +1352,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         employment.status === 'phd/dr' & employment.type === 'education' & 
         (employment.state === chosen_state_a | employment.state === chosen_state_b)).map(employment => [employment.margin_errors,employment.percentage]).map(
           function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100))}
-        )) > 0.3 & chartType === 'all')
+        )) > 0.3 & chartType === 'all') |
+      (Math.min(...employment.filter(employment => employment.type === insidechartType & 
+        employment.variable === selected_attributions & (employment.state === chosen_state_a | employment.state === chosen_state_b) &
+        employment.status === insidechartStatus).map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & accordion_is === 'accordion-is' & chartType === 'column') |
+      (Math.min(...employment.filter(employment => (employment.attribution === attribute[0] | 
+        employment.attribution === attribute[1]) & 
+        employment.status === insidechartStatus & 
+        employment.type === insidechartType & 
+        (employment.state === chosen_state_a | employment.state === chosen_state_b)).map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & accordion_is === 'accordion-is' & chartType === 'column')  |
+      (Math.min(...employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
+        employment.status === 'phd/dr' & employment.type === 'education' & 
+        (employment.state === chosen_state_a | employment.state === chosen_state_b)).map(employment => [employment.margin_errors,employment.percentage]).map(
+          function(ME){return(ME[1])}
+        )) === 0 & chartType === 'all')
     ){
       setStateWarningSty('shown-warning')
     }else{
@@ -1255,112 +1381,213 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   let [add_stop, setStop] = useState(0);
 
   const wordCounter = x => {
-    if(x.length/147 > 2){
-      setStop((Math.trunc(x.length/147)-2)*0.03)
+    if(x.trim().split(/\s+/gi).length/20 > 2){
+      setStop((Math.trunc(x.trim().split(/\s+/gi).length/20)-2)*0.03)
     }else{
       setStop(0)
     }
   }
 
   useEffect(() => {
-  wordCounter(
-    {
-    'accordion-is':
+    if(tab_num === 1 & chartType === 'all'){
+      wordCounter(
+        in_the_b+state_label_b+', among people aged 16-64'+
+        (employment.filter(employment => employment.type === insidechartType & 
+          employment.variable === selected_attributions & employment.state === chosen_state_b &
+          employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+          employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
+        ', an estimated'+
+        employment.filter(employment => employment.attribution === 'deaf' & 
+          employment.status !== 'no HS diploma' &  
+          employment.type === 'education' & 
+          employment.state === chosen_state_b).map(
+          function(employment, index){ return index === 0 ? 
+          ' and '+
+          (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+          edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+          (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+          edulist[index] :
+          ' '+employment.percentage+'% '+edulist[index]}).reverse()+
+        ', compared to '+
+        employment.filter(employment => employment.attribution === 'hearing' & 
+          employment.status !== 'no HS diploma' & 
+          employment.type === 'education' & 
+          employment.state === chosen_state_b).map(
+          function(employment, index){ return index === 0 ? 
+          ' and '+
+          (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+          edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
+          (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+          edulist[index] :
+          ' '+employment.percentage+'% '+edulist[index]}).reverse())+citation[2]
+      )
+    }else if(tab_num === 1){
+      wordCounter(
         {
-          percentage: 
-            'In the United States, among people aged 25-64'+scope+', an estimated'+
-            employment.filter(employment => employment.type === insidechartType & 
-              employment.variable === selected_attributions & employment.state === 'United States' &
-              employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-              function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
-              ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-              deaf_labels[employment.index] : ' '+ 
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-              deaf_labels[employment.index]})+
-            nationDescript+', compared to '+
-            employment.filter(employment => employment.type === insidechartType & 
-              employment.variable === selected_attributions & employment.state === 'United States' &
-              employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-              function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
-              ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-              hear_labels[employment.index] : ' '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-              hear_labels[employment.index]}),
-          median_income:
-            'In the United States, among people aged 16-64,'+
-            employment.filter(employment => employment.status === 'earning' &  
-              employment.type === 'salary-range' & 
-              employment.state === 'United States' &  
-              employment.variable === selected_attributions &
-              employment.attribution.includes('deaf')).map(
-                function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+          'accordion-is':
+            {
+              percentage: 
+              employment.filter(employment => employment.type === insidechartType & 
+                employment.variable === selected_attributions & employment.state === chosen_state_b &
+                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                employment.percentage !== 0).length === 0 ?
+              in_the_b+state_label_b+", among people aged 16-64, the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
+              in_the_b+state_label_b+', among people aged 16-64, an estimated'+
+              employment.filter(employment => employment.type === insidechartType & 
+                employment.variable === selected_attributions & employment.state === chosen_state_b &
+                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                employment.percentage !== 0).map(
+                function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                 ' and '+
-                deaf_labels[employment.index]+
-                ' $'+employment.median_income/1000 + 'K': 
-                employment.index === 0 ?
-                ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
-                +employment.median_income/1000 + 'K':
-                ' '+deaf_labels[employment.index]+
-                ' $'+employment.median_income/1000 + 'K'})+
-            ', compared to '+
-            employment.filter(employment => employment.status === 'earning' &  
-              employment.type === 'salary-range' & 
-              employment.state === 'United States' &  
-              employment.variable === selected_attributions &
-              employment.attribution.includes('hearing')).map(
-                function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
+                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                deaf_labels[employment.index] : ' '+ 
+                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                deaf_labels[employment.index]}).reverse()+
+              nationDescript+', compared to '+
+              employment.filter(employment => employment.type === insidechartType & 
+                employment.variable === selected_attributions & employment.state === chosen_state_b &
+                employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                employment.percentage !== 0).map(
+                function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
                 ' and '+
-                hear_labels[employment.index]+
-                ' $'+employment.median_income/1000 + 'K': 
-                employment.index === 0 ?
-                ' '+hear_labels[employment.index] +' earn $'+
-                +employment.median_income/1000 + 'K':
-                ' '+hear_labels[employment.index]+
-                ' $'+employment.median_income/1000 + 'K'})
-      }[metrics],
-    'accordion-is-open':
+                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                hear_labels[employment.index] : ' '+
+                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                hear_labels[employment.index]}).reverse(),
+              median_income: ''
+            }[metrics],
+          'accordion-is-open':
+            {
+              percentage:
+              in_the_b+state_label_b+', among people aged 16-64, an estimated '+
+                employment.filter(employment => employment.attribution === attribute[0] & 
+                  employment.status === insidechartStatus &  
+                  employment.type === insidechartType & 
+                  employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
+                    function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                  )
+                  +
+                words[0]+nationDescript+', compared to '+
+                employment.filter(employment => employment.attribution === attribute[1] & 
+                  employment.status === insidechartStatus &  
+                  employment.type === insidechartType & 
+                  employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
+                    function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                  )+
+                words[1],
+              median_income: '.'
+            }[metrics]
+        }[accordion_is]+' '+citation[2]
+      )
+    }else{
+      wordCounter(
         {
-          percentage:
-            'In the United States, among people aged 25-64'+scope+', an estimated '+
-            employment.filter(employment => employment.attribution === attribute[0] & 
-              employment.status === insidechartStatus &  
-              employment.type === insidechartType & 
-              employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-              )
-              +
-            words[0]+nationDescript+', compared to '+
-            employment.filter(employment => employment.attribution === attribute[1] & 
-              employment.status === insidechartStatus &  
-              employment.type === insidechartType & 
-              employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
-              )+
-            words[1],
-          median_income:
-            'In the United States, among people aged 16-64,'+
-            employment.filter(employment => employment.status === 'earning' &  
-              employment.type === 'salary-range' & 
-              employment.state === 'United States' &  
-              employment.attribution === attribute[0]).map(
-                function(employment){return (
-                ' '+words[0]+' who are working full-time earn $'+
-                +employment.median_income/1000 + 'K')})+
-            ', compared to '+
-            employment.filter(employment => employment.status === 'earning' &  
-              employment.type === 'salary-range' & 
-              employment.state === 'United States' &  
-              employment.attribution === attribute[1]).map(
-                function(employment){return (
-                  ' '+words[1]+' earn $'+
-                  +employment.median_income/1000 + 'K')})
+        'accordion-is':
+            {
+              percentage: 
+                'In the United States, among people aged 25-64'+scope+', an estimated'+
+                employment.filter(employment => employment.type === insidechartType & 
+                  employment.variable === selected_attributions & employment.state === 'United States' &
+                  employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                  employment.percentage !== 0).map(
+                  function(employment,index,row){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index] && row.length > 1) ? 
+                  ' and '+
+                  (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                  deaf_labels[employment.index] : ' '+ 
+                  (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                  deaf_labels[employment.index]})+
+                nationDescript+', compared to '+
+                employment.filter(employment => employment.type === insidechartType & 
+                  employment.variable === selected_attributions & employment.state === 'United States' &
+                  employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                  employment.percentage !== 0).map(
+                  function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                  ' and '+
+                  (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                  hear_labels[employment.index] : ' '+
+                  (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                  hear_labels[employment.index]}),
+              median_income:
+                'In the United States, among people aged 16-64,'+
+                employment.filter(employment => employment.status === 'earning' &  
+                  employment.type === 'salary-range' & 
+                  employment.state === 'United States' &  
+                  employment.variable === selected_attributions &
+                  employment.attribution.includes('deaf') &
+                  employment.median_income !== 0).map(
+                    function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                    ' and '+
+                    deaf_labels[employment.index]+
+                    ' $'+employment.median_income/1000 + 'K': 
+                    index === 0 ?
+                    ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
+                    +employment.median_income/1000 + 'K':
+                    ' '+deaf_labels[employment.index]+
+                    ' $'+employment.median_income/1000 + 'K'})+
+                ', compared to '+
+                employment.filter(employment => employment.status === 'earning' &  
+                  employment.type === 'salary-range' & 
+                  employment.state === 'United States' &  
+                  employment.variable === selected_attributions &
+                  employment.attribution.includes('hearing') &
+                  employment.median_income !== 0).map(
+                    function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
+                    ' and '+
+                    hear_labels[employment.index]+
+                    ' $'+employment.median_income/1000 + 'K': 
+                    index === 0 ?
+                    ' '+hear_labels[employment.index] +' earn $'+
+                    +employment.median_income/1000 + 'K':
+                    ' '+hear_labels[employment.index]+
+                    ' $'+employment.median_income/1000 + 'K'})
+          }[metrics],
+        'accordion-is-open':
+            {
+              percentage:
+                'In the United States, among people aged 25-64'+scope+', an estimated '+
+                employment.filter(employment => employment.attribution === attribute[0] & 
+                  employment.status === insidechartStatus &  
+                  employment.type === insidechartType & 
+                  employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
+                    function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                  )
+                  +
+                words[0]+nationDescript+', compared to '+
+                employment.filter(employment => employment.attribution === attribute[1] & 
+                  employment.status === insidechartStatus &  
+                  employment.type === insidechartType & 
+                  employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
+                    function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                  )+
+                words[1],
+              median_income:
+                'In the United States, among people aged 16-64,'+
+                employment.filter(employment => employment.status === 'earning' &  
+                  employment.type === 'salary-range' & 
+                  employment.state === 'United States' &  
+                  employment.attribution === attribute[0]).map(
+                    function(employment){return (
+                    ' '+words[0]+' who are working full-time earn $'+
+                    +employment.median_income/1000 + 'K')})+
+                ', compared to '+
+                employment.filter(employment => employment.status === 'earning' &  
+                  employment.type === 'salary-range' & 
+                  employment.state === 'United States' &  
+                  employment.attribution === attribute[1]).map(
+                    function(employment){return (
+                      ' '+words[1]+' earn $'+
+                      +employment.median_income/1000 + 'K')})
           }[metrics]
-      }[accordion_is]+' '+citation[2])
-  },[accordion_is,attribute,deaf_labels,hear_labels,insidechartStatus,insidechartType,metrics,nationDescript,scope,selected_attributions,words])
+        }[accordion_is]+' '+citation[2]
+      )
+    }
+  },[accordion_is,attribute,deaf_labels,hear_labels,
+    insidechartStatus,insidechartType,metrics,nationDescript,
+    scope,selected_attributions,words,tab_num,
+    chartType,chosen_state_b, in_the_b, state_label_b]
+  )
 
-  // Charts
+  // Highchart's plots
   Highcharts.SVGRenderer.prototype.symbols.download = function (x, y, w, h) {
     var path = [
         // Arrow stem
@@ -1499,16 +1726,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -1551,16 +1786,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -1631,54 +1874,58 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   'In the United States, among people aged '+limit_age+scope+', an estimated'+
                   employment.filter(employment => employment.type === insidechartType & 
                     employment.variable === selected_attributions & employment.state === 'United States' &
-                    employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-                    function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                    employment.status === insidechartStatus & employment.attribution.includes('deaf')  &
+                    employment.percentage !== 0).map(
+                    function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                     ' and '+
-                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                     deaf_labels[employment.index] : ' '+ 
-                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                    deaf_labels[employment.index]})+
+                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                    deaf_labels[employment.index]}).reverse()+
                   nationDescript+', compared to '+
                   employment.filter(employment => employment.type === insidechartType & 
                     employment.variable === selected_attributions & employment.state === 'United States' &
-                    employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-                    function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                    employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                    employment.percentage !== 0).map(
+                    function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                     ' and '+
-                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                     hear_labels[employment.index] : ' '+
-                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                    hear_labels[employment.index]}),
+                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                    hear_labels[employment.index]}).reverse(),
                 median_income:
                   'In the United States, among people aged 16-64,'+
                   employment.filter(employment => employment.status === 'earning' &  
                     employment.type === 'salary-range' & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
-                    employment.attribution.includes('deaf')).map(
-                      function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                    employment.attribution.includes('deaf') &
+                    employment.median_income !== 0).map(
+                      function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
                       deaf_labels[employment.index]+
                       ' $'+employment.median_income/1000 + 'K': 
-                      employment.index === 0 ?
+                      index === (row.length-1) ?
                       ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
                       +employment.median_income/1000 + 'K':
                       ' '+deaf_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K'})+
+                      ' $'+employment.median_income/1000 + 'K'}).reverse()+
                   ', compared to '+
                   employment.filter(employment => employment.status === 'earning' &  
                     employment.type === 'salary-range' & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
-                    employment.attribution.includes('hearing')).map(
-                      function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
+                    employment.attribution.includes('hearing') &
+                    employment.median_income !== 0).map(
+                      function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
                       hear_labels[employment.index]+
                       ' $'+employment.median_income/1000 + 'K': 
-                      employment.index === 0 ?
+                      index === (row.length-1) ?
                       ' '+hear_labels[employment.index] +' earn $'+
                       +employment.median_income/1000 + 'K':
                       ' '+hear_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K'})
+                      ' $'+employment.median_income/1000 + 'K'}).reverse()
               }[metrics],
             'accordion-is-open':
               {
@@ -1688,7 +1935,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     employment.status === insidechartStatus &  
                     employment.type === insidechartType & 
                     employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                      function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                     )
                     +
                   words[0]+nationDescript+', compared to '+
@@ -1696,7 +1943,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     employment.status === insidechartStatus &  
                     employment.type === insidechartType & 
                     employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                      function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                      function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                     )+
                   words[1],
                 median_income:
@@ -1852,9 +2099,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.percentage === this.y).map(
             function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
         },
       }
@@ -1880,9 +2135,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.percentage === this.y).map(
             function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
         },
       }
@@ -1945,9 +2208,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.state === 'United States').map(
               function(employment, index){ return index === 0 ? 
               ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
               edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+              (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
               edulist[index] :
               ' '+employment.percentage+'% '+edulist[index]}).reverse()+
             ', compared to '+
@@ -1957,9 +2220,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.state === 'United States').map(
               function(employment, index){ return index === 0 ? 
               ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
               edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+              (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
               edulist[index] :
               ' '+employment.percentage+'% '+edulist[index]}).reverse()+
               ' '+citation[2]+'</p>',
@@ -2105,9 +2368,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.percentage === this.y).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
           //return '<img src=''></img>'
         },
@@ -2136,9 +2407,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.percentage === this.y).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
           //return '<img src=''></img>'
         },
@@ -2198,18 +2477,18 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             '<p>In the United States, among people aged 25-64, an estimated '+
             dgraduate.map(function(dgraduate, index){ return index === 0 ?
             ' and '+
-            (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
+            (dgraduate[1] === 0 ? 'N/A of ' : ((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
             dgraduate[0].toLowerCase() : index === 4 ? ' '+
-            (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + "% \u26a0 of deaf people have completed a bachelor’s degree or higher in "+dgraduate[0].toLowerCase() :
+            (dgraduate[1] === 0 ? 'N/A of deaf people have completed a bachelor’s degree or higher in ' : ((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + "% \u26a0 of deaf people have completed a bachelor’s degree or higher in "+dgraduate[0].toLowerCase() :
             (insidechartStatus === 'Employment' ? dgraduate[1] + "% of deaf people with degrees in "+dgraduate[0].toLowerCase()+' are employed': 
             dgraduate[1] + "% of deaf people have completed a bachelor's degree or higher in "+dgraduate[0].toLowerCase())):
             ' '+dgraduate[1]+'% in '+dgraduate[0].toLowerCase()}).reverse()+
             ', compared to '+
             hgraduate.map(function(hgraduate, index){ return index === 0 ?
               ' and '+
-            (((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? hgraduate[1] + '% \u26a0 ' : hgraduate[1] + '% ')+
+            (hgraduate[1] === 0 ? 'N/A of ' : ((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? hgraduate[1] + '% \u26a0 ' : hgraduate[1] + '% ')+
             hgraduate[0].toLowerCase() : index === 4 ?
-            (((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? ' '+hgraduate[1] + "% \u26a0 of hearing people in "+hgraduate[0].toLowerCase() :
+            (hgraduate[1] === 0 ? 'N/A of hearing people have completed a bachelor’s degree or higher in ' : ((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? ' '+hgraduate[1] + "% \u26a0 of hearing people in "+hgraduate[0].toLowerCase() :
             (insidechartStatus === 'Employment' ? ' '+hgraduate[1] + "% of hearing people in "+hgraduate[0].toLowerCase()+' being employed': 
             ' '+hgraduate[1] + "% of hearing people with degrees in "+hgraduate[0].toLowerCase())):
             ' '+hgraduate[1]+'% in '+hgraduate[0].toLowerCase()}).reverse()+' '+citation[2]+'</p>',
@@ -2921,16 +3200,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -2973,16 +3260,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -3077,9 +3372,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.percentage === this.y).map(
             function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
         },
       }
@@ -3105,9 +3408,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.percentage === this.y).map(
             function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
           }else{
-            return this.y + '%';
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
           }
         },
       }
@@ -3238,16 +3549,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -3290,16 +3609,24 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
-            if(metrics === 'percentage'){
-              return '\u26a0'+this.y + '%'
+            if(this.y === 0){
+              return ''
             }else{
-              return '\u26a0 $'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return '\u26a0'+this.y + '%'
+              }else{
+                return '\u26a0 $'+this.y/1000+'K'
+              }
             }
           }else{
-            if(metrics === 'percentage'){
-              return this.y + '%';
+            if(this.y === 0){
+              return ''
             }else{
-              return '$'+this.y/1000+'K'
+              if(metrics === 'percentage'){
+                return this.y + '%';
+              }else{
+                return '$'+this.y/1000+'K'
+              }
             }
           }
         }
@@ -3365,60 +3692,38 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               column:
                 {
                   'accordion-is':
-                    {
-                      percentage: 
-                        in_the_b+state_label_b+', among people aged '+limit_age+', an estimated'+
-                        employment.filter(employment => employment.type === insidechartType & 
-                          employment.variable === selected_attributions & employment.state === chosen_state_b &
-                          employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-                          function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
-                          ' and '+
-                          (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                          deaf_labels[employment.index] : ' '+ 
-                          (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                          deaf_labels[employment.index]})+
-                        nationDescript+', compared to '+
-                        employment.filter(employment => employment.type === insidechartType & 
-                          employment.variable === selected_attributions & employment.state === chosen_state_b &
-                          employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-                          function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
-                          ' and '+
-                          (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                          hear_labels[employment.index] : ' '+
-                          (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                          hear_labels[employment.index]})+'.',
-                      median_income:
-                        in_the_b+state_label_b+', among people aged 16-64,'+
-                        employment.filter(employment => employment.status === 'earning' &  
-                          employment.type === 'salary-range' & 
-                          employment.state === chosen_state_b &  
-                          employment.variable === selected_attributions &
-                          employment.attribution.includes('deaf')).map(
-                            function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
-                            ' and '+
-                            deaf_labels[employment.index]+
-                            ' $'+employment.median_income/1000 + 'K': 
-                            employment.index === 0 ?
-                            ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
-                            +employment.median_income/1000 + 'K':
-                            ' '+deaf_labels[employment.index]+
-                            ' $'+employment.median_income/1000 + 'K'})+
-                        ', compared to '+
-                        employment.filter(employment => employment.status === 'earning' &  
-                          employment.type === 'salary-range' & 
-                          employment.state === chosen_state_b &  
-                          employment.variable === selected_attributions &
-                          employment.attribution.includes('hearing')).map(
-                            function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
-                            ' and '+
-                            hear_labels[employment.index]+
-                            ' $'+employment.median_income/1000 + 'K': 
-                            employment.index === 0 ?
-                            ' '+hear_labels[employment.index] +' earn $'+
-                            +employment.median_income/1000 + 'K':
-                            ' '+hear_labels[employment.index]+
-                            ' $'+employment.median_income/1000 + 'K'})+'.'
-                    }[metrics],
+                  {
+                    percentage: 
+                    employment.filter(employment => employment.type === insidechartType & 
+                      employment.variable === selected_attributions & employment.state === chosen_state_b &
+                      employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                      employment.percentage !== 0).length === 0 ?
+                    in_the_b+state_label_b+', among people aged '+limit_age+
+                    ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
+                    in_the_b+state_label_b+', among people aged '+limit_age+', an estimated'+
+                    employment.filter(employment => employment.type === insidechartType & 
+                      employment.variable === selected_attributions & employment.state === chosen_state_b &
+                      employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                      employment.percentage !== 0).map(
+                      function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
+                      ' and '+
+                      (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                      deaf_labels[employment.index] : ' '+ 
+                      (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                      deaf_labels[employment.index]}).reverse()+
+                    nationDescript+', compared to '+
+                    employment.filter(employment => employment.type === insidechartType & 
+                      employment.variable === selected_attributions & employment.state === chosen_state_b &
+                      employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                      employment.percentage !== 0).map(
+                      function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
+                      ' and '+
+                      (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                      hear_labels[employment.index] : ' '+
+                      (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                      hear_labels[employment.index]}).reverse(),
+                    median_income: ''
+                  }[metrics],
                   'accordion-is-open':
                     {
                       percentage:
@@ -3427,7 +3732,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                           employment.status === insidechartStatus &  
                           employment.type === insidechartType & 
                           employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
-                            function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                            function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                           )
                           +
                         words[0]+nationDescript+', compared to '+
@@ -3435,26 +3740,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                           employment.status === insidechartStatus &  
                           employment.type === insidechartType & 
                           employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
-                            function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                            function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                           )+
                         words[1],
-                      median_income:
-                      in_the_b+state_label_b+', among people aged 16-64,'+
-                        employment.filter(employment => employment.status === 'earning' &  
-                          employment.type === 'salary-range' & 
-                          employment.state === chosen_state_b &  
-                          employment.attribution === attribute[0]).map(
-                            function(employment){return (
-                            ' '+words[0]+' who are working full-time earn $'+
-                            +employment.median_income/1000 + 'K')})+
-                        ', compared to '+
-                        employment.filter(employment => employment.status === 'earning' &  
-                          employment.type === 'salary-range' & 
-                          employment.state === chosen_state_b &  
-                          employment.attribution === attribute[1]).map(
-                            function(employment){return (
-                              ' '+words[1]+' earn $'+
-                              +employment.median_income/1000 + 'K')})
+                      median_income: '.'
                     }[metrics]
                 }[accordion_is],
               spline: 
@@ -3465,7 +3754,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               
               all: 
                 ''
-            }[chartType]+citation[2]+'</p>',
+            }[chartType]+' '+citation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
           useHTML: true,
@@ -3678,16 +3967,21 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         },
         subtitle: {
           text: 
-            '<p>'+in_the_b+state_label_b+', among people aged '+limit_age+', an estimated'+
+            '<p>'+in_the_b+state_label_b+', among people aged '+limit_age+
+            (employment.filter(employment => employment.type === insidechartType & 
+              employment.variable === selected_attributions & employment.state === chosen_state_b &
+              employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+              employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
+            ', an estimated'+
             employment.filter(employment => employment.attribution === 'deaf' & 
               employment.status !== 'no HS diploma' &  
               employment.type === 'education' & 
               employment.state === chosen_state_b).map(
               function(employment, index){ return index === 0 ? 
               ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
               edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+              (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
               edulist[index] :
               ' '+employment.percentage+'% '+edulist[index]}).reverse()+
             ', compared to '+
@@ -3697,11 +3991,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               employment.state === chosen_state_b).map(
               function(employment, index){ return index === 0 ? 
               ' and '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
               edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+              (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
               edulist[index] :
-              ' '+employment.percentage+'% '+edulist[index]}).reverse()+citation[2]+'</p>',
+              ' '+employment.percentage+'% '+edulist[index]}).reverse())+' '+citation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
           useHTML: true,
@@ -3724,8 +4018,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 [0, 'rgb(243, 243, 243)'],
                 [0.2, 'rgb(243, 243, 243)'],
                 [0.2, 'rgb(255,255,255)'],
-                [0.71, 'rgb(255,255,255)'],
-                [0.71, 'rgb(243, 243, 243)']
+                [0.8-add_stop, 'rgb(255,255,255)'],
+                [0.8-add_stop, 'rgb(243, 243, 243)']
               ]      
           },
           plotBackgroundColor: '#ffffff',
@@ -3762,7 +4056,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             <TabList aria-label="Tabs of National Level, State Level, and Occupational Fields">
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='National Level Interactive Chart'>{'National Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Level Interactive Charts'>{'State Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
-              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'Occupational Fields'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
+              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Occupational Fields Interactive Table'>{'Occupational Fields'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
+              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide, display: 'none'}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
             </TabList>
             <TabPanel>
               <div className='inside_container'>
@@ -3885,54 +4180,58 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                           'In the United States, among people aged '+limit_age+scope+', an estimated'+
                                           employment.filter(employment => employment.type === insidechartType & 
                                             employment.variable === selected_attributions & employment.state === 'United States' &
-                                            employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-                                            function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                            employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                            employment.percentage !== 0).map(
+                                            function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                             deaf_labels[employment.index] : ' '+ 
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                            deaf_labels[employment.index]})+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                            deaf_labels[employment.index]}).reverse()+
                                           nationDescript+', compared to '+
                                           employment.filter(employment => employment.type === insidechartType & 
                                             employment.variable === selected_attributions & employment.state === 'United States' &
-                                            employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-                                            function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                                            employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                            employment.percentage !== 0).map(
+                                            function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                             hear_labels[employment.index] : ' '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                            hear_labels[employment.index]})+'.',
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                            hear_labels[employment.index]}).reverse()+'.',
                                         median_income:
                                           'In the United States, among people aged 16-64,'+
                                           employment.filter(employment => employment.status === 'earning' &  
                                             employment.type === 'salary-range' & 
                                             employment.state === 'United States' &  
                                             employment.variable === selected_attributions &
-                                            employment.attribution.includes('deaf')).map(
-                                              function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                            employment.attribution.includes('deaf') &
+                                            employment.median_income !== 0).map(
+                                              function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                               ' and '+
                                               deaf_labels[employment.index]+
                                               ' $'+employment.median_income/1000 + 'K': 
-                                              employment.index === 0 ?
+                                              index === (row.length-1) ?
                                               ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
                                               +employment.median_income/1000 + 'K':
                                               ' '+deaf_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K'})+
+                                              ' $'+employment.median_income/1000 + 'K'}).reverse()+
                                           ', compared to '+
                                           employment.filter(employment => employment.status === 'earning' &  
                                             employment.type === 'salary-range' & 
                                             employment.state === 'United States' &  
                                             employment.variable === selected_attributions &
-                                            employment.attribution.includes('hearing')).map(
-                                              function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
+                                            employment.attribution.includes('hearing') &
+                                            employment.median_income !== 0).map(
+                                              function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                               ' and '+
                                               hear_labels[employment.index]+
                                               ' $'+employment.median_income/1000 + 'K': 
-                                              employment.index === 0 ?
+                                              index === (row.length-1) ?
                                               ' '+hear_labels[employment.index] +' earn $'+
                                               +employment.median_income/1000 + 'K':
                                               ' '+hear_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K'})+'.'
+                                              ' $'+employment.median_income/1000 + 'K'}).reverse()+'.'
                                       }[metrics],
                                     'accordion-is-open':
                                       {
@@ -3942,7 +4241,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment.status === insidechartStatus &  
                                             employment.type === insidechartType & 
                                             employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                              function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                             )
                                             +
                                           words[0]+nationDescript+', compared to '+
@@ -3950,7 +4249,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment.status === insidechartStatus &  
                                             employment.type === insidechartType & 
                                             employment.state === 'United States').map(employment => [employment.margin_errors,employment.percentage]).map(
-                                              function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                              function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                             )+
                                           words[1]+'.',
                                         median_income:
@@ -3991,18 +4290,18 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                   'In the United States, among people aged 25-64, an estimated '+
                                   dgraduate.map(function(dgraduate, index){ return index === 0 ?
                                   ' and '+
-                                  (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
+                                  (dgraduate[2] === 0 ? 'N/A of ' : ((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + '% \u26a0 ' : dgraduate[1] + '% ')+
                                   dgraduate[0].toLowerCase() : index === 4 ? ' '+
-                                  (((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + "% \u26a0 of deaf people have completed a bachelor’s degree or higher in "+dgraduate[0].toLowerCase() :
+                                  (dgraduate[2] === 0 ? 'N/A of deaf people have completed a bachelor’s degree or higher in ' : ((dgraduate[2]/100)/1.962937)/(dgraduate[1]/100) > 0.3 ? dgraduate[1] + "% \u26a0 of deaf people have completed a bachelor’s degree or higher in "+dgraduate[0].toLowerCase() :
                                   (insidechartStatus === 'Employment' ? dgraduate[1] + "% of deaf people with degrees in "+dgraduate[0].toLowerCase()+' are employed': 
                                   dgraduate[1] + "% of deaf people have completed a bachelor's degree or higher in "+dgraduate[0].toLowerCase())):
                                   ' '+dgraduate[1]+'% in '+dgraduate[0].toLowerCase()}).reverse()+
                                   ', compared to '+
                                   hgraduate.map(function(hgraduate, index){ return index === 0 ?
                                     ' and '+
-                                  (((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? hgraduate[1] + '% \u26a0 ' : hgraduate[1] + '% ')+
+                                  (hgraduate[2] === 0 ? 'N/A of ' : ((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? hgraduate[1] + '% \u26a0 ' : hgraduate[1] + '% ')+
                                   hgraduate[0].toLowerCase()+'.' : index === 4 ?
-                                  (((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? ' '+hgraduate[1] + "% \u26a0 of hearing people in "+hgraduate[0].toLowerCase() :
+                                  (dgraduate[2] === 0 ? 'N/A of hearing people have completed a bachelor’s degree or higher in ' : ((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? ' '+hgraduate[1] + "% \u26a0 of hearing people in "+hgraduate[0].toLowerCase() :
                                   (insidechartStatus === 'Employment' ? ' '+hgraduate[1] + "% of hearing people in "+hgraduate[0].toLowerCase()+' being employed': 
                                   ' '+hgraduate[1] + "% of hearing people with degrees in "+hgraduate[0].toLowerCase())):
                                   ' '+hgraduate[1]+'% in '+hgraduate[0].toLowerCase()}).reverse(),
@@ -4034,9 +4333,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     employment.state === 'United States').map(
                                     function(employment, index){ return index === 0 ? 
                                     ' and '+
-                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
                                     edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+                                    (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
                                     edulist[index] :
                                     ' '+employment.percentage+'% '+edulist[index]}).reverse()+
                                   ', compared to '+
@@ -4046,9 +4345,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     employment.state === 'United States').map(
                                     function(employment, index){ return index === 0 ? 
                                     ' and '+
-                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                    (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
                                     edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                    (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+                                    (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                                     edulist[index] :
                                     ' '+employment.percentage+'% '+edulist[index]}).reverse()+'.'
                               }[chartType]
@@ -4319,6 +4618,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               </div>
             </TabPanel>
             <TabPanel>
+              {employment.filter(employment => employment.type === insidechartType & 
+                employment.variable === selected_attributions & employment.state === chosen_state_a &
+                employment.status === insidechartStatus & employment.attribution.includes('deaf')).every(
+                employment => employment.percentage === 0)}
               <div className='inside_container'>
                 <p className='aria-text'>Left Content</p>
                 <p className='aria-text'>
@@ -4492,53 +4795,76 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         column:
                                           {
                                             'accordion-is':
-                                              in_the_a+state_label_a+', among people aged '+limit_age+', an estimated'+
+                                              in_the_a+state_label_a+', among people aged '+limit_age+
+                                              (employment.filter(employment => employment.type === insidechartType & 
+                                                employment.variable === selected_attributions & employment.state === chosen_state_a &
+                                                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                                employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript : 
+                                                ', an estimated'+
                                               employment.filter(employment => employment.type === insidechartType & 
                                                 employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                                employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-                                                function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                                employment.percentage !== 0).map(
+                                                function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                                 ' and '+
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                                 deaf_labels[employment.index] : ' '+ 
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                                deaf_labels[employment.index]})+
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                deaf_labels[employment.index]}).reverse()+
                                               nationDescript+', compared to '+
+                                              (employment.filter(employment => employment.type === insidechartType & 
+                                                employment.variable === selected_attributions & employment.state === chosen_state_a &
+                                                employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                                employment.percentage !== 0).length === 0 ? ' N/A of ' : '')+
                                               employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                              employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-                                              function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                                              employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                              employment.percentage !== 0).map(
+                                              function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                               ' and '+
-                                              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                               hear_labels[employment.index] : ' '+
-                                              (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                              hear_labels[employment.index]})+
+                                              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                              hear_labels[employment.index]}).reverse())+
+                                              (employment.filter(employment => employment.type === insidechartType & 
+                                                employment.variable === selected_attributions & (employment.state === chosen_state_a | employment.state === chosen_state_b) &
+                                                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                                employment.percentage !== 0).length === 0 ? ". This issue is also present "+in_the_b.toLowerCase()+state_label_b+'.' : 
+                                              employment.filter(employment => employment.type === insidechartType & 
+                                                employment.variable === selected_attributions & employment.state === chosen_state_b &
+                                                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                                employment.percentage !== 0).length === 0 ?
+                                              '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+
+                                              ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
                                               '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated'+
                                               employment.filter(employment => employment.type === insidechartType & 
                                                 employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                                employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
-                                                function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
+                                                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                                employment.percentage !== 0).map(
+                                                function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                                 ' and '+
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                                 deaf_labels[employment.index] : ' '+ 
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                                deaf_labels[employment.index]})+
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                deaf_labels[employment.index]}).reverse()+
                                               nationDescript+', compared to '+
                                               employment.filter(employment => employment.type === insidechartType & 
                                                 employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                                employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
-                                                function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
+                                                employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                                employment.percentage !== 0).map(
+                                                function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
                                                 ' and '+
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                                 hear_labels[employment.index] : ' '+
-                                                (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
-                                                hear_labels[employment.index]})+'.',                                      
+                                                (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
+                                                hear_labels[employment.index]}).reverse()+'.'),                                      
                                             'accordion-is-open':
                                               in_the_a+state_label_a+', among people aged '+limit_age+', an estimated '+
                                               employment.filter(employment => employment.attribution === attribute[0] & 
                                                 employment.status === insidechartStatus &  
                                                 employment.type === insidechartType & 
                                                 employment.state === chosen_state_a).map(employment => [employment.margin_errors,employment.percentage]).map(
-                                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                                  function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                                 )
                                                 +
                                               words[0]+nationDescript+', compared to '+
@@ -4546,35 +4872,40 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                                 employment.status === insidechartStatus &  
                                                 employment.type === insidechartType & 
                                                 employment.state === chosen_state_a).map(employment => [employment.margin_errors,employment.percentage]).map(
-                                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                                  function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                                 )+words[1]+
                                               '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated '+
                                               employment.filter(employment => employment.attribution === attribute[0] & 
                                                 employment.status === insidechartStatus &  
                                                 employment.type === insidechartType & 
                                                 employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
-                                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                                  function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                                 )+
                                               words[0]+nationDescript+', compared to '+
                                               employment.filter(employment => employment.attribution === attribute[1] & 
                                                 employment.status === insidechartStatus &  
                                                 employment.type === insidechartType & 
                                                 employment.state === chosen_state_b).map(employment => [employment.margin_errors,employment.percentage]).map(
-                                                  function(ME){return(((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
+                                                  function(ME){return(ME[1] === 0 ? 'N/A of ' : ((ME[0]/100)/1.962937)/(ME[1]/100) > 0.3 ? ME[1] + '% \u26a0 of ' : ME[1] + '% of ')}
                                                 )+
                                               words[1]+'.'
                                           }[accordion_is],
                                         all: 
-                                        in_the_a+state_label_a+', among people aged '+limit_age+', an estimated'+
+                                        in_the_a+state_label_a+', among people aged '+limit_age+
+                                        (employment.filter(employment => employment.type === insidechartType & 
+                                          employment.variable === selected_attributions & employment.state === chosen_state_a &
+                                          employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                          employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
+                                        ', an estimated'+
                                           employment.filter(employment => employment.attribution === 'deaf' & 
                                             employment.status !== 'no HS diploma' &  
                                             employment.type === 'education' & 
                                             employment.state === chosen_state_a).map(
                                             function(employment, index){ return index === 0 ? 
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                             edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+                                            (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
                                             edulist[index] :
                                             ' '+employment.percentage+'% '+edulist[index]}).reverse()+
                                           ', compared to '+
@@ -4584,21 +4915,30 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment.state === chosen_state_a).map(
                                             function(employment, index){ return index === 0 ? 
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
                                             edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+                                            (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                                             edulist[index] :
-                                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+'. While '+
-                                          in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated'+
+                                            ' '+employment.percentage+'% '+edulist[index]}).reverse())+
+                                          (employment.filter(employment => employment.type === insidechartType & 
+                                            employment.variable === selected_attributions & (employment.state === chosen_state_a | employment.state === chosen_state_b) &
+                                            employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                            employment.percentage !== 0).length === 0 ? ". This issue is also present "+in_the_b.toLowerCase()+state_label_b : 
+                                          employment.filter(employment => employment.type === insidechartType & 
+                                            employment.variable === selected_attributions & employment.state === chosen_state_b &
+                                            employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                            employment.percentage !== 0).length === 0 ?
+                                          '. While '+in_the_b.toLowerCase()+state_label_b+", the sample size is not sufficient to accurately report the deaf education attainment" : 
+                                          '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated'+
                                           employment.filter(employment => employment.attribution === 'deaf' & 
                                             employment.status !== 'no HS diploma' &  
                                             employment.type === 'education' & 
                                             employment.state === chosen_state_b).map(
                                             function(employment, index){ return index === 0 ? 
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
                                             edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
+                                            (employment.percentage === 0 ? 'N/A of deaf people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people have completed ' : employment.percentage + '% of deaf people have completed ')+
                                             edulist[index] :
                                             ' '+employment.percentage+'% '+edulist[index]}).reverse()+
                                           ', compared to '+
@@ -4608,11 +4948,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment.state === chosen_state_b).map(
                                             function(employment, index){ return index === 0 ? 
                                             ' and '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                            (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
                                             edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
-                                            (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
+                                            (employment.percentage === 0 ? 'N/A of hearing people have completed ' :((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                                             edulist[index] :
-                                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+'.'
+                                            ' '+employment.percentage+'% '+edulist[index]}).reverse()+'.')
                                       }[chartType]
                                     }
                                   </div>
@@ -4911,6 +5251,117 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div className='inside_container'>
+                <p className='aria-text'>Left Content</p>
+                <p className='aria-text'>
+                  This content contains 51 reports and you can select the state to generate a report.
+                </p>
+                <p className='aria-text'>Beginning of State Report Generator</p>
+                {
+                  {
+                  'Before' : 
+                  <>
+                    <div className = 'state_report_grid' style = {{height: '500px'}}>
+                      <div className='state_report_a'>
+                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
+                          <path fill = '#414042' d = 'M -0.8 0.7 L -0.8 4.2 L -0.7 4.2 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 4.1 L -0.8 4.1 L -0.8 4.2 L 2 4.2 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 2.6 L 0.5 2.6 L 0.5 2.7 L -0.5 2.7 Z M -0.5 3 L 0.5 3 L 0.5 2.9 L -0.5 2.9 Z M -0.5 3.3 L 1.7 3.3 L 1.7 3.2 L -0.5 3.2 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 3 L 1.1 3 L 1.1 2.3 L 0.7 2.3 Z'/>
+                          <path fill = '#00A79D' d = 'M 1.65 3 L 1.25 3 L 1.25 2.5 L 1.65 2.5 Z'/>
+                        </svg>
+                      </div>
+                      <div className='state_report_b'>
+                          <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
+                        <div style = {{maxWidth: '300px'}}>
+                          <Select 
+                            aria-labelledby="aria-label1"
+                            //ariaLiveMessages={{
+                            //  onFocus,
+                            //}}
+                            inputId="aria-input1"
+                            name="aria-live"
+                            styles={chart_side_style}
+                            isSearchable = {searchable}
+                            tabIndex={null}
+                            value = {report_multi_state}
+                            options = {geographics_wo_US}
+                            onChange = {changeReportGeoState}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </>,
+                  'After':
+                    <>
+                      <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
+                        <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                      </button>
+                      <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
+                        <div className='data_sidebar_interface'>
+                          <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
+                            <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                          </button>
+                          <div style={{marginTop:'10px'}}/>
+                          <div style = {{marginBottom: '22px'}}/>
+                          <p className = 'state_title' style = {{border: 'none', color: 'black', background: 'white', borderRadius: '10px'}}>To generate a report, select your state:</p>
+                          <Select 
+                            styles={chart_option_style}
+                            isSearchable = {false}
+                            tabIndex={null}
+                            value = {report_multi_state}
+                            options = {geographics_wo_US}
+                            onChange = {changeReportGeoState}
+                          />
+                        </div>
+                      </div>
+                      <div className={data_grid}>
+                        <div className='a'>
+                          <div className = 'state_title'>{report_state.toUpperCase()+' STATE REPORT'}</div>
+                          <object data={PDFs[reportPDF]} type="application/pdf" frameborder="0" width="100%" height="400px" style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '700px', width: '100%' }} aria-label = 'PDF Viewer'>
+                            <div style = {{textAlign: 'center'}}>
+                              <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
+                                <path fill = '#828282' d = 'M -0.8 0.7 L -0.8 3.1 L -0.7 3 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 2.7 L 1.7 2.9 L 1.5 2.7 L 1.3 2.9 L 1.1 2.7 L 0.9 2.9 L 0.7 2.7 L 0.5 2.9 L 0.3 2.7 L 0.1 2.9 L -0.1 2.7 L -0.3 2.9 L -0.5 2.7 L -0.7 2.9 L -0.8 2.9 L -0.8 3 L -0.7 3 L -0.5 2.8 L -0.3 3 L -0.1 2.8 L 0.1 3 L 0.3 2.8 L 0.5 3 L 0.7 2.8 L 0.9 3 L 1.1 2.8 L 1.3 3 L 1.5 2.8 L 1.7 3 L 1.9 2.8 L 2 2.7 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.8 3.2 L -0.8 4.2 L 2 4.2 L 2 4.1 L -0.7 4.1 L -0.7 3.2 L -0.5 3 L -0.3 3.2 L -0.1 3 L 0.1 3.2 L 0.3 3 L 0.5 3.2 L 0.7 3 L 0.9 3.2 L 1.1 3 L 1.3 3.2 L 1.5 3 L 1.7 3.2 L 1.9 3 L 1.9 4.2 L 2 4.2 L 2 2.8 L 1.9 2.9 L 1.7 3.1 L 1.5 2.9 L 1.3 3.1 L 1.1 2.9 L 0.9 3.1 L 0.7 2.9 L 0.5 3.1 L 0.3 2.9 L 0.1 3.1 L -0.1 2.9 L -0.3 3.1 L -0.5 2.9 L -0.7 3.1 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 2.6 L 0.9 2.8 L 1.1 2.6 L 1.1 2.3 L 0.7 2.3 Z' />
+                                <path fill = '#e05a43' d = 'M 1.65 2.75 L 1.5 2.6 L 1.3 2.8 L 1.25 2.75 L 1.25 2.5 L 1.65 2.5 Z'/>
+                              </svg>
+                            </div>
+                          </object>
+                          <div className = 'thep'>If you are unable to fully access the report, your browser may not support PDFs.</div>
+                            <div className = 'thep'><b>Download here instead: <a href={PDFs[reportPDF]} style = {{textDecoration: 'none', color: '#0B7373'}}>{report_state} Report</a></b></div> 
+                          </div>
+                        <div className='b' style={{display:interface_side}}>
+                          <p className='aria-text'>Right Content</p>
+                          <p className='aria-text'>
+                            This content consists of several selection options that affect charts.
+                          </p>
+                          <p className='aria-text'>
+                            When one of these options is selected, this will also affect a chart, title, description, and other selection options 
+                            including all information in exported chart.
+                          </p>
+                          <form>
+                            <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
+                            <div style = {{marginBottom: '10px'}}/>
+                            <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
+                            <Select 
+                            aria-labelledby="aria-label1"
+                            //ariaLiveMessages={{
+                            //  onFocus,
+                            //}}
+                            inputId="aria-input1"
+                            name="aria-live"
+                            styles={chart_side_style}
+                            isSearchable = {searchable}
+                            tabIndex={null}
+                            value = {report_multi_state}
+                            options = {geographics_wo_US}
+                            onChange = {changeReportGeoState}
+                            />
+                          </form>
+                        </div>
+                      </div>
+                    </>
+                }[when_you_select]
+              }
               </div>
             </TabPanel>
           </Tabs>

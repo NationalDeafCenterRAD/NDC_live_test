@@ -537,7 +537,7 @@ const Navbar = () => {
 
   const changeWidth = () => {
     if(style === 'column-close'){
-      setStyle('column-open');
+      setStyle('column-close');
       setTabIndex('0');
     }else{
       setStyle('column-close');
@@ -631,13 +631,13 @@ const Navbar = () => {
             Report Generator
           </div>
         </Link>*/}
-        <Link to='/FAQs' style = {linkStyle} /*aria-hidden="true"*/>
+        {/*<Link to='/FAQs' style = {linkStyle} aria-hidden="true">
           <div className = 'column-text'>
             <FontAwesome className='column-item' name = 'book'/>
             &nbsp;&nbsp;&nbsp; 
             FAQs
           </div>
-        </Link>
+        </Link>*/}
       </div>
       <Suspense fallback={<Loading/>}>
       <Routes>
