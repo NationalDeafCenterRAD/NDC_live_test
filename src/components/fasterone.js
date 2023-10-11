@@ -4057,7 +4057,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='National Level Interactive Chart'>{'National Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Level Interactive Charts'>{'State Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Occupational Fields Interactive Table'>{'Occupational Fields'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
-              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
+              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide, display: 'None'}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
             </TabList>
             <TabPanel>
               <div className='inside_container'>
