@@ -4057,7 +4057,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='National Level Interactive Chart'>{'National Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Level Interactive Charts'>{'State Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Occupational Fields Interactive Table'>{'Occupational Fields'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
-              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide, display: 'none'}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
+              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
             </TabList>
             <TabPanel>
               <div className='inside_container'>
@@ -5264,16 +5264,57 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   {
                   'Before' : 
                   <>
-                    <div className = 'state_report_grid' style = {{height: '500px'}}>
-                      <div className='state_report_a'>
-                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
+                    <div className={data_grid} style = {{height: '500px'}}>
+                      <div className='a'>
+                        <div className = 'state_title'>{'STATE REPORT'}</div>
+                        <div style={{display:data_sidebar}} aria-hidden = 'true'>
+                          <div className = 'state_title' style = {{border: 'none', textAlign: 'center'}}>To generate a report, select your state:</div>
+                          <div className = 'that-is-my-form-container'>
+                            <Select 
+                              styles={chart_side_style}
+                              isSearchable = {false}
+                              tabIndex={null}
+                              value = {report_multi_state}
+                              options = {geographics_wo_US}
+                              onChange = {changeReportGeoState}
+                            />
+                          </div>
+                        </div>
+                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{display: 'block', maxHeight:'350px', minHeight:'200px', marginRight: 'auto', marginLeft: 'auto'}}>
                           <path fill = '#414042' d = 'M -0.8 0.7 L -0.8 4.2 L -0.7 4.2 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 4.1 L -0.8 4.1 L -0.8 4.2 L 2 4.2 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 2.6 L 0.5 2.6 L 0.5 2.7 L -0.5 2.7 Z M -0.5 3 L 0.5 3 L 0.5 2.9 L -0.5 2.9 Z M -0.5 3.3 L 1.7 3.3 L 1.7 3.2 L -0.5 3.2 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 3 L 1.1 3 L 1.1 2.3 L 0.7 2.3 Z'/>
                           <path fill = '#00A79D' d = 'M 1.65 3 L 1.25 3 L 1.25 2.5 L 1.65 2.5 Z'/>
                         </svg>
                       </div>
-                      <div className='state_report_b'>
+                      <div className='b' style={{display:interface_side}}>
+                        <p className='aria-text'>Right Content</p>
+                        <p className='aria-text'>
+                          This content consists of one selection option that affect report.
+                        </p>
+                        <form style = {{width: '300px'}}>
+                          <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
+                          <div style = {{marginBottom: '10px'}}/>
                           <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
-                        <div style = {{maxWidth: '300px'}}>
+                          <Select 
+                          aria-labelledby="aria-label1"
+                          //ariaLiveMessages={{
+                          //  onFocus,
+                          //}}
+                          inputId="aria-input1"
+                          name="aria-live"
+                          styles={chart_side_style}
+                          isSearchable = {searchable}
+                          tabIndex={null}
+                          value = {report_multi_state}
+                          options = {geographics_wo_US}
+                          onChange = {changeReportGeoState}
+                          />
+                        </form>
+                      </div>
+                  </div>
+                    {/*<div style = {{height: '500px'}}>
+                      <div className='state_report_b' style ={{display:data_sidebar}}>
+                          <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
+                        <div style = {{maxWidth: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                           <Select 
                             aria-labelledby="aria-label1"
                             //ariaLiveMessages={{
@@ -5290,7 +5331,42 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                           />
                         </div>
                       </div>
-                    </div>
+                      <div className='state_report_a'>
+                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
+                          <path fill = '#414042' d = 'M -0.8 0.7 L -0.8 4.2 L -0.7 4.2 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 4.1 L -0.8 4.1 L -0.8 4.2 L 2 4.2 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 2.6 L 0.5 2.6 L 0.5 2.7 L -0.5 2.7 Z M -0.5 3 L 0.5 3 L 0.5 2.9 L -0.5 2.9 Z M -0.5 3.3 L 1.7 3.3 L 1.7 3.2 L -0.5 3.2 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 3 L 1.1 3 L 1.1 2.3 L 0.7 2.3 Z'/>
+                          <path fill = '#00A79D' d = 'M 1.65 3 L 1.25 3 L 1.25 2.5 L 1.65 2.5 Z'/>
+                        </svg>
+                      </div>
+                      <div className='b' style={{display:interface_side}}>
+                          <p className='aria-text'>Right Content</p>
+                          <p className='aria-text'>
+                            This content consists of several selection options that affect charts.
+                          </p>
+                          <p className='aria-text'>
+                            When one of these options is selected, this will also affect a chart, title, description, and other selection options 
+                            including all information in exported chart.
+                          </p>
+                          <form>
+                            <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
+                            <div style = {{marginBottom: '10px'}}/>
+                            <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
+                            <Select 
+                            aria-labelledby="aria-label1"
+                            //ariaLiveMessages={{
+                            //  onFocus,
+                            //}}
+                            inputId="aria-input1"
+                            name="aria-live"
+                            styles={chart_side_style}
+                            isSearchable = {searchable}
+                            tabIndex={null}
+                            value = {report_multi_state}
+                            options = {geographics_wo_US}
+                            onChange = {changeReportGeoState}
+                            />
+                          </form>
+                      </div>
+                    </div>*/}
                   </>,
                   'After':
                     <>
@@ -5332,11 +5408,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         <div className='b' style={{display:interface_side}}>
                           <p className='aria-text'>Right Content</p>
                           <p className='aria-text'>
-                            This content consists of several selection options that affect charts.
-                          </p>
-                          <p className='aria-text'>
-                            When one of these options is selected, this will also affect a chart, title, description, and other selection options 
-                            including all information in exported chart.
+                            This content consists of one selection option that affect report.
                           </p>
                           <form>
                             <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
