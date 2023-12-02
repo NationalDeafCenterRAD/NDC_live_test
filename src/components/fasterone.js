@@ -1,4 +1,5 @@
 
+// If you want to put Generate Report in download button as one of options, see how to do that: https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/exporting/menuitemdefinitions/
 //Import React, CSS, logo, and global level citation
 import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
 import './dashboard.css';
@@ -12,9 +13,11 @@ import employment from './assets/employment.json';
 import timeseries from './assets/timeseries.json';
 
 //Widgets
+import { Link } from 'react-router-dom';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import Select, { components } from 'react-select';
-import Table from './table.js'
+import Table from './table.js';
+import swal from 'sweetalert';
 
 /*Icons and fonts*/
 import 'font-awesome/css/font-awesome.min.css';
@@ -63,6 +66,10 @@ let national_options = [
   },
   {label: 'Median Earning', value: 'Median Earning', variable: 'earning', title: 'Median Earning', title_by:'', disabled: false, second_disabled: false, display: 'None',
   set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'salary-range',
+   chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
+  },
+  {label: 'Mean Earning', value: 'Mean Earning', variable: 'earning', title: 'Mean Earning', title_by:'', disabled: false, second_disabled: false, display: 'None',
+  set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'mean-salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'mean-salary-range',
    chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Type of Employment', value: 'Type of Employment', variable: 'self-employment', title: 'Self-Employment Rate', title_by:'', disabled: false, second_disabled: false, display: 'unset',
@@ -144,6 +151,7 @@ let inside_chart_options = [
   {label: "Business Owners", value: "Business Owners", title: "Percentage of Business Owners", variable: "business owner", type: "self-employment", age: "16-64", description: ' are business owners', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Full-Time Workers", value: "Full-Time Workers", title: "Percentage of Full-Time Workers", variable: "full-time", type: "self-employment", age: "16-64", description: ' are full-time workers', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   
+  {label: "Enrolled", value: "Enrolled", title: "Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "the high school's attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college', sentence: 'some college attainment rate', group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher", sentence: "the associate's degree attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
@@ -153,9 +161,11 @@ let inside_chart_options = [
   {label: "Employed", value: "Employed", title: "Employment Rate", variable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: 'the employment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Unemployed", value: "Unemployed", title: "Unemployment Rate", variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work,', description1: ' are unemployed', sentence: 'the unemployment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Not in Labor Force", value: "Not in Labor Force", title: "People not in Labor Force", variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work,', description1: ' are not in the labor force', sentence: 'the non-labor force participation rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
-  
+
   {label: "Employment Rates", value: "Employment Rates", title: "Employment Rate", variable: 'employed',type: 'levels of education',age: '25-64', description: 'employment rate',description1: '  are employed', sentence: '', group: 'levels of education', metrics: 'percentage', chartype: 'levels',disabled: true, second_disabled: true},
-  {label: "Median Earnings", value: "Median Earnings", title: "Median Earnings", variable: 'earning',type: 'levels of education',age: '25-64', description: 'median earning',description1: '', sentence: '', group: 'levels of education', metrics: 'median_income', chartype: 'levels',disabled: true, second_disabled: true}
+  {label: "Median Earnings", value: "Median Earnings", title: "Median Earnings", variable: 'earning',type: 'levels of education',age: '25-64', description: 'median earning',description1: '', sentence: '', group: 'levels of education', metrics: 'median_income', chartype: 'levels',disabled: true, second_disabled: true},
+  {label: "Mean Earnings", value: "Mean Earnings", title: "Mean Earnings", variable: 'mean-earning',type: 'levels of education',age: '25-64', description: 'mean earning',description1: '', sentence: '', group: 'levels of education', metrics: 'median_income', chartype: 'levels',disabled: true, second_disabled: true}
+
 ]
 let attributions = [
   {label: 'deaf', value: 'deaf', variable: 'overall', color: 'teal', words: 'deaf people'},
@@ -222,61 +232,9 @@ let state_inside_chart_options = [
   {label: "Unemployed", value: "Unemployed", title: "Unemployment Rate", variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Not in Labor Force", value: "Not in Labor Force", title: "People not in Labor Force", variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work', description1: ' are not in the labor force', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
 ]
+
 let geographics = [
   {label: 'United States', value: 'United States', variable: 'US'},
-  {label: 'Alabama', value: 'Alabama', variable: 'Alabama'},
-  {label: 'Alaska', value: 'Alaska', variable: 'Alaska'},
-  {label: 'Arizona', value: 'Arizona', variable: 'Arizona'},
-  {label: 'Arkansas', value: 'Arkansas', variable: 'Arkansas'},
-  {label: 'California', value: 'California', variable: 'California'},
-  {label: 'Colorado', value: 'Colorado', variable: 'Colorado'},
-  {label: 'Connecticut', value: 'Connecticut', variable: 'Connecticut'},
-  {label: 'Delaware', value: 'Delaware', variable: 'Delaware'},
-  {label: 'District of Columbia', value: 'District of Columbia', variable: 'District of Columbia'},
-  {label: 'Florida', value: 'Florida', variable: 'Florida'},
-  {label: 'Georgia', value: 'Georgia', variable: 'Georgia'},
-  {label: 'Hawaii', value: 'Hawaii', variable: 'Hawaii'},
-  {label: 'Idaho', value: 'Idaho', variable: 'Idaho'},
-  {label: 'Illinois', value: 'Illinois', variable: 'Illinois'},
-  {label: 'Indiana', value: 'Indiana', variable: 'Indiana'},
-  {label: 'Iowa', value: 'Iowa', variable: 'Iowa'},
-  {label: 'Kansas', value: 'Kansas', variable: 'Kansas'},
-  {label: 'Kentucky', value: 'Kentucky', variable: 'Kentucky'},
-  {label: 'Louisiana', value: 'Louisiana', variable: 'Louisiana'},
-  {label: 'Maine', value: 'Maine', variable: 'Maine'},
-  {label: 'Maryland', value: 'Maryland', variable: 'Maryland'},
-  {label: 'Massachusetts', value: 'Massachusetts', variable: 'Massachusetts'},
-  {label: 'Michigan', value: 'Michigan', variable: 'Michigan'},
-  {label: 'Minnesota', value: 'Minnesota', variable: 'Minnesota'},
-  {label: 'Mississippi', value: 'Mississippi', variable: 'Mississippi'},
-  {label: 'Missouri', value: 'Missouri', variable: 'Missouri'},
-  {label: 'Montana', value: 'Montana', variable: 'Montana'},
-  {label: 'Nebraska', value: 'Nebraska', variable: 'Nebraska'},
-  {label: 'Nevada', value: 'Nevada', variable: 'Nevada'},
-  {label: 'New Hampshire', value: 'New Hampshire', variable: 'New Hampshire'},
-  {label: 'New Jersey', value: 'New Jersey', variable: 'New Jersey'},
-  {label: 'New Mexico', value: 'New Mexico', variable: 'New Mexico'},
-  {label: 'New York', value: 'New York', variable: 'New York'},
-  {label: 'North Carolina', value: 'North Carolina', variable: 'North Carolina'},
-  {label: 'North Dakota', value: 'North Dakota', variable: 'North Dakota'},
-  {label: 'Ohio', value: 'Ohio', variable: 'Ohio'},
-  {label: 'Oklahoma', value: 'Oklahoma', variable: 'Oklahoma'},
-  {label: 'Oregon', value: 'Oregon', variable: 'Oregon'},
-  {label: 'Pennsylvania', value: 'Pennsylvania', variable: 'Pennsylvania'},
-  {label: 'Rhode Island', value: 'Rhode Island', variable: 'Rhode Island'},
-  {label: 'South Carolina', value: 'South Carolina', variable: 'South Carolina'},
-  {label: 'South Dakota', value: 'South Dakota', variable: 'South Dakota'},
-  {label: 'Tennessee', value: 'Tennessee', variable: 'Tennessee'},
-  {label: 'Texas', value: 'Texas', variable: 'Texas'},
-  {label: 'Utah', value: 'Utah', variable: 'Utah'},
-  {label: 'Vermont', value: 'Vermont', variable: 'Vermont'},
-  {label: 'Virginia', value: 'Virginia', variable: 'Virginia'},
-  {label: 'Washington', value: 'Washington', variable: 'Washington'},
-  {label: 'West Virginia', value: 'West Virginia', variable: 'West Virginia'},
-  {label: 'Wisconsin', value: 'Wisconsin', variable: 'Wisconsin'},
-  {label: 'Wyoming', value: 'Wyoming', variable: 'Wyoming'}
-]
-let geographics_wo_US = [
   {label: 'Alabama', value: 'Alabama', variable: 'Alabama'},
   {label: 'Alaska', value: 'Alaska', variable: 'Alaska'},
   {label: 'Arizona', value: 'Arizona', variable: 'Arizona'},
@@ -395,60 +353,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
    employment => employment.status)
 
   // Stylize selection styles
-  const chart_option_style = {
-    option: (provided, state) => ({
-      ...provided,
-      background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
-      color: state.isSelected ? 'white': 'black',
-      cursor: state.isDisabled ? 'default' : 'pointer',
-      fontWeight: state.isDisabled ? 900 : 300
-    }),
-    menu: (provided) => ({
-      ...provided,
-      borderRadius: '0 0 10px 10px',
-      overflow: 'hidden'
-    }),
-    indicatorSeparator: () => {},
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      color: 'black',
-      "&:hover": {
-        color: 'black'
-      }
-    }),
-    control: (provided) => ({
-      ...provided,
-      background: "white",
-      borderRadius: 100,
-      border: 'None',
-      padding: 2,
-      "&:hover": {
-        background: "#F6F6F7",
-        color: 'white',
-        cursor: 'pointer',
-        transition: "all 0.5s ease-in-out"
-      },
-      transition: "all 0.5s ease-in-out"
-    }),
-    placeholder: (defaultStyles) => {
-      return {
-          ...defaultStyles,
-          color: 'black',
-          fontWeight: 700,
-      }
-    },
-    singleValue:(provided, state) => ({
-      ...provided,
-      height:'100%',
-      color:'black',
-      paddingTop:'3px',
-      fontWeight: state.isDisabled ? 900 : 700
-    }),
-  }
   const chart_side_style = {
     option: (provided, state) => ({
       ...provided,
-      background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
+      background: state.isSelected ? '#0d7777' : state.isFocused ? '#ECEDF0' : 'white',
       color: state.isSelected ? 'white': 'black',
       cursor: state.isDisabled ? 'default' : 'pointer',
       fontWeight: state.isDisabled ? 900 : 300
@@ -456,9 +364,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     indicatorSeparator: () => {},
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: '#0B7373',
+      color: '#0d7777',
       "&:hover": {
-        color: '#0B7373'
+        color: '#0d7777'
       }
     }),
     menu: (provided) => ({
@@ -470,7 +378,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       ...provided,
       background: "#F6F6F7",
       borderRadius: 100,
-      border: '0.5px #0B7373 solid',
+      border: '0.5px #0d7777 solid',
       padding: 2,
       "&:hover": {
         background: '#ECEDF0',
@@ -483,70 +391,16 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     placeholder: (defaultStyles) => {
       return {
           ...defaultStyles,
-          color: '#0B7373',
+          color: '#0d7777',
           fontWeight: 700,
       }
     },
     singleValue:(provided) => ({
       ...provided,
       height:'100%',
-      color:'#0B7373',
+      color:'#0d7777',
       paddingTop:'3px',
       fontWeight: 700,
-    }),
-  }
-  const second_option_style = {
-    option: (provided, state) => ({
-      ...provided,
-      fontWeight: state.isSelected ? 900: 100,
-      cursor: nationDisabled ? 'not-allowed' : 'pointer',
-      background: state.isSelected & nationDisabled ? 'transparent' 
-                : state.isSelected & !nationDisabled ? '#008e8593' 
-                : state.isFocused ? '#ECEDF0' 
-                : 'transparent',
-      color: nationDisabled ? '#bfbfbf' 
-           : 'black',
-      fontSize: 16,
-      fontFamily: 'Roboto'
-    }),
-    control: (provided) => ({
-      ...provided,
-      marginTop: 20,
-      border: '0.5px #008e85 solid',
-      borderBottom: 'none',
-      borderRadius: '20px 20px 0 0',
-      padding: 2,
-      "&:hover": {
-        background: '#ECEDF0',
-        cursor: 'pointer',
-        transition: "all 0.1s ease-in-out"
-      },
-      transition: "all 0.1s ease-in-out"
-    }),
-    menu: (provided) => ({
-      ...provided,
-      position: 'static',
-      overflowX: 'hidden',
-      border: '0.5px #008e85 solid',
-      margin:0,
-      zIndex: 0,
-      padding: 0,
-      background: "#F6F6F7",
-      borderRadius: '0 0 20px 20px',
-      color: '#008e85',
-      boxShadow: 'None',
-      "&:hover": {
-        background: '#F6F6F7',
-        cursor: 'pointer',
-        transition: "all 0.5s ease-in-out"
-      },
-      transition: "all 0.5s ease-in-out"
-    }),
-    singleValue:(provided) => ({
-      ...provided,
-      height:'100%',
-      paddingTop:'3px',
-      fontWeight: 700
     }),
   }
   const second_side_style = {
@@ -556,27 +410,27 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       cursor: nationDisabled ? 'not-allowed' : 'pointer',
       fontWeight: state.isSelected ? 900: 100,
       background: state.isSelected & nationDisabled ? 'transparent' 
-      : state.isSelected & !nationDisabled ? '#008e8593' 
+      : state.isSelected & !nationDisabled ? '#0d7777' 
       : state.isFocused ? '#ECEDF0' 
       : 'transparent',
       color: nationDisabled ? '#bfbfbf' :
-        state.isSelected ? 'black'  : 
-        '#0B7373',
+        state.isSelected ? 'white'  : 
+        '#0d7777',
       fontSize: 16,
       fontFamily: 'Roboto',
     }),
     dropdownIndicator: (provided) => ({
       ...provided,
       cursor: 'pointer',
-      color: nationDisabled ? '#bfbfbf' :'#0B7373',
+      color: nationDisabled ? '#bfbfbf' :'#0d7777',
       "&:hover": {
-        color: '#0B7373'
+        color: '#0d7777'
       }
     }),
     control: (provided) => ({
       ...provided,
       cursor: 'pointer',
-      border: '0.5px #0B7373 solid',
+      border: '0.5px #0d7777 solid',
       borderBottom: 'none',
       borderRadius: '20px 20px 0 0',
       background: "#F6F6F7",
@@ -593,13 +447,13 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       cursor: 'pointer',
       position: 'static',
       overflowX: 'hidden',
-      border:  '0.5px #0B7373 solid',
+      border:  '0.5px #0d7777 solid',
       margin:0,
       zIndex: 0,
       padding: 0,
       background: "#F6F6F7",
       borderRadius: '0 0 20px 20px',
-      color: '#0B7373',
+      color: '#0d7777',
       boxShadow: 'None',
       "&:hover": {
         background: '#F6F6F7',
@@ -613,70 +467,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       cursor: 'pointer',
       height:'100%',
       fontWeight: 700,
-      color: nationDisabled ? '#bfbfbf' : '#0B7373',
-    })
-  }
-  const third_option_style = {
-    option: (provided, state) => ({
-      ...provided,
-      cursor: state.isDisabled ? 'not-allowed' : 'pointer',
-      fontWeight: state.isSelected ? 900: 100,
-      background: state.isSelected & second_nationDisabled ? 'transparent' 
-                : state.isSelected & !second_nationDisabled ? '#008e8593' 
-                : state.isFocused ? '#ECEDF0' 
-                : 'transparent',
-      color: second_nationDisabled ? '#bfbfbf' 
-           : 'black',
-      fontSize: 16,
-      fontFamily: 'Roboto'
-    }),
-    control: (provided) => ({
-      ...provided,
-      marginTop: -5,
-      border: '0.5px #008e85 solid',
-      borderBottom: 'none',
-      borderRadius: '20px 20px 0 0',
-      padding: 2,
-      "&:hover": {
-        background: '#ECEDF0',
-        cursor: 'pointer',
-        transition: "all 0.1s ease-in-out"
-      },
-      transition: "all 0.1s ease-in-out"
-    }),
-    menu: (provided) => ({
-      ...provided,
-      position: 'static',
-      overflowX: 'hidden',
-      border: '0.5px #008e85 solid',
-      margin:0,
-      zIndex: 0,
-      padding: 0,
-      background: "#F6F6F7",
-      borderRadius: '0 0 20px 20px',
-      color: '#008e85',
-      boxShadow: 'None',
-      "&:hover": {
-        background: '#F6F6F7',
-        cursor: 'pointer',
-        transition: "all 0.5s ease-in-out"
-      },
-      transition: "all 0.5s ease-in-out"
-    }),
-    singleValue:(provided) => ({
-      ...provided,
-      height:'100%',
-      paddingTop:'3px',
-      fontWeight: 700
-    }),
-    multiValue: (provided, state) => ({
-      ...provided,
-      color: state.isDisabled ? 'transparent' : '#333333',
-      background: state.isDisabled ? 'transparent' : '#E6E6E6'
-    }),
-    multiValueLabel: (provided, state) => ({
-      ...provided,
-      color: state.isDisabled ? 'transparent ': '#333333',
+      color: nationDisabled ? '#bfbfbf' : '#0d7777',
     })
   }
   const third_side_style = {
@@ -684,11 +475,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       ...provided,
       fontWeight: state.isSelected ? 900: 100,
       background: state.isSelected & second_nationDisabled ? 'transparent' 
-                : state.isSelected & !second_nationDisabled ? '#008e8593' 
+                : state.isSelected & !second_nationDisabled ? '#0d7777' 
                 : state.isFocused ? '#ECEDF0' 
                 : 'transparent',
-      color: second_nationDisabled ? '#bfbfbf'
-      :'black',
+      color: second_nationDisabled ? '#bfbfbf':
+      state.isSelected ? 'white' : '#0d7777',
       fontSize: 16,
       fontFamily: 'Roboto',
       cursor: 'pointer'
@@ -745,16 +536,16 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   const buttons_under_title = {
     option: (provided, state) => ({
       ...provided,
-      background: state.isSelected ? '#008e8593' : state.isFocused ? '#ECEDF0' : 'white',
-      color: 'black',
+      background: state.isSelected ? '#0d7777' : state.isFocused ? '#ECEDF0' : 'white',
+      color: state.isSelected ? 'white':'#0d7777',
       cursor: 'pointer'
     }),
     indicatorSeparator: () => {},
     dropdownIndicator: (provided) => ({
       ...provided,
-      color: '#0B7373',
+      color: '#0d7777',
       "&:hover": {
-        color: '#0B7373'
+        color: '#0d7777'
       }
     }),
     menu: (provided) => ({
@@ -771,7 +562,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       marginBottom: 10,
       fontSize: '16px',
       fontFamily: 'Roboto',
-      border: '0.5px #0B7373 solid',
+      border: '0.5px #0d7777 solid',
       "&:hover": {
         background: '#ECEDF0',
         color: 'white',
@@ -783,14 +574,14 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     placeholder: (defaultStyles) => {
       return {
           ...defaultStyles,
-          color: '#0B7373',
+          color: '#0d7777',
       }
     },
     singleValue:(provided) => ({
       ...provided,
       paddingTop:'3px',
       height:'100%',
-      color:'#0B7373'
+      color:'#0d7777'
     }),
   }
 
@@ -879,8 +670,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     textaccordion_is === 'accordion-is-open' ? setTextAccordionIs('accordion-is') : setTextAccordionIs('accordion-is-open');
   }
 
-  // Tab Function
-  const [tab_num, setTabNumber] = useState(0)
+  // Use DOWNLOAD REPORT to trigger tab to Report tab
+  const [reportTrigger, setReportTrigger] = useState(0)
+
+  const changeTabNumber = index => {
+    setReportTrigger(index);
+  };
 
   // Data: Trend over Time - Set limit x-axis range
   const min_year = Math.min(...timeseries.filter(timeseries => timeseries.type === 'education' &
@@ -895,7 +690,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   const [maintitle, setMainTitle] = useState('Education Attainment')
   const [nationDisabled, setnationDisabled] = useState(false)
   const [second_nationDisabled, setsecondNationDisabled] = useState(false)
-  const [title_color,setTitleColor] = useState('#0B7373')
+  const [title_color,setTitleColor] = useState('#0d7777')
   const [nationSelectDisplay, setNationSelectDisplay] = useState('unset')
   const [nationalTitle, setNationalTitle] = useState("Bachelor's Degree Attainment")
   const [nationDescript, setNationDescript] = useState(" have completed a bachelor's degree or higher")
@@ -940,7 +735,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     if(e.second_disabled === true){
       setTitleColor('#bfbfbf')
     }else{
-      setTitleColor('#0B7373')
+      setTitleColor('#0d7777')
     }
     setMainTitle(e.value)
     setnationDisabled(e.disabled)
@@ -1110,18 +905,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }
   }
 
-  // Functions for "Report" tab
-  const [report_state, setReportState] = useState('State...');
-  const [when_you_select, setWhenYouSelect] = useState('Before')
-  const [report_multi_state, setReportMultiState] = useState([  {label: 'State...', value: 'State...'}])
-  const [reportPDF, setReportPDF] = useState('NDC_Texas_report.pdf')
-  const changeReportGeoState = (e) => {
-    setReportState(e.variable)
-    setReportMultiState(e)
-    setReportPDF('NDC_'+e.variable+'_report.pdf')
-    setWhenYouSelect('After')
-  }
-
   // Change information inside "More Option" interface when interacting
   const [num_col, setNumCol] = useState([0,6])
   const [attribute, setAttribution] = useState(['deaf','hearing'])
@@ -1243,7 +1026,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
 
   // Reset charts if switching to either nation level or state level
   useEffect(() => {
-    if(tab_num === 1 | tab_num === 2){
+    if(reportTrigger === 1 | reportTrigger === 2){
       setAttributions('overall')
       setnationDisabled(false)
       setsecondNationDisabled(false)
@@ -1268,12 +1051,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       setSecondSchema([{label: 'Overall', value: 'Overall', variable: 'overall', variables: [''], deaf: ['deaf people'], hearing: ['hearing people']}])
       setMoreOptions(' ')
     }
-    if(tab_num === 1){
+    if(reportTrigger === 1 | reportTrigger === 3){
       setYear((acs_five_year-4)+'-'+(acs_five_year))
     }else{
       setYear(acs_one_year)
     }
-  },[tab_num])
+  },[reportTrigger])
 
   // Warnings for nation level
   const [warning_sty,setWarningSty] = useState('not-warning')
@@ -1389,7 +1172,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   }
 
   useEffect(() => {
-    if(tab_num === 1 & chartType === 'all'){
+    if(reportTrigger === 1 & chartType === 'all'){
       wordCounter(
         in_the_b+state_label_b+', among people aged 16-64'+
         (employment.filter(employment => employment.type === insidechartType & 
@@ -1421,7 +1204,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           edulist[index] :
           ' '+employment.percentage+'% '+edulist[index]}).reverse())+citation[2]
       )
-    }else if(tab_num === 1){
+    }else if(reportTrigger === 1){
       wordCounter(
         {
           'accordion-is':
@@ -1510,7 +1293,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               median_income:
                 'In the United States, among people aged 16-64,'+
                 employment.filter(employment => employment.status === 'earning' &  
-                  employment.type === 'salary-range' & 
+                  employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.variable === selected_attributions &
                   employment.attribution.includes('deaf') &
@@ -1518,15 +1301,15 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
                     ' and '+
                     deaf_labels[employment.index]+
-                    ' $'+employment.median_income/1000 + 'K': 
+                    ' $'+Math.round(employment.median_income/1000) + 'K': 
                     index === 0 ?
                     ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
-                    +employment.median_income/1000 + 'K':
+                    +Math.round(employment.median_income/1000) + 'K':
                     ' '+deaf_labels[employment.index]+
-                    ' $'+employment.median_income/1000 + 'K'})+
+                    ' $'+Math.round(employment.median_income/1000) + 'K'})+
                 ', compared to '+
                 employment.filter(employment => employment.status === 'earning' &  
-                  employment.type === 'salary-range' & 
+                  employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.variable === selected_attributions &
                   employment.attribution.includes('hearing') &
@@ -1534,12 +1317,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
                     ' and '+
                     hear_labels[employment.index]+
-                    ' $'+employment.median_income/1000 + 'K': 
+                    ' $'+Math.round(employment.median_income/1000) + 'K': 
                     index === 0 ?
                     ' '+hear_labels[employment.index] +' earn $'+
-                    +employment.median_income/1000 + 'K':
+                    +Math.round(employment.median_income/1000) + 'K':
                     ' '+hear_labels[employment.index]+
-                    ' $'+employment.median_income/1000 + 'K'})
+                    ' $'+Math.round(employment.median_income/1000) + 'K'})
           }[metrics],
         'accordion-is-open':
             {
@@ -1563,27 +1346,27 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               median_income:
                 'In the United States, among people aged 16-64,'+
                 employment.filter(employment => employment.status === 'earning' &  
-                  employment.type === 'salary-range' & 
+                  employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.attribution === attribute[0]).map(
                     function(employment){return (
                     ' '+words[0]+' who are working full-time earn $'+
-                    +employment.median_income/1000 + 'K')})+
+                    +Math.round(employment.median_income/1000) + 'K')})+
                 ', compared to '+
                 employment.filter(employment => employment.status === 'earning' &  
-                  employment.type === 'salary-range' & 
+                  employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.attribution === attribute[1]).map(
                     function(employment){return (
                       ' '+words[1]+' earn $'+
-                      +employment.median_income/1000 + 'K')})
+                      +Math.round(employment.median_income/1000) + 'K')})
           }[metrics]
         }[accordion_is]+' '+citation[2]
       )
     }
   },[accordion_is,attribute,deaf_labels,hear_labels,
     insidechartStatus,insidechartType,metrics,nationDescript,
-    scope,selected_attributions,words,tab_num,
+    scope,selected_attributions,words,reportTrigger,
     chartType,chosen_state_b, in_the_b, state_label_b]
   )
 
@@ -1659,7 +1442,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.value+'%'
           }else{
-            return '$'+this.value/1000+'K'
+            return '$'+Math.round(this.value/1000)+'K'
           }
         }
       }
@@ -1669,7 +1452,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         if(metrics === 'percentage'){
           return this.y+'%'
         }else{
-          return '$'+this.y/1000+'K'
+          return '$'+Math.round(this.y/1000)+'K'
         }
       },
       shared: false,
@@ -1732,7 +1515,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -1742,7 +1525,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -1792,7 +1575,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -1802,7 +1585,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -1896,7 +1679,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 median_income:
                   'In the United States, among people aged 16-64,'+
                   employment.filter(employment => employment.status === 'earning' &  
-                    employment.type === 'salary-range' & 
+                    employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
                     employment.attribution.includes('deaf') &
@@ -1904,15 +1687,15 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
                       deaf_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K': 
+                      ' $'+Math.round(employment.median_income/1000) + 'K': 
                       index === (row.length-1) ?
                       ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
-                      +employment.median_income/1000 + 'K':
+                      +Math.round(employment.median_income/1000) + 'K':
                       ' '+deaf_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K'}).reverse()+
+                      ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+
                   ', compared to '+
                   employment.filter(employment => employment.status === 'earning' &  
-                    employment.type === 'salary-range' & 
+                    employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
                     employment.attribution.includes('hearing') &
@@ -1920,12 +1703,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
                       hear_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K': 
+                      ' $'+Math.round(employment.median_income/1000) + 'K': 
                       index === (row.length-1) ?
                       ' '+hear_labels[employment.index] +' earn $'+
-                      +employment.median_income/1000 + 'K':
+                      +Math.round(employment.median_income/1000) + 'K':
                       ' '+hear_labels[employment.index]+
-                      ' $'+employment.median_income/1000 + 'K'}).reverse()
+                      ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()
               }[metrics],
             'accordion-is-open':
               {
@@ -1949,20 +1732,20 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 median_income:
                   'In the United States, among people aged 16-64,'+
                   employment.filter(employment => employment.status === 'earning' &  
-                    employment.type === 'salary-range' & 
+                    employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.attribution === attribute[0]).map(
                       function(employment){return (
                       ' '+words[0]+' who are working full-time earn $'+
-                      +employment.median_income/1000 + 'K')})+
+                      +Math.round(employment.median_income/1000) + 'K')})+
                   ', compared to '+
                   employment.filter(employment => employment.status === 'earning' &  
-                    employment.type === 'salary-range' & 
+                    employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.attribution === attribute[1]).map(
                       function(employment){return (
                         ' '+words[1]+' earn $'+
-                        +employment.median_income/1000 + 'K')})
+                        +Math.round(employment.median_income/1000) + 'K')})
                   }[metrics]
               }[accordion_is],
             spline: 
@@ -2831,7 +2614,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.value+'%'
           }else{
-            return '$'+this.value/1000+'K'
+            return '$'+Math.round(this.value/1000)+'K'
           }
         }
       }
@@ -2842,7 +2625,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         if(metrics === 'percentage'){
           return this.y+'%'
         }else{
-          return '$'+this.y/1000+'K'
+          return '$'+Math.round(this.y/1000)+'K'
         }
       },
       backgroundColor: 'rgba(0,0,0,0.6)',
@@ -2881,7 +2664,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.y + '%';
           }else{
-            return '$'+this.y/1000+'K'
+            return '$'+Math.round(this.y/1000)+'K'
           }
         },
       },
@@ -2905,7 +2688,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.y + '%';
           }else{
-            return '$'+this.y/1000+'K'
+            return '$'+Math.round(this.y/1000)+'K'
           }
         }
       },
@@ -2926,7 +2709,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.y + '%';
           }else{
-            return '$'+this.y/1000+'K'
+            return '$'+Math.round(this.y/1000)+'K'
           }
         }
       },
@@ -2949,7 +2732,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.y + '%';
           }else{
-            return '$'+this.y/1000+'K'
+            return '$'+Math.round(this.y/1000)+'K'
           }
         }
       },
@@ -2977,7 +2760,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 if(metrics === 'percentage'){
                   return this.y + '%';
                 }else{
-                  return '$'+this.y/1000+'K'
+                  return '$'+Math.round(this.y/1000)+'K'
                 }
               },
               style: {
@@ -3021,8 +2804,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.filter(employment => employment.type === 'levels of education' &
               employment.status === insidechartStatus & employment.attribution === 'deaf' && employment.level === 'no HS diploma').map(
               employment => employment[metrics]).map(function(x){
-              if(insidechartStatus === 'earning'){
-                return '$'+x/1000+'K'
+              if(metrics === 'median_income'){
+                return '$'+Math.round(x/1000)+'K'
               }else{
                 return x+'%'
               }})+
@@ -3030,8 +2813,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             employment.filter(employment => employment.type === 'levels of education' &
               employment.status === insidechartStatus & employment.attribution === 'deaf' && employment.level === 'master').map(
               employment => employment[metrics]).map(function(x){
-              if(insidechartStatus === 'earning'){
-                return '$'+x/1000+'K'
+              if(metrics === 'median_income'){
+                return '$'+Math.round(x/1000)+'K'
               }else{
                 return x+'%'
               }})+' for those with a master’s degree '+citation[2],
@@ -3133,7 +2916,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.value+'%'
           }else{
-            return '$'+this.value/1000+'K'
+            return '$'+Math.round(this.value/1000)+'K'
           }
         }
       }
@@ -3143,7 +2926,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         if(metrics === 'percentage'){
           return this.y+'%'
         }else{
-          return '$'+this.y/1000+'K'
+          return '$'+Math.round(this.y/1000)+'K'
         }
       },
       shared: false,
@@ -3206,7 +2989,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -3216,7 +2999,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -3266,7 +3049,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -3276,7 +3059,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -3482,7 +3265,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(metrics === 'percentage'){
             return this.value+'%'
           }else{
-            return '$'+this.value/1000+'K'
+            return '$'+Math.round(this.value/1000)+'K'
           }
         }
       }
@@ -3492,7 +3275,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         if(metrics === 'percentage'){
           return this.y+'%'
         }else{
-          return '$'+this.y/1000+'K'
+          return '$'+Math.round(this.y/1000)+'K'
         }
       },
       shared: false,
@@ -3555,7 +3338,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -3565,7 +3348,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -3615,7 +3398,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return '\u26a0'+this.y + '%'
               }else{
-                return '\u26a0 $'+this.y/1000+'K'
+                return '\u26a0 $'+Math.round(this.y/1000)+'K'
               }
             }
           }else{
@@ -3625,7 +3408,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               if(metrics === 'percentage'){
                 return this.y + '%';
               }else{
-                return '$'+this.y/1000+'K'
+                return '$'+Math.round(this.y/1000)+'K'
               }
             }
           }
@@ -3638,12 +3421,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      buttons: {
-        contextButton: {
-          text: '',
-          symbol: 'download'
-        }
-      },
       chartOptions: { // specific options for the exported image
         plotOptions: {
           series: {
@@ -3795,6 +3572,26 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             }
           }
         }
+      },
+      menuItemDefinitions: {
+        // Custom definition
+        label: {
+            onclick: function () {
+              if(typeof PDFs['NDC_'+chosen_state_b+'_report.pdf'] === 'string'){
+                window.open(PDFs['NDC_'+chosen_state_b+'_report.pdf'])
+              }else{
+                swal(chosen_state_b, "This state report is unavailable due to either unstable estimates or an insufficient deaf sample size.", "warning");
+              }
+            },
+            text: 'Generate '+chosen_state_b+' report'
+        }
+      },
+      buttons: {
+          contextButton: {
+            text: '',
+            symbol: 'download',
+            menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG", 'separator', 'label']
+          }
       }
     }
   };
@@ -3920,11 +3717,25 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      buttons: {
-        contextButton: {
-          text: '',
-          symbol: 'download'
+      menuItemDefinitions: {
+        // Custom definition
+        label: {
+            onclick: function () {
+              if(typeof PDFs['NDC_'+chosen_state_b+'_report.pdf'] === 'string'){
+                window.open(PDFs['NDC_'+chosen_state_b+'_report.pdf'])
+              }else{
+                swal(chosen_state_b, "This state report is unavailable due to either unstable estimates or an insufficient deaf sample size.", "warning");
+              }
+            },
+            text: 'Generate '+chosen_state_b+' report'
         }
+      },
+      buttons: {
+          contextButton: {
+            text: '',
+            symbol: 'download',
+            menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG", 'separator', 'label']
+          }
       },
       chartOptions: { // specific options for the exported image
         plotOptions: {
@@ -4049,15 +3860,17 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               <div id = 'title'>
                 Deaf Postsecondary Data from the American Community Survey ({year})
               </div>
+              <Link to='/StateReport' reloadDocument className = 'aria_report_button' aria-label = 'Get State Report'>
+                <FontAwesome className='iconSecondButton' name = 'file' style = {{fontSize: '20px'}}/> &nbsp; Get State Report
+              </Link> 
             </div>  
             <div className = 'main-b'/>                
           </div>
-          <Tabs onSelect={tabIndex => setTabNumber(tabIndex)}>
+          <Tabs onSelect={changeTabNumber} selectedIndex={reportTrigger}>
             <TabList aria-label="Tabs of National Level, State Level, and Occupational Fields">
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='National Level Interactive Chart'>{'National Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='State Level Interactive Charts'>{'State Level'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
               <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}} aria-label='Occupational Fields Interactive Table'>{'Occupational Fields'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
-              <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide, display: 'None'}} aria-label='State Reports'>{'Report'.slice(0,slice_string[0]).trim()+slice_string[1]}</Tab>
             </TabList>
             <TabPanel>
               <div className='inside_container'>
@@ -4080,7 +3893,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     </button>
                     <div style={{marginTop:'10px'}}/>
                     <Select 
-                      styles={chart_option_style}
+                      styles={chart_side_style}
                       value = {nationalSchema}
                       options = {national_options}
                       isSearchable = {searchable}
@@ -4090,7 +3903,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     <div style = {{marginBottom: '22px'}}/>
                     <div style = {{display: nationSelectDisplay}}>
                       <Select
-                        styles={chart_option_style}
+                        styles={chart_side_style}
                         value = {inside_chart_schema}
                         options = {inside_chart_options.filter(x => x.group === groupInsideChart)}
                         isSearchable = {false}
@@ -4098,8 +3911,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         tabIndex={null}
                       /> 
                     </div>
+                    <div style = {{marginBottom: '22px'}}/>
                     <Select 
-                      styles={second_option_style}
+                      styles={second_side_style}
                       value = {secondSchema}
                       menuIsOpen={true}
                       isDisabled={nationDisabled}
@@ -4120,7 +3934,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         <div className = 'accordion-content'>
                           <div style = {{marginBottom: '22px'}}/>
                           <Select 
-                          styles={third_option_style}
+                          styles={third_side_style}
                           menuIsOpen={true}
                           isMulti={true}
                           isDisabled={second_nationDisabled}
@@ -4168,8 +3982,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                           </div>
                         </div>
                         <div className = 'accordion-content'>
-                          <div className = 'text-contain'>
-                            <div className = 'thep'>
+                          <div className = 'Jonah-text-contain'>
+                            <div className = 'Jonah-thep'>
                             {
                               {
                                 column:
@@ -4202,7 +4016,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         median_income:
                                           'In the United States, among people aged 16-64,'+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.variable === selected_attributions &
                                             employment.attribution.includes('deaf') &
@@ -4210,15 +4024,15 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                               function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                               ' and '+
                                               deaf_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K': 
+                                              ' $'+Math.round(employment.median_income/1000) + 'K': 
                                               index === (row.length-1) ?
                                               ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
-                                              +employment.median_income/1000 + 'K':
+                                              +Math.round(employment.median_income/1000) + 'K':
                                               ' '+deaf_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K'}).reverse()+
+                                              ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+
                                           ', compared to '+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.variable === selected_attributions &
                                             employment.attribution.includes('hearing') &
@@ -4226,12 +4040,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                               function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                               ' and '+
                                               hear_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K': 
+                                              ' $'+Math.round(employment.median_income/1000) + 'K': 
                                               index === (row.length-1) ?
                                               ' '+hear_labels[employment.index] +' earn $'+
-                                              +employment.median_income/1000 + 'K':
+                                              +Math.round(employment.median_income/1000) + 'K':
                                               ' '+hear_labels[employment.index]+
-                                              ' $'+employment.median_income/1000 + 'K'}).reverse()+'.'
+                                              ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+'.'
                                       }[metrics],
                                     'accordion-is-open':
                                       {
@@ -4255,20 +4069,20 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         median_income:
                                           'In the United States, among people aged 16-64,'+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[0]).map(
                                               function(employment){return (
                                               ' '+words[0]+' who are working full-time earn $'+
-                                              +employment.median_income/1000 + 'K')})+
+                                              +Math.round(employment.median_income/1000) + 'K')})+
                                           ', compared to '+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[1]).map(
                                               function(employment){return (
                                                 ' '+words[1]+' earn $'+
-                                                +employment.median_income/1000 + 'K.')})
+                                                +Math.round(employment.median_income/1000) + 'K.')})
                                       }[metrics]
                                   }[accordion_is],
                                 spline: 
@@ -4311,8 +4125,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                   employment.filter(employment => employment.type === 'levels of education' &
                                     employment.status === insidechartStatus & employment.attribution === 'deaf' && employment.level === 'no HS diploma').map(
                                     employment => employment[metrics]).map(function(x){
-                                    if(insidechartStatus === 'earning'){
-                                      return '$'+x/1000+'K'
+                                    if(metrics === 'median_income'){
+                                      return '$'+Math.round(x/1000)+'K'
                                     }else{
                                       return x+'%'
                                     }})+
@@ -4320,8 +4134,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                   employment.filter(employment => employment.type === 'levels of education' &
                                     employment.status === insidechartStatus & employment.attribution === 'deaf' && employment.level === 'master').map(
                                     employment => employment[metrics]).map(function(x){
-                                    if(insidechartStatus === 'earning'){
-                                      return '$'+x/1000+'K'
+                                    if(metrics === 'median_income'){
+                                      return '$'+Math.round(x/1000)+'K'
                                     }else{
                                       return x+'%'
                                     }})+' for those with a master’s degree.',                                
@@ -4354,7 +4168,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                             }
                             </div>
                             <div style = {{marginBottom: '12px'}}/>
-                            <div className = 'thep'>
+                            <div className = 'Jonah-thep'>
                             { 
                               {
                                 column:
@@ -4383,7 +4197,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment => employment.margin_errors)+'% for deaf people and ',
                                         median_income:
                                           formatDollar(round(employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & employment.state === 'United States' &  
+                                            employment.type === insidechartType & employment.state === 'United States' &  
                                             employment.attribution === 'deaf').map(employment => employment.margin_errors)))+' for deaf people and '
                                       }[metrics]+
                                       {
@@ -4395,7 +4209,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             employment => employment.margin_errors)+'% for hearing people.',
                                         median_income:
                                           formatDollar(round(employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & employment.state === 'United States' &  
+                                            employment.type === insidechartType & employment.state === 'United States' &  
                                             employment.attribution === 'hearing').map(employment => employment.margin_errors)))+' for hearing people.'
                                       }[metrics],
                                     'accordion-is-open':
@@ -4430,13 +4244,13 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         median_income:
                                           'In this chart, estimates are based on a sample size of '+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[0]).map(employment => employment.n).map(
                                               function(n){if(n < 100){return 'less than 100'}else{return n}}).toLocaleString('en-US')+' '+
                                           words[0]+' people and '+
                                           employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[1]).map(employment => employment.n).map(
                                             function(n){if(n < 100){return 'less than 100'}else{return n}}).toLocaleString('en-US')+
@@ -4444,12 +4258,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                           ' people who participated in the '+acs_one_year+
                                           ' American Community Survey. The margin of errors are '+
                                           formatDollar(round(employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[0]).map(employment => employment.margin_errors)))+
                                           ' for '+words[0]+' and '+
                                           formatDollar(round(employment.filter(employment => employment.status === 'earning' &  
-                                            employment.type === 'salary-range' & 
+                                            employment.type === insidechartType & 
                                             employment.state === 'United States' &  
                                             employment.attribution === attribute[1]).map(employment => employment.margin_errors)))+
                                           ' for '+words[1]+'.'
@@ -4612,16 +4426,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         </div>
                       </div>
                     </div>
-                    <div style={{ padding: 10 }}/>
+                    <div style={{ padding: 10 }}/> 
                   </div>
                 </div>
               </div>
             </TabPanel>
             <TabPanel>
-              {employment.filter(employment => employment.type === insidechartType & 
-                employment.variable === selected_attributions & employment.state === chosen_state_a &
-                employment.status === insidechartStatus & employment.attribution.includes('deaf')).every(
-                employment => employment.percentage === 0)}
               <div className='inside_container'>
                 <p className='aria-text'>Left Content</p>
                 <p className='aria-text'>
@@ -4642,7 +4452,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     </button>
                     <div style={{marginTop:'10px'}}/>
                     <Select 
-                      styles={chart_option_style}
+                      styles={chart_side_style}
                       value = {nationalSchema}
                       options = {state_options}
                       isSearchable = {searchable}
@@ -4655,7 +4465,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         aria-labelledby="aria-label"
                         inputId="aria-input"
                         name="aria-live"
-                        styles={chart_option_style}
+                        styles={chart_side_style}
                         value = {inside_chart_schema}
                         options = {state_inside_chart_options.filter(x => x.group === groupInsideChart)}
                         isSearchable = {false}
@@ -4663,8 +4473,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         tabIndex={null}
                       /> 
                     </div>
+                    <div style = {{marginBottom: '22px'}}/>
                     <Select 
-                      styles={second_option_style}
+                      styles={second_side_style}
                       value = {secondSchema}
                       menuIsOpen={true}
                       isDisabled={nationDisabled}
@@ -4685,7 +4496,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         <div className = 'accordion-content'>
                           <div style = {{marginBottom: '22px'}}/>
                           <Select 
-                          styles={third_option_style}
+                          styles={third_side_style}
                           menuIsOpen={true}
                           isMulti={true}
                           isDisabled={second_nationDisabled}
@@ -4712,8 +4523,21 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     <div style = {{display: nationSelectDisplay}}>
                       {
                         {
-                          'accordion-is': <div className = 'state_title'>{nationalTitle.toUpperCase()+title_by.toUpperCase()+': '+state_label_a.toUpperCase()+' AND '+state_label_b.toUpperCase()}</div>,
-                          'accordion-is-open': <div className = 'state_title'>{nationalTitle.toUpperCase()+': '+state_label_a.toUpperCase()+' AND '+state_label_b.toUpperCase()}</div>
+                          'accordion-is': 
+                            <div className = 'state_title'>
+                              <div className = 'text-to-button'>{nationalTitle.toUpperCase()+title_by.toUpperCase()+': '+state_label_a.toUpperCase()+' AND '+state_label_b.toUpperCase()}</div>
+                              <Link to='/StateReport' reloadDocument className = 'report_button' aria-label = 'Download State Report' aria-hidden = 'true'>
+                                <FontAwesome className='iconSecondButton' name = 'file' style = {{fontSize: '20px'}}/>&nbsp; Generate State Report
+                              </Link> 
+                            </div>,
+                          'accordion-is-open': 
+                            <div className = 'state_title'>
+                              <div className='text-to-button'>{nationalTitle.toUpperCase()+': '+state_label_a.toUpperCase()+' AND '+state_label_b.toUpperCase()}</div>
+                              <Link to='/StateReport' reloadDocument className = 'report_button' aria-label = 'Download State Report' aria-hidden = 'true'>
+                                <FontAwesome className='iconSecondButton' name = 'file' style = {{fontSize: '20px'}}/> &nbsp; Generate State Report
+                              </Link> 
+                            </div>
+
                         }[accordion_is]
                       }
                     </div>
@@ -4788,8 +4612,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                               </div>
                             </div>
                             <div className = 'accordion-content'>
-                                <div className = 'text-contain'>
-                                  <div className = 'thep'>
+                                <div className = 'Jonah-text-contain'>
+                                  <div className = 'Jonah-thep'>
                                     {
                                       {
                                         column:
@@ -4957,7 +4781,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     }
                                   </div>
                                   <div style = {{marginBottom: '12px'}}/>
-                                  <div className = 'thep'>
+                                  <div className = 'Jonah-thep'>
                                     { 
                                       {
                                         column:
@@ -5223,8 +5047,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                       <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
                     </button>
                     <div style={{marginTop:'10px'}}/>
-                    <div className = 'text-contain-with-background'>
-                      <div className = 'thep'>
+                    <div className = 'Jonah-text-contain-with-background'>
+                      <div className = 'Jonah-thep'>
                         This table estimates the percentage of deaf and hearing workers aged 
                         16-64 by occupation, percentage of workers with a bachelor’s degree or higher, 
                         followed by the median earning. 
@@ -5242,198 +5066,16 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   </div>
                   <div className='b' style={{display:interface_side}}>
                     <div style={{ padding: 10 }}/>
-                    <div className = 'text-contain'>
-                      <div className = 'thep'>
+                    <div className = 'Jonah-text-contain'>
+                      <div className = 'Jonah-thep'>
                         This table estimates the percentage of deaf and hearing workers aged 
                         16-64 by occupation, percentage of workers with a bachelor’s degree or higher, 
                         followed by the median earning. 
                       </div>
+                      <div style={{ padding: 10 }}/>
                     </div>
                   </div>
                 </div>
-              </div>
-            </TabPanel>
-            <TabPanel>
-              <div className='inside_container'>
-                <p className='aria-text'>Left Content</p>
-                <p className='aria-text'>
-                  This content contains 51 reports and you can select the state to generate a report.
-                </p>
-                <p className='aria-text'>Beginning of State Report Generator</p>
-                {
-                  {
-                  'Before' : 
-                  <>
-                    <div className={data_grid} style = {{height: '500px'}}>
-                      <div className='a'>
-                        <div className = 'state_title'>{'STATE REPORT'}</div>
-                        <div style={{display:data_sidebar}} aria-hidden = 'true'>
-                          <div className = 'state_title' style = {{border: 'none', textAlign: 'center'}}>To generate a report, select your state:</div>
-                          <div className = 'that-is-my-form-container'>
-                            <Select 
-                              styles={chart_side_style}
-                              isSearchable = {false}
-                              tabIndex={null}
-                              value = {report_multi_state}
-                              options = {geographics_wo_US}
-                              onChange = {changeReportGeoState}
-                            />
-                          </div>
-                        </div>
-                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{display: 'block', maxHeight:'350px', minHeight:'200px', marginRight: 'auto', marginLeft: 'auto'}}>
-                          <path fill = '#414042' d = 'M -0.8 0.7 L -0.8 4.2 L -0.7 4.2 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 4.1 L -0.8 4.1 L -0.8 4.2 L 2 4.2 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 2.6 L 0.5 2.6 L 0.5 2.7 L -0.5 2.7 Z M -0.5 3 L 0.5 3 L 0.5 2.9 L -0.5 2.9 Z M -0.5 3.3 L 1.7 3.3 L 1.7 3.2 L -0.5 3.2 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 3 L 1.1 3 L 1.1 2.3 L 0.7 2.3 Z'/>
-                          <path fill = '#00A79D' d = 'M 1.65 3 L 1.25 3 L 1.25 2.5 L 1.65 2.5 Z'/>
-                        </svg>
-                      </div>
-                      <div className='b' style={{display:interface_side}}>
-                        <p className='aria-text'>Right Content</p>
-                        <p className='aria-text'>
-                          This content consists of one selection option that affect report.
-                        </p>
-                        <form style = {{width: '300px'}}>
-                          <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
-                          <div style = {{marginBottom: '10px'}}/>
-                          <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
-                          <Select 
-                          aria-labelledby="aria-label1"
-                          //ariaLiveMessages={{
-                          //  onFocus,
-                          //}}
-                          inputId="aria-input1"
-                          name="aria-live"
-                          styles={chart_side_style}
-                          isSearchable = {searchable}
-                          tabIndex={null}
-                          value = {report_multi_state}
-                          options = {geographics_wo_US}
-                          onChange = {changeReportGeoState}
-                          />
-                        </form>
-                      </div>
-                  </div>
-                    {/*<div style = {{height: '500px'}}>
-                      <div className='state_report_b' style ={{display:data_sidebar}}>
-                          <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
-                        <div style = {{maxWidth: '300px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                          <Select 
-                            aria-labelledby="aria-label1"
-                            //ariaLiveMessages={{
-                            //  onFocus,
-                            //}}
-                            inputId="aria-input1"
-                            name="aria-live"
-                            styles={chart_side_style}
-                            isSearchable = {searchable}
-                            tabIndex={null}
-                            value = {report_multi_state}
-                            options = {geographics_wo_US}
-                            onChange = {changeReportGeoState}
-                          />
-                        </div>
-                      </div>
-                      <div className='state_report_a'>
-                        <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
-                          <path fill = '#414042' d = 'M -0.8 0.7 L -0.8 4.2 L -0.7 4.2 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 4.1 L -0.8 4.1 L -0.8 4.2 L 2 4.2 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 2.6 L 0.5 2.6 L 0.5 2.7 L -0.5 2.7 Z M -0.5 3 L 0.5 3 L 0.5 2.9 L -0.5 2.9 Z M -0.5 3.3 L 1.7 3.3 L 1.7 3.2 L -0.5 3.2 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 3 L 1.1 3 L 1.1 2.3 L 0.7 2.3 Z'/>
-                          <path fill = '#00A79D' d = 'M 1.65 3 L 1.25 3 L 1.25 2.5 L 1.65 2.5 Z'/>
-                        </svg>
-                      </div>
-                      <div className='b' style={{display:interface_side}}>
-                          <p className='aria-text'>Right Content</p>
-                          <p className='aria-text'>
-                            This content consists of several selection options that affect charts.
-                          </p>
-                          <p className='aria-text'>
-                            When one of these options is selected, this will also affect a chart, title, description, and other selection options 
-                            including all information in exported chart.
-                          </p>
-                          <form>
-                            <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
-                            <div style = {{marginBottom: '10px'}}/>
-                            <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
-                            <Select 
-                            aria-labelledby="aria-label1"
-                            //ariaLiveMessages={{
-                            //  onFocus,
-                            //}}
-                            inputId="aria-input1"
-                            name="aria-live"
-                            styles={chart_side_style}
-                            isSearchable = {searchable}
-                            tabIndex={null}
-                            value = {report_multi_state}
-                            options = {geographics_wo_US}
-                            onChange = {changeReportGeoState}
-                            />
-                          </form>
-                      </div>
-                    </div>*/}
-                  </>,
-                  'After':
-                    <>
-                      <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                        <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
-                      </button>
-                      <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
-                        <div className='data_sidebar_interface'>
-                          <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
-                            <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
-                          </button>
-                          <div style={{marginTop:'10px'}}/>
-                          <div style = {{marginBottom: '22px'}}/>
-                          <p className = 'state_title' style = {{border: 'none', color: 'black', background: 'white', borderRadius: '10px'}}>To generate a report, select your state:</p>
-                          <Select 
-                            styles={chart_option_style}
-                            isSearchable = {false}
-                            tabIndex={null}
-                            value = {report_multi_state}
-                            options = {geographics_wo_US}
-                            onChange = {changeReportGeoState}
-                          />
-                        </div>
-                      </div>
-                      <div className={data_grid}>
-                        <div className='a'>
-                          <div className = 'state_title'>{report_state.toUpperCase()+' STATE REPORT'}</div>
-                          <object data={PDFs[reportPDF]} type="application/pdf" frameborder="0" width="100%" height="400px" style={{ marginLeft: 'auto', marginRight: 'auto', maxWidth: '700px', width: '100%' }} aria-label = 'PDF Viewer'>
-                            <div style = {{textAlign: 'center'}}>
-                              <svg height = '29vw' viewBox="-1.9 0.45 5 4" style= {{maxHeight:'250px', minHeight:'150px'}}>
-                                <path fill = '#828282' d = 'M -0.8 0.7 L -0.8 3.1 L -0.7 3 L -0.7 0.8 L 1.3 0.8 L 1.3 1.5 L 1.9 1.5 L 1.9 2.7 L 1.7 2.9 L 1.5 2.7 L 1.3 2.9 L 1.1 2.7 L 0.9 2.9 L 0.7 2.7 L 0.5 2.9 L 0.3 2.7 L 0.1 2.9 L -0.1 2.7 L -0.3 2.9 L -0.5 2.7 L -0.7 2.9 L -0.8 2.9 L -0.8 3 L -0.7 3 L -0.5 2.8 L -0.3 3 L -0.1 2.8 L 0.1 3 L 0.3 2.8 L 0.5 3 L 0.7 2.8 L 0.9 3 L 1.1 2.8 L 1.3 3 L 1.5 2.8 L 1.7 3 L 1.9 2.8 L 2 2.7 L 2 1.4 L 1.4 1.4 L 1.4 0.7 Z M 1.35 0.8 L 1.95 1.5 L 2 1.4 L 1.4 0.7 Z M -0.8 3.2 L -0.8 4.2 L 2 4.2 L 2 4.1 L -0.7 4.1 L -0.7 3.2 L -0.5 3 L -0.3 3.2 L -0.1 3 L 0.1 3.2 L 0.3 3 L 0.5 3.2 L 0.7 3 L 0.9 3.2 L 1.1 3 L 1.3 3.2 L 1.5 3 L 1.7 3.2 L 1.9 3 L 1.9 4.2 L 2 4.2 L 2 2.8 L 1.9 2.9 L 1.7 3.1 L 1.5 2.9 L 1.3 3.1 L 1.1 2.9 L 0.9 3.1 L 0.7 2.9 L 0.5 3.1 L 0.3 2.9 L 0.1 3.1 L -0.1 2.9 L -0.3 3.1 L -0.5 2.9 L -0.7 3.1 Z M -0.5 1.7 L 1.7 1.7 L 1.7 1.8 L -0.5 1.8 Z M -0.5 2 L 1.7 2 L 1.7 2.1 L -0.5 2.1 Z M -0.5 2.4 L 0.5 2.4 L 0.5 2.3 L -0.5 2.3 Z M -0.5 3.6 L 1.7 3.6 L 1.7 3.5 L -0.5 3.5 Z M 0.7 2.6 L 0.9 2.8 L 1.1 2.6 L 1.1 2.3 L 0.7 2.3 Z' />
-                                <path fill = '#e05a43' d = 'M 1.65 2.75 L 1.5 2.6 L 1.3 2.8 L 1.25 2.75 L 1.25 2.5 L 1.65 2.5 Z'/>
-                              </svg>
-                            </div>
-                          </object>
-                          <div className = 'thep'>If you are unable to fully access the report, your browser may not support PDFs.</div>
-                            <div className = 'thep'><b>Download here instead: <a href={PDFs[reportPDF]} style = {{textDecoration: 'none', color: '#0B7373'}}>{report_state} Report</a></b></div> 
-                          </div>
-                        <div className='b' style={{display:interface_side}}>
-                          <p className='aria-text'>Right Content</p>
-                          <p className='aria-text'>
-                            This content consists of one selection option that affect report.
-                          </p>
-                          <form>
-                            <label id="aria-label1" className = 'aria-focus' htmlFor="aria-input1"/>
-                            <div style = {{marginBottom: '10px'}}/>
-                            <p className = 'state_title' style = {{border: 'none'}}>To generate a report, select your state:</p>
-                            <Select 
-                            aria-labelledby="aria-label1"
-                            //ariaLiveMessages={{
-                            //  onFocus,
-                            //}}
-                            inputId="aria-input1"
-                            name="aria-live"
-                            styles={chart_side_style}
-                            isSearchable = {searchable}
-                            tabIndex={null}
-                            value = {report_multi_state}
-                            options = {geographics_wo_US}
-                            onChange = {changeReportGeoState}
-                            />
-                          </form>
-                        </div>
-                      </div>
-                    </>
-                }[when_you_select]
-              }
               </div>
             </TabPanel>
           </Tabs>

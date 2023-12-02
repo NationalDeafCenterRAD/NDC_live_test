@@ -18,7 +18,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route, 
-  Link
+  Link,
 } from 'react-router-dom';
 
 /*Icons and fonts*/
@@ -45,14 +45,12 @@ HC_accessible(Highcharts)
 
 /*Functional Pages*/
 const Faster = lazy(() => import('./fasterone.js'));
-//const ReportGenerator = lazy(() => import('./report_generator.js'))
-const Method = lazy(() => import('./method.js'));
 const EducationChartText = lazy(() => import('./educationcharttext.js'));
 const EducationChart = lazy(() => import('./educationchart.js'));
 const EmploymentChartText = lazy(() => import('./employmentcharttext.js'));
 const EmploymentChart = lazy(() => import('./employmentchart.js'));
 const AboutData = lazy(() => import('./aboutdata.js'));
-
+const StateReport = lazy(() => import('./state_report_page.js'))
 
 const Navbar = () => {
   // Color Accessibility Options
@@ -529,6 +527,7 @@ const Navbar = () => {
         enabled: false
       }
   };
+
   /*Create the open and close nav column function*/
   const [style, setStyle] = useState('column-close');
   const [a_tabindex, setTabIndex] = useState('-1');
@@ -559,7 +558,7 @@ const Navbar = () => {
     }
   }, [style])
 
- // Add style on linked text
+  // Add style on linked text
   const linkStyle = {
     textDecoration: "none",
     color: 'white',
@@ -567,32 +566,25 @@ const Navbar = () => {
     fontSize: '16px'
   };
 
-  /*const disableLink = {
-    textDecoration: "none",
-    color: '#8f8f8f',
-    fontWeight: 600,
-    fontSize: '16px',
-    pointerEvents: 'none'
-  }*/
+  // Reloading each time routes change
+  //const [currentPath, setCurrentPath] = useState(location);
+  //useEffect(()=>{
+  //  if(currentPath !== window.location.pathname()){
+  //    window.location.reload();
+  //    setCurrentPath(window.location.pathname());
+  //  }
+  //},[currentPath])
+
+  //console.log('UseState: ',currentPath);
 
   return (
   <>
     <div className = 'entire-container'>
     <div className='body'>
-      <div className = 'main-grid'>
-        <div className = 'main-a'>
-          {/*<nav className = 'top-nav'>
-            <button className = 'for-column' onClick={changeWidth} ref = {buttonRef} aria-hidden="true">
-              <FontAwesome className = 'for-column-icon' name = 'list' style = {{fontSize: '20px'}}/>
-            </button>
-          </nav>*/}
-        </div>
-        <div className = 'main-b'>
-          <button className = 'invisible-button' value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
-            <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '30px'}}/>
-          </button>  
-        </div>
-      </div>
+      <button className = 'invisible-button' value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
+        <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '20px'}}/>
+        <div className = 'Jonah-nav-text'>ACCESSIBILITY</div> 
+      </button> 
       <div className = {popup_style}>
         <div className = 'accessible-container' ref = {popupRef}>
           <div className = 'accessible-box' id = 'accessible-id'>
@@ -624,35 +616,18 @@ const Navbar = () => {
             General
           </div>
         </Link>
-        {/*<Link to='/ReportGenerator' style = {linkStyle}>
-          <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'paperclip'/>
-            &nbsp;&nbsp;&nbsp; 
-            Report Generator
-          </div>
-        </Link>*/}
-        {/*<Link to='/FAQs' style = {linkStyle} aria-hidden="true">
-          <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'book'/>
-            &nbsp;&nbsp;&nbsp; 
-            FAQs
-          </div>
-        </Link>*/}
       </div>
       <Suspense fallback={<Loading/>}>
       <Routes>
         <Route exact path='/' element={<Faster colors={colors} 
                                                   justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>
-        {/*<Route exact path='/ReportGenerator' element={<ReportGenerator colors={colors} 
-                                                  justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>*/}                                         
-        <Route exact path='/FAQs' element={<Method />}/>
+                                                  colorfill={colorfill}/>}/>                                        
         <Route exact path='/EducationChartText' element={<EducationChartText />}/>
         <Route exact path='/EducationChart' element={<EducationChart />}/>
         <Route exact path='/EmploymentChartText' element={<EmploymentChartText />}/>
         <Route exact path='/EmploymentChart' element={<EmploymentChart />}/>
         <Route exact path='/AboutData' element={<AboutData />}/>
+        <Route exact path='/StateReport' element={<StateReport />}/>
       </Routes>
       </Suspense>
     </Router>

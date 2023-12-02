@@ -7,11 +7,13 @@
     --unselected_tab: #f0f0f0;
     --unselected_tab_border: #9e9e9e;
     --unselected_tab_color: #828282;
-    --selected_tab:#0B7373;
-    --tranparent: #357576ef;
-    --tab_focus: #0188fe;
+    --selected_tab:#0d7777;
+    --tranparent:  #0d7777ef;
+    --tab_focus: #010202;
+    --light_tab_focus: #7fc3ff;
     --black: #282729;
-    --hover_color: #37726e;
+    --hover_color: #0d7777;
+    --secondary_color: #8362aa;
 }
 /*[data-theme='dark'] {
     --bodybackground: #151515;
@@ -313,6 +315,16 @@ a:hover .map_line{
     overflow-y:hidden;
     overflow-x:hidden;
 }
+.inside_container-border-radius-all-rounds{
+    position: relative;
+    background: var(--boxbackground);
+    border-radius: 10px;
+    padding:10px;
+    border: var(--border) solid 1px;
+    box-shadow: 0 1px 3px var(--shadow);
+    overflow-y:hidden;
+    overflow-x:hidden;
+}
 .grid{
     display: grid;
     grid-template-columns: 1fr repeat(6, minmax(auto, 10em));
@@ -336,13 +348,13 @@ a:hover .map_line{
     grid-template-rows: repeat(2, 75px);
     grid-template-rows: auto;
 }
-.state_title{
+#report_state_title{
     font-size: 16px;
     font-family: 'Roboto';
     width: 95%;
     font-weight: 900;
-    color: #787878;
-    border-bottom: #e3e3e3 solid 1px;
+    color: var(--bodybackground);
+    text-shadow: 0px 1px 1px var(--black);
     padding: 10px 0px 15px 10px;
     margin-bottom: 10px;
     grid-column-start: 1;
@@ -385,9 +397,9 @@ a:hover .map_line{
     overflow-y: scroll;
     padding-top: 40px;
     top: 0;
-    right: 0;
+    right: -15px;
     z-index: 1;
-    width: 290px;
+    width: 300px;
     height: 100%;
     transition: all 0.2s ease-out;
     -o-transition: all 0.2s ease-out;
@@ -455,26 +467,33 @@ a:hover .map_line{
 }
 
 /*Text Style*/
-.text-contain{
+.Jonah-text-contain{
     margin-left: auto;
     margin-right: auto;
     width: 90%;
-    overflow-y: scroll;
+    overflow-y: hidden;
     border-radius: 10px 10px 10px 10px;
     max-width: 600px;
     height: 100%;
 }
-.text-contain-with-background{
+#Report-Jonah-text-contain{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    align-self: 'flex-end';
+    width: 90%;
+}
+.Jonah-text-contain-with-background{
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
     width: 90%;
-    overflow-y: scroll;
+    overflow-y: hidden;
     border-radius: 10px 10px 10px 10px;
     max-width: 600px;
     background: white;
 }
-.thep{
+.Jonah-thep{
     font-family:'Roboto';
     font-size: 16px;
     padding: 10px 0 10px 0;
@@ -516,11 +535,10 @@ a:hover .map_line{
 
 /*Report Tab Style*/
 .that-is-my-form-container{
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 1px solid black;
+    margin: 0 auto;
+    display: block;
+    text-align:center;
+    max-width: 400px;
 }
 
 /*Stylize widgets*/
@@ -531,7 +549,7 @@ a:hover .map_line{
 .react-tabs__tab { 
     display: inline-block;
     border: 1px solid transparent; 
-    background: var(--unselected_tab);
+    background: var(--selected_tab);
     border-bottom: none; 
     bottom: -1px; 
     position: relative; 
@@ -544,16 +562,17 @@ a:hover .map_line{
     -webkit-user-select: none;
     user-select: none;
     -ms-user-select: none;
-    border-left: var(--unselected_tab_border) solid 1px;
-    border-right: var(--unselected_tab_border) solid 1px;
-    border-top: var(--unselected_tab_border) solid 1px;
-    color: var(--unselected_tab_color);
+    color: var(--boxbackground);
 } 
 .react-tabs__tab--selected { 
-    background: var(--selected_tab); 
-    border: var(--selected_tab) 2px;
-    color: white; 
+    background: var(--boxbackground); 
+    color: var(--black); 
     border-radius: 5px 5px 0 0; 
+    border-left: var(--border) solid 1px;
+    border-right: var(--border) solid 1px;
+    border-top: var(--border) solid 1px;
+    box-shadow: 0 -2px 3px var(--shadow);
+    z-index: 10;
 } 
 .react-tabs__tab-panel { 
     display: none; 
@@ -562,7 +581,7 @@ a:hover .map_line{
     display: block;
 } 
 .react-tabs__tab:focus { 
-    box-shadow: 0 0 5px var(--tab_focus); 
+    box-shadow: 0 -4 5px var(--tab_focus); 
     border-color: var(--tab_focus); 
     outline: none; 
 }
@@ -1088,4 +1107,75 @@ table{
     color: var(--black);
     font-weight: 300;
     font-size: 16px;
+}
+
+/*Style report button*/
+.state_title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 16px;
+    font-family: 'Roboto';
+    width: 95%;
+    font-weight: 900;
+    color: #787878;
+    border-bottom: #e3e3e3 solid 1px;
+    padding: 10px 0px 15px 10px;
+    margin-bottom: 10px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+.iconSecondButton{
+    font-size: 30px;
+    text-align: right;
+    color: var(--bodybackground);
+    cursor: pointer; 
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -ms-user-select: none;
+    transition: all 0.5s ease-out;
+    -o-transition: all 0.5s ease-out;
+    -moz-transition: all 0.5s ease-out;
+    -webkit-transition: all 0.5s ease-out;
+}
+.text-to-button{
+    margin-right: 5px;
+}
+.report_button{
+    position: relative;
+    width: min-content;
+    height: min-content;
+    text-wrap: nowrap;
+    white-space:nowrap;
+    text-decoration: none;
+	cursor: pointer;
+    padding: 10px;
+    color: var(--bodybackground);
+    background: var(--secondary_color);
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-top: -10px;
+    font-weight: 300;
+}
+.aria_report_button{
+    left: -9999px;
+    position: absolute;
+}
+.swal-button {
+    padding: 7px 19px;
+    border-radius: 2px;
+    background-color: var(--selected_tab);
+    font-size: 12px;
+    border: 1px solid var(--selected_tab);
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
+  }
+@media only screen and (max-width: 1100px){
+    .state_title{
+        flex-direction: column-reverse;
+    }
+    .report_button{
+        margin-left: 0px;
+        margin-bottom: 15px;
+    }
 }

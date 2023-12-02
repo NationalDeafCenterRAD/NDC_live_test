@@ -2,8 +2,8 @@
     position: absolute;
     top: -40px;
     z-index: 100;
-    width: 100%;
-    min-height: 100vh;
+    width: 100vw;
+    height: 110vh;
     background: white;
     cursor:wait;
     -moz-user-select: none;
