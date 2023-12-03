@@ -31,7 +31,7 @@ const EducationChart = () => {
       text: ""
     },
     xAxis: {
-      categories: ['Asian','Black','Latinx','Native American','Multiracial','White'],
+      categories: ['Asian','Black','Latinx','Native American','Multiracial','White','BIPOC'],
       visible: true,
       title: {
         text: null
