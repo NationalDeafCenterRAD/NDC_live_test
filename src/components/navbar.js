@@ -7,6 +7,7 @@
 import './navbar.css';
 import './dashboard.css';
 import Loading from './Loading.js';
+import "iframe-resizer/js/iframeResizer.contentWindow"; // add this
 //import copyright from './images/CC_BY-NC-ND.svg';
 
 // Data
