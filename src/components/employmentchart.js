@@ -33,10 +33,10 @@ const EmploymentChartText = () => {
       text: "deaf",
       verticalAlign: 'middle',
       floating: true,
-      y:-20,
+      y:-30,
       style: {
         fontFamily: 'Roboto Slab, serif',
-        fontSize: '20px'
+        fontSize: '18px'
       },
     },
     tooltip: {
@@ -445,10 +445,10 @@ const EmploymentChartText = () => {
       text: "hearing",
       verticalAlign: 'middle',
       floating: true,
-      y:-20,
+      y:-30,
       style: {
         fontFamily: 'Roboto Slab, serif',
-        fontSize: '20px'
+        fontSize: '18px'
       },
     },
     tooltip: {
