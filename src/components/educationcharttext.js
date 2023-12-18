@@ -15,7 +15,7 @@ const EducationChartText = () => {
     <div className = 'body'>
       <div className = 'width-of-textchart'>
         <div className = 'title-for-chart'>Education Attainment</div>
-        Fewer deaf people completed high school or college degrees than their hearing peers in <div id = 'find-here-please'>{acs_one_year}</div>. Educational attainment 
+        Fewer deaf people completed high school or college degrees than their hearing peers in {acs_one_year}. Educational attainment 
         varies across gender, race, and ethnicity. For example, 
         {' '+employment.filter(employment => employment.type === 'education' & 
           employment.state === 'United States' &

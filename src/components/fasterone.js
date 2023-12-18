@@ -599,7 +599,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   useLayoutEffect(() => {
     function updateSize() {
       setPaddingSide(round(3+10*Math.pow(1.01, -650+window.innerWidth)/(1+Math.pow(1.01, -650+window.innerWidth)),2)+'px');
-      setSliceString([round(20-16*Math.pow(1.01, 500-window.innerWidth)/(1+Math.pow(1.01, 500-window.innerWidth)),2),'']);
+      setSliceString([round(20-12*Math.pow(1.01, 500-window.innerWidth)/(1+Math.pow(1.01, 500-window.innerWidth)),2),'']);
       if(window.innerWidth < 800){
         setHC_Width(window.innerWidth/1.2)
         setInterface_Side('None')

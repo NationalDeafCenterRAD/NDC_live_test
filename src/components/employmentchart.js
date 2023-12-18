@@ -33,7 +33,7 @@ const EmploymentChartText = () => {
       text: "deaf",
       verticalAlign: 'middle',
       floating: true,
-      y:-15,
+      y:-20,
       style: {
         fontFamily: 'Roboto Slab, serif',
         fontSize: '20px'
@@ -445,7 +445,7 @@ const EmploymentChartText = () => {
       text: "hearing",
       verticalAlign: 'middle',
       floating: true,
-      y:-15,
+      y:-20,
       style: {
         fontFamily: 'Roboto Slab, serif',
         fontSize: '20px'

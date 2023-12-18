@@ -37,7 +37,6 @@ import HC_accessible from "highcharts/modules/accessibility";
 
 // Widgets
 import {CirclePicker} from 'react-color';
-//import FocusTrap from 'focus-trap-react';
 
 // Add pattern in Highcharts
 HCPattern(Highcharts);
@@ -566,17 +565,6 @@ const Navbar = () => {
     fontWeight: 600,
     fontSize: '16px'
   };
-
-  // Reloading each time routes change
-  //const [currentPath, setCurrentPath] = useState(location);
-  //useEffect(()=>{
-  //  if(currentPath !== window.location.pathname()){
-  //    window.location.reload();
-  //    setCurrentPath(window.location.pathname());
-  //  }
-  //},[currentPath])
-
-  //console.log('UseState: ',currentPath);
 
   return (
   <>
