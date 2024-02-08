@@ -5049,9 +5049,14 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     <div style={{marginTop:'10px'}}/>
                     <div className = 'Jonah-text-contain-with-background'>
                       <div className = 'Jonah-thep'>
-                        This table estimates the percentage of deaf and hearing workers aged 
-                        16-64 by occupation, percentage of workers with a bachelor’s degree or higher, 
-                        followed by the median earning. 
+                        This table estimates the percentage of deaf and hearing people by occupation, 
+                        the percentage of people who have a bachelor’s degree or higher in each occupation, 
+                        and the median earnings for each occupation.
+                      </div>
+                      <div className = 'Jonah-thep'>
+                        <i>Click on the word “deaf” in the columns to arrange the chart in ascending 
+                          or descending order.
+                        </i> 
                       </div>
                     </div>
                   </div>
@@ -5068,9 +5073,14 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     <div style={{ padding: 10 }}/>
                     <div className = 'Jonah-text-contain'>
                       <div className = 'Jonah-thep'>
-                        This table estimates the percentage of deaf and hearing workers aged 
-                        16-64 by occupation, percentage of workers with a bachelor’s degree or higher, 
-                        followed by the median earning. 
+                        This table estimates the percentage of deaf and hearing people by occupation, 
+                        the percentage of people who have a bachelor’s degree or higher in each occupation, 
+                        and the median earnings for each occupation.
+                      </div>
+                      <div className = 'Jonah-thep'>
+                        <i>Click on the word “deaf” in the columns to arrange the chart in ascending 
+                          or descending order.
+                        </i> 
                       </div>
                       <div style={{ padding: 10 }}/>
                     </div>
