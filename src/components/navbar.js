@@ -6,24 +6,36 @@
 /*JS works with CSS*/
 import './navbar.css';
 import './dashboard.css';
+
 import Loading from './Loading.js';
-import "iframe-resizer/js/iframeResizer.contentWindow"; // add this
-//import copyright from './images/CC_BY-NC-ND.svg';
+import EducationChart from './educationchart.js';
+import EmploymentChart from './employmentchart.js';
+import AboutData from './aboutdata.js';
+import Method from './method.js';
+import StateReport from './state_report_page.js'
 
 // Data
 import us25_64 from './assets/us25_64.json';
+//import NDCfull from './images/NDC_logo_color_horizontal-black-text.png';
+//import NDC from './images/NDC_logo_color.png';
+//import TAD from './images/tad_logo_white-2.png';
+//import DOE from './images/USDOE_white.png';
+//import OSEP from './images/OSEP-Ideas-That-Work-white.png';
 
 /*React and Switching Page Function and Click Outside Function*/
 import React, { useState, useRef, useEffect, lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
-  Route, 
-  Link,
+  Route
 } from 'react-router-dom';
+
+// Persistent shareable link
+const url_to_share = "https://www.nationaldeafcenter.org/dashboard/"
 
 /*Icons and fonts*/
 import 'font-awesome/css/font-awesome.min.css';
+import 'font-awesome/css/font-awesome.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 import FontAwesome from 'react-fontawesome';
@@ -38,6 +50,19 @@ import HC_accessible from "highcharts/modules/accessibility";
 // Widgets
 import {CirclePicker} from 'react-color';
 
+// Iframe supports
+// Try https://www.npmjs.com/package/iframe-resizer/v/3.6.6
+import '@iframe-resizer/child'
+
+window.parent.postMessage({
+	type: "connect",
+	url: window.location.href
+}, "*",);
+
+window.iFrameResizer = {
+  targetOrigin: '*'
+}
+
 // Add pattern in Highcharts
 HCPattern(Highcharts);
 HC_exporting(Highcharts);
@@ -45,18 +70,12 @@ HC_accessible(Highcharts)
 
 /*Functional Pages*/
 const Faster = lazy(() => import('./fasterone.js'));
-const EducationChartText = lazy(() => import('./educationcharttext.js'));
-const EducationChart = lazy(() => import('./educationchart.js'));
-const EmploymentChartText = lazy(() => import('./employmentcharttext.js'));
-const EmploymentChart = lazy(() => import('./employmentchart.js'));
-const AboutData = lazy(() => import('./aboutdata.js'));
-const StateReport = lazy(() => import('./state_report_page.js'))
 
 const Navbar = () => {
   // Color Accessibility Options
   // Change Color function
   const colors = ['#863bff','#ff69ff','#d60068','#eb4034','#ff990a','#ffbe0a','#e3cc00','#48bd00','#00A79D','#24ede6','#00c3ff','#b39862']
-  
+
   // Pattern Switch
   const [colorfill, setColorFill] = useState(['#00A79D','#43C9C8','#D6EEF0','url(#teal)','url(#teal1)','url(#teal2)','#282729','#949494','#dbdbdb'])
   const [justcolor, setJustColor] = useState('#00A79D')
@@ -87,19 +106,19 @@ const Navbar = () => {
       }else if(color.hex === '#b39862'){
         setColorFill(['#856c3a','#b39862','#dbccad','url(#brown)','url(#brown1)','url(#brown2)','#282729','#949494','#dbdbdb'])
       }
-  } 
+  }
 
   // Popup switch // To fix asynchronous problem  https://dev.to/shareef/react-usestate-hook-is-asynchronous-1hia
   const [popup_style, setPopupStyle] = useState('popup-close');
   const [collapse, setCollapse] = useState(false);
   const buttonpopupRef = useRef()
   const popupRef = useRef()
-        
+
   const changePopup = () => {
     popup_style === 'popup-open' ? setPopupStyle('popup-close') : setPopupStyle('popup-open');
     popup_style === 'popup-open' ? setCollapse(true) : setCollapse(false);
   };
-      
+
   useEffect(() => {
     const outsideDetection = e => {
       if ( buttonpopupRef.current && !buttonpopupRef.current.contains(e.target) &&
@@ -107,15 +126,15 @@ const Navbar = () => {
             setPopupStyle('popup-close')
           }
         }
-        
+
       document.addEventListener('mousedown', outsideDetection)
-        
+
       return () => {
         // Clean up the event listener
         document.removeEventListener('mousedown', outsideDetection)
       }
   }, [popup_style])
-  
+
   //Demostrated chart
   let demo = {
       chart:{
@@ -471,7 +490,7 @@ const Navbar = () => {
         color: colorfill[0],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'White' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'White' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
       },
@@ -480,7 +499,7 @@ const Navbar = () => {
         color: colorfill[1],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Black' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Black' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
       },
@@ -490,17 +509,17 @@ const Navbar = () => {
         color: colorfill[2],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Asian/Pacific Islander' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Asian/Pacific Islander' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
-      }, 
+      },
       {
         showInLegend: false,
         name: 'Deaf + Native American',
         color: colorfill[3],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Native American' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Native American' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
       },
@@ -509,7 +528,7 @@ const Navbar = () => {
         color: colorfill[4],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Latinx' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Latinx' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
       },
@@ -519,7 +538,7 @@ const Navbar = () => {
         color: colorfill[5],
         borderColor: colorfill[0],
         borderWidth: 1,
-        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Other Race/Multiracial' & 
+        data: us25_64.filter(us25_64 => us25_64.RACETH === 'Other Race/Multiracial' &
         us25_64.SCHL === 'HS diploma' & us25_64.type === 'race' & us25_64.year === 2019).map(
         us25_64 => us25_64.attain).reverse()
       }],
@@ -530,19 +549,8 @@ const Navbar = () => {
 
   /*Create the open and close nav column function*/
   const [style, setStyle] = useState('column-close');
-  const [a_tabindex, setTabIndex] = useState('-1');
   const buttonRef = useRef();
   const sidebarRef = useRef();
-
-  const changeWidth = () => {
-    if(style === 'column-close'){
-      setStyle('column-close');
-      setTabIndex('0');
-    }else{
-      setStyle('column-close');
-      setTabIndex('-1');
-    }
-  }; 
 
   useEffect(() => {
     const outsideDetection = e => {
@@ -556,71 +564,127 @@ const Navbar = () => {
       // Clean up the event listener
       document.removeEventListener('mousedown', outsideDetection)
     }
-  }, [style])
+  }, [style]);
 
-  // Add style on linked text
-  const linkStyle = {
-    textDecoration: "none",
-    color: 'white',
-    fontWeight: 600,
-    fontSize: '16px'
-  };
+  // Share Copy API GET QUERY
+  const [openGETAPI, setOpenGETAPI] = useState(false);
+  const [copyLinked, setCopyLinked] = useState('COPY');
+  const menuRef = useRef();
+  const outMenuRef = useRef();
+
+  const copyToClipBoard = async() => {
+    try{
+      const textToCopy = url_to_share+window.location.search
+      await navigator.clipboard.writeText(textToCopy);
+      setCopyLinked('COPIED')
+      console.log('Successfuly copied')
+    }catch(err){
+      console.error(err.name, err.message);
+    }
+  }
+
+  const closeAPIMenu = () => {
+    setOpenGETAPI(false);
+  }  
+
+  const openAPIMenu = function () {
+    setOpenGETAPI(true);
+  }
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCopyLinked('COPY');
+      setOpenGETAPI(false);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  },[copyLinked])
+
+  useEffect(() => {
+    const outsideDetection = e => {
+      if ( outMenuRef.current && !outMenuRef.current.contains(e.target) &&
+            menuRef.current && !menuRef.current.contains(e.target)){
+            setOpenGETAPI(false);
+          }
+        }
+
+      document.addEventListener('mousedown', outsideDetection)
+
+      return () => {
+        // Clean up the event listener
+        document.removeEventListener('mousedown', outsideDetection)
+      }
+  }, [openGETAPI])
 
   return (
   <>
-    <div className = 'entire-container'>
-    <div className='body'>
-      <button className = 'invisible-button' value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
-        <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '20px'}}/>
-        <div className = 'Jonah-nav-text'>ACCESSIBILITY</div> 
-      </button> 
+    <Router>
+      <div className='flex-invisible-button'>
+        <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {openAPIMenu} ref = {buttonpopupRef} aria-label = 'Share Link - Copy link to share' aria-expanded = {collapse} aria-hidden = 'true'>
+          <FontAwesome className='iconButton' name = 'share-alt' style = {{fontSize: '20px'}}/>
+          <div className = 'Jonah-nav-text'>SHARE</div>
+        </button>
+        <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
+          <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '20px'}}/>
+          <div className = 'Jonah-nav-text'>ACCESSIBILITY</div>
+        </button>
+      </div>
+      <div className = 'open-get-API' disabled={!openGETAPI} tabIndex={!openGETAPI ? -1 : 0}>
+        <div className = 'menuGetAPI' ref = {menuRef}>
+          <button id='api-menu-close' onClick={closeAPIMenu} tabIndex={!openGETAPI ? -1 : 0} aria-hidden="true" ref = {outMenuRef}/><br/>
+          <div id='api-menu-padding'>
+          <form onSubmit={e => { e.preventDefault(); }}>
+            <fieldset className="get-api-fieldset">
+              <legend>
+                Copy this link to share result based on your query:
+              </legend>
+              <div className = 'get-text-and-submit-together'>
+                <input type = 'text' 
+                  readOnly='readonly'
+                  id = 'text' 
+                  onClick={copyToClipBoard}
+                  value = {url_to_share+location.search}
+                  tabIndex={!openGETAPI ? -1 : 0}
+                />
+                <input type = 'submit' id = 'submit' value = {copyLinked}  tabIndex={!openGETAPI ? -1 : 0} onClick={copyToClipBoard}/>
+              </div>
+            </fieldset>
+          </form>
+          </div>
+        </div>
+      </div>
       <div className = {popup_style}>
-        <div className = 'accessible-container' ref = {popupRef}>
+        <div className = 'accessible-containe r' ref = {popupRef}>
           <div className = 'accessible-box' id = 'accessible-id'>
-            <div className = 'title'>ACCESSIBILITY OPTIONS</div>
+            <div className = 'title'>ACCESSIBILITY OPTIONS
+              <button id='access-close-icon' onClick={changePopup} tabIndex={popup_style==='popup-close' ? -1 : 0} aria-hidden="true" ref = {buttonpopupRef}/>
+            </div>
             <HighchartsReact highcharts={Highcharts} options={demo}/>
           </div>
           <div className = 'accessible-box'>
             <div className = 'accessible-color'>
               <CirclePicker colors={colors} color={justcolor} onChangeComplete={Colorpicker}/>
             </div>
-            <button className='accessible-close' onClick={changePopup} ref = {buttonpopupRef} aria-hidden="true">
-              X
-            </button>
           </div>
         </div>
-      </div>
-    </div>
-    <Router>
-      <div className={style} ref = {sidebarRef}>
-        <div style = {{textAlign: 'right', marginRight: '10px'}}>
-          <button className = 'for-column-close' onClick={changeWidth} ref = {buttonRef} aria-hidden="true">
-            X
-          </button>
-        </div>
-        <Link to='/' style={linkStyle} tabIndex = {a_tabindex}>
-          <div className = 'column-text'>
-            <FontAwesome className='column-item' name = 'pie-chart'/>
-            &nbsp;&nbsp;&nbsp; 
-            General
-          </div>
-        </Link>
       </div>
       <Suspense fallback={<Loading/>}>
       <Routes>
-        <Route exact path='/' element={<Faster colors={colors} 
-                                                  justcolor={justcolor} 
-                                                  colorfill={colorfill}/>}/>                                        
-        <Route exact path='/EducationChartText' element={<EducationChartText />}/>
-        <Route exact path='/EducationChart' element={<EducationChart />}/>
-        <Route exact path='/EmploymentChartText' element={<EmploymentChartText />}/>
-        <Route exact path='/EmploymentChart' element={<EmploymentChart />}/>
-        <Route exact path='/AboutData' element={<AboutData />}/>
-        <Route exact path='/StateReport' element={<StateReport />}/>
+        <Route exact path='/' element={<Faster colors={colors}
+                                                  justcolor={justcolor}
+                                                  colorfill={colorfill}/>}/>
       </Routes>
       </Suspense>
     </Router>
-    </div>
+    <EducationChart colors={colors}
+                    justcolor={justcolor}
+                    colorfill={colorfill}/>
+    <EmploymentChart  colors={colors}
+                      justcolor={justcolor}
+                      colorfill={colorfill}/>
+    <StateReport />
+    <AboutData/>
+    <Method/>
   </>
   )
 }

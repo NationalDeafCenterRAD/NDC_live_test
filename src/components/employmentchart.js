@@ -14,9 +14,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 
-const EmploymentChartText = () => {
-
-  const colorfill = ['#00A79D','#43C9C8','#D6EEF0','url(#teal)','url(#teal1)','url(#teal2)','#282729','#949494','#dbdbdb']
+const EmploymentChartText = ({colors, justcolor, colorfill}) => {
   
   let deaf_emp = {
     chart:{
@@ -549,14 +547,35 @@ const EmploymentChartText = () => {
   }
 
   return(
-    <div className = 'body'>
-      <div className = 'width-of-textchart'>
-        <div className='chart-text-subgrid'>
-          <div className='charttext-subgrid_a'>
-            <HighchartsReact highcharts={Highcharts} options={deaf_emp}/>
-          </div>
-          <div className = 'chart-text-subgrid_b'>
-            <HighchartsReact highcharts={Highcharts} options={hearing_emp}/>
+    <div className = 'super-emp-body'>
+      <div className = 'emp-body'>
+        <div className = 'width-of-textchart'>
+          <div className = 'title-for-chart'>Employment Rates</div>
+          National employment statistics show lower employment rates among deaf people. Almost half of deaf people are not in the labor force. 
+          Employment rates vary by gender, race and ethnicity. For example, 
+          {' '+employment.filter(employment => employment.type === 'employment' & 
+            employment.state === 'United States' &
+            employment.attribution === 'deafdisabled' &
+            employment.status === 'employed').map(
+            employment => employment.percentage)}
+          % of deafdisabled people are employed compared to 
+          {' '+employment.filter(employment => employment.type === 'employment' & 
+            employment.state === 'United States' &
+            employment.attribution === 'deaf with no additional disabilities' &
+            employment.status === 'employed').map(
+            employment => employment.percentage)}
+          % of deaf people without additional disabilities.  To learn more, explore employment data on the national and state tabs.
+        </div>
+        <div className = 'super-wrap-highcharts'>
+          <div className = 'width-of-textchart'>
+            <div className='chart-text-subgrid'>
+              <div className='charttext-subgrid_a'>
+                <HighchartsReact highcharts={Highcharts} options={deaf_emp}/>
+              </div>
+              <div className = 'chart-text-subgrid_b'>
+                <HighchartsReact highcharts={Highcharts} options={hearing_emp}/>
+              </div>
+            </div>
           </div>
         </div>
       </div>

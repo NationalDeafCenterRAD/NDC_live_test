@@ -87,18 +87,6 @@
     color: var(--unselected_tab_color);
 }
 
-/*Stylize body*/
-.body {
-    background: var(--bodybackground);
-    z-index:-1;
-    width: 100%;
-    overflow-x: hidden;
-    height:100%;
-    display: flex;
-    flex-direction: column;
-    position:static;
-}
-
 /*Stylize bullets*/
 ul {
     margin-top:0;
@@ -302,8 +290,7 @@ a:hover .map_line{
 /*Stylize interface and container*/
 .container{
     width: 90vw;
-    min-height: 90vh;
-    margin:10px auto 10px auto;
+    margin:10px auto 50px auto;
 }
 .inside_container {
     position: relative;
@@ -476,6 +463,18 @@ a:hover .map_line{
     max-width: 600px;
     height: 100%;
 }
+.Jonah-text-contain-about{
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px 10px 10px 10px;
+    max-width: 600px;
+    height: 100%;
+}
+
+.Jonah-body-contain{
+    overflow-x: hidden;
+}
+
 #Report-Jonah-text-contain{
     margin-left: auto;
     margin-right: auto;
@@ -1010,11 +1009,12 @@ table{
 
 /*Stylize FAQ*/
 .faqs {
-	width: 100%;
+    hyphens: auto;
 	max-width: 768px;
 	margin: 0 auto;
 	padding: 15px;
     cursor: pointer;
+    overflow-x: hidden;
 }
 
 .faqs .faq {
@@ -1027,9 +1027,9 @@ table{
 
 .faqs .faq .faq-question {
 	position: relative;
-	font-size: 20px;
+	font-size: 16px;
 	padding-right: 80px;
-    font-family: 'Roboto slab';
+    font-family: 'Roboto';
     font-weight: 900;
 	transition: all 0.4s ease;
 }
@@ -1169,7 +1169,21 @@ table{
     font-size: 12px;
     border: 1px solid var(--selected_tab);
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
-  }
+}
+
+.faq-title{
+    margin-top: 20px;
+    text-align: center;
+    font-weight: 900;
+    font-size: 24px;
+    font-family: 'Roboto slab';
+    color: var(--black);
+}
+
+.border-top{
+    border-top: 1px dashed var(--unselected_tab_color);
+}
+
 @media only screen and (max-width: 1100px){
     .state_title{
         flex-direction: column-reverse;

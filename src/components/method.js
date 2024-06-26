@@ -1,16 +1,14 @@
 // High level functions
-import React, {useState, useEffect, useLayoutEffect, useRef} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import most_recent_year from './assets/acs_year.json';
 import most_recent_year1 from './assets/acs_5_year.json';
 import './dashboard.css'
 
 //Widget This faq.js is developed by Tyler Potts who provided "Easy React JS Accordion" tutorial through https://www.youtube.com/watch?v=jwp-cYZbgic
 import FAQ from './faq.js'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
-import FontAwesome from 'react-fontawesome';
 
 // Data
 import employment from './assets/employment.json';
@@ -46,69 +44,19 @@ The R syntax for all the statistical estimates in the paper can be accessed at u
 
 
 const Method = () => {
-  //Width Screen Size Listener
-  const [size, setSize] = useState([0,0]);
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener('resize', updateSize);
-    updateSize();
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-
-  //Change sidebar width in container
-  const [data_sidebar, setData_SideBar] = useState('None')
-  const [interface_side, setInterface_Side] = useState('unset')
-  const [data_grid, setData_Grid] = useState('grid')
-  const [paddingSide, setPaddingSide] = useState(null)
-  useEffect(() => {
-    if(size[0] < 900 & size[0] > 550 ){
-      setData_SideBar('grid')
-      setInterface_Side('None')
-      setData_Grid('ungrid')
-      setPaddingSide('10px')
-    }else if(size[0] < 551){
-      setData_SideBar('grid')
-      setInterface_Side('None')
-      setData_Grid('ungrid')
-      setPaddingSide('6px')
-    }else{
-      setData_SideBar('None')
-      setInterface_Side('unset')
-      setData_Grid('grid')
-      setPaddingSide(null)
-    };
-  }, [size])
+  const population_percentage = employment.filter(e => e.type === 'population' & 
+    e.attribution === 'deaf' & e.state === 'United States' & e.variable === 'overall').map(e => e.percentage)[0]
 
   //SideBar Width
   const [sidebarWidth, setSideBarWidth] = useState('-290px');
-  const [icon_rotate, setIcon_Rotate] = useState('rotate3d(0, 1, 0, 0deg)')
   const buttonRef = useRef()
   const sidebarRef = useRef()
-  const [tabindex, setTabIndex] = useState('-1')
-  const [tabindex1, setTabIndex1] = useState('0')
-
-  const changeSideBarWidth = () => {
-    if(sidebarWidth === '-290px'){
-      setSideBarWidth('0px')
-      setIcon_Rotate('rotate3d(0, 1, 0, 180deg)')
-      setTabIndex('0')
-      setTabIndex1('-1')
-    }else{
-      setSideBarWidth('-290px')
-      setIcon_Rotate('rotate3d(0, 1, 0, 0deg)')
-      setTabIndex('-1')
-      setTabIndex1('0')
-    }
-  }; 
 
   useEffect(() => {
     const outsideDetection = e => {
       if ( buttonRef.current && !buttonRef.current.contains(e.target) &&
            sidebarRef.current && !sidebarRef.current.contains(e.target)){
         setSideBarWidth('-290px')
-        setIcon_Rotate('rotate3d(0, 1, 0, 0deg)')
       }
     }
 
@@ -121,61 +69,86 @@ const Method = () => {
   }, [sidebarWidth])
 
   const [items, setItems] = useState([
-    {question: 'What kind of data did we use?', 
-     answer: 
-      <div className = 'paragraph-method'>The data for this project were taken from the
-      Public Use Microdata Sample (PUMS) of the {most_recent_year} and {(most_recent_year1-4)+'-'+most_recent_year}
-      American Community Survey (ACS), conducted
-      by the United States census. The PUMS provides
-      a confidential subset of the ACS for the public
-      to analyze. The ACS is a legally mandated questionnaire 
-      sent to a random sample of addresses
-      of homes and group quarters in the US. The
-      questionnaire includes questions about both
-      housing units and their individual occupants. The
-      PUMS dataset includes survey weights, designed
-      to produce estimates that generalize to US people, 
-      along with a set of replicate weights used to
-      estimate sampling error. These weights account
-      for the complex probability sample design as well
-      as for non-response. Although the census bureau
-      goes to great lengths to minimize non-sampling
-      error, it is impossible to fully eliminate, so
-      estimates should be interpreted with care. More
-      information can be found at <a href='http://www.census.gov/programs-surveys/acs/about.html' style = {{textDecoration:'none',color:'#008e84',fontWeight:900}}>American Community Surveys</a>.
-      </div>,
-     open: false
-    },
-    {question: 'How large is the American Community Survey data?', 
+    {question: 'How many deaf people live in the United States?',
      answer:
-      <div className = 'paragraph-method'>The American Community Survey data has sent household surveys to approximately 3.5 million addresses per year.
-      There are more than 20,000 variables in this data. These analyses translate these data into data dashboard. 
-      The {most_recent_year} sample included {
+     <div className = 'paragraph-method'>According to the {most_recent_year}, 
+     American Community Survey (ACS), about {population_percentage+'%'} of the U.S. population 
+     consider themselves deaf or have serious difficulty hearing. More information at: 
+      <ul>
+        <li>
+          <a href='https://www.disabilitystatistics.org/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.disabilitystatistics.org</a>
+        </li>
+        <li>
+          <a href='https://www.researchondisability.org/ADSC/build-your-own-statistics' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.researchondisability.org/ADSC/build-your-own-statistics</a>
+        </li>
+      </ul>
+     <p/>
+     The Hearing Loss Association of America estimates that <a href='https://www.hearingloss.org/wp-content/uploads/HLAA_HearingLoss_Facts_Statistics.pdf' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>48 million Americans have some degree of hearing loss</a>.  
+    </div>,
+     open: false   
+    },
+    {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
+     answer: 
+      <div className = 'paragraph-method'>
+      The American Community Survey provides data in 1-year and 5-year estimates. The dashboard uses 1-year estimates for 
+      the national-level data to provide the most current employment and education rates. 5-year estimates, which are larger, 
+      are used for state-level data to ensure that the sample size is large enough to be representative.
+      The {most_recent_year} 1-year ACS sample for deaf people is {
       employment.filter(employment => employment.type === 'employment' & 
         employment.attribution === 'deaf' & 
         employment.state === 'United States' &
         (employment.status === 'unemployed' | employment.status === 'employed' | 
         employment.status === 'notinLF')).map(employment => employment.n).reduce(
-        (sum, a) => sum + a, 0).toLocaleString('en-US')} deaf people, and the 5-year sample ({(most_recent_year1-4)+'-'+(most_recent_year1)}) used for state-level data  
-      included {
+        (sum, a) => sum + a, 0).toLocaleString('en-US')} while the {(most_recent_year1-4)+'-'+(most_recent_year1)} 5-year ACS sample is {
       employment.filter(employment => employment.type === 'employment' & 
         employment.attribution === 'deaf' & 
         employment.state !== 'United States' &
         (employment.status === 'unemployed' | employment.status === 'employed' | 
         employment.status === 'notinLF')).map(employment => employment.n).reduce(
         (sum, a) => sum + a, 0).toLocaleString('en-US')
-      } deaf people. 
+      }. 
       </div>,
      open: false
     },
-    {question: 'How do we define the deaf population?',
+    {question: 'How many deaf people attend residential schools and mainstream schools?', 
      answer:
-     <div className = 'paragraph-method'>Recall that the U.S. Census Bureau collects data on functional limitations and not disability or identity labels.
-     The respondents who stated that they had "serious difficulty hearing" were used to represent the deaf population in these analyses.
+      <div className = 'paragraph-method'>The American Community Survey does not collect data 
+      about the type of school deaf people attend so we do not know which educational environment 
+      people in this sample had attended. For estimates about deaf students in different educational 
+      environments, see <a href='https://www.jstor.org/stable/27023781' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www2.ed.gov/programs/osepidea/618-data/state-level-data-files/index.html' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
+      </div>,
+     open: false
+    },
+    {question: 'How many deaf people use sign language?',
+     answer:
+     <div className = 'paragraph-method'>The American Community Survey collects information about how 
+     well a person speaks English, and allows people to write in the additional languages used in the home. 
+     The ACS does not ask about knowledge or use of sign language. For current estimates about sign language use, 
+     see <a href='https://academic.oup.com/jdsde/article/28/1/1/6845390?login=false' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Mitchell & Young, (2022)</a>.
      </div>,
-    open: false
-
-  }
+     open: false
+    },
+    {question: 'What is the difference between unemployed and not in the labor force?',
+     answer:
+     <div className = 'paragraph-method'>The federal government describes people without a 
+     job as people who are unemployed or not in the labor force. People who reported being 
+     currently, or recently, looking for work, are counted as unemployed. People who are not currently 
+     employed, and are not looking for work, are counted as not in the labor force. This latter group may 
+     include students, parents, caretakers, or retired people, for example.
+     </div>,
+     open: false
+    },
+    {question: 'Why are some of the age ranges 16-64 and other age ranges 25-64?',
+     answer:
+     <div className = 'paragraph-method'>This dashboard includes employment data for deaf 
+     people ages 16-64, commonly considered to be the working-age population, and education data 
+     for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
+     to learn more about deaf people younger than 16, 
+     check out <a href='https://www.disabilitystatistics.org/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Disability Statistics</a>, 
+     or the <a href='https://data.census.gov/mdat/#/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
+     </div>,
+     open: false
+    }
   ])
 
   const toggleFAQ = index => {
@@ -190,56 +163,18 @@ const Method = () => {
   }
 
   return(
-  <div className = 'body'>
-    <div className = 'container'>
-      <div className = 'main-grid'>
-        <div className = 'main-a'>
-          <div id = 'title'>
-            Deaf Postsecondary Data from the American Community Survey
-          </div>
-        </div>  
-      </div>
-      <Tabs aria-label="A set of charts">
-        <TabList>
-          <Tab style={{paddingLeft:paddingSide, paddingRight: paddingSide}}>{'FAQs'}</Tab>
-        </TabList>
-        <TabPanel>
-          <div className='inside_container'>
-            <p className='aria-text'>Left Content</p>
-            <p className='aria-text'>
-              This content contains a list of common questions to ask.
-            </p>
-            <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
-            </button>
-            <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
-              <div className='data_sidebar_interface'>
-                <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
-                  <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
-                </button>
-              </div>
-            </div>
-            <div className={data_grid}>
-              <div className='a'>
-                <div className = 'title'>{'FREQUENTLY ASKED QUESTIONS'}</div>
-                <div className = 'faqs'>
-                  {items.map((value, index)=>{
-                    return <FAQ value = {value} index = {index} toggleFAQ = {toggleFAQ}/>
-                  })}
-                </div>
-              </div>
-              <div className='b' style={{display:interface_side}}>
-                <p className='aria-text'>Right Content</p>
-                <p className='aria-text'>
-                  This content consists of one selection that sends you to different sections (i.e., General section, Employment section)
-                </p>
-              </div>
-            </div>
+  <>
+    <div className = 'Jonah-body-contain'>
+      <div className = 'Jonah-text-contain-about'>
+        <div className = 'faq-title'>Data Dashboard FAQs</div>
+        <div className = 'faqs'>
+          {items.map((value, index)=>{
+            return <FAQ value = {value} index = {index} toggleFAQ = {toggleFAQ}/>
+          })}
         </div>
-      </TabPanel>
-    </Tabs>
+      </div>
     </div>
-  </div>
+  </>
   );
 }
 

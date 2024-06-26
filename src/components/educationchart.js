@@ -3,6 +3,7 @@ import React from "react";
 
 // Assets
 import employment from './assets/employment.json';
+import acs_one_year from './assets/acs_year.json';
 import './edu_chart_text.css';
 
 // Font Families
@@ -14,9 +15,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 
-const EducationChart = () => {
-
-  const colorfill = ['#00A79D','#43C9C8','#D6EEF0','url(#teal)','url(#teal1)','url(#teal2)','#282729','#949494','#dbdbdb']
+const EducationChart = ({colors, justcolor, colorfill}) => {
   
   let education_attainment = {
     chart:{
@@ -122,9 +121,37 @@ const EducationChart = () => {
   };
 
   return(
-    <div className = 'body'>
-      <div className = 'width-of-textchart'>
-        <HighchartsReact highcharts={Highcharts} options={education_attainment}/>
+    <div className = 'super-edu-body'>
+      <div className = 'edu-body'>
+        <div className = 'super-wrap-highcharts'>
+          <div className = 'width-of-textchart'>
+            <HighchartsReact highcharts={Highcharts} options={education_attainment} className = 'highcharts-border-radius'/>
+          </div>
+        </div>
+        <div className = 'width-of-textchart'>
+          <div className = 'title-for-chart'>Education Attainment</div>
+          Fewer deaf people completed high school or college degrees than their hearing peers in {acs_one_year}. Educational attainment 
+          varies across gender, race, and ethnicity. For example, 
+          {' '+employment.filter(employment => employment.type === 'education' & 
+            employment.state === 'United States' &
+            employment.attribution === 'deaf white' &
+            employment.status === 'bachelor').map(
+            employment => employment.percentage)}
+          % of white deaf people have a bachelor's degree or higher 
+          compared to 
+          {' '+employment.filter(employment => employment.type === 'education' & 
+            employment.state === 'United States' &
+            employment.attribution === 'deaf Black' &
+            employment.status === 'bachelor').map(
+            employment => employment.percentage)}
+          % of Black deaf and 
+          {' '+employment.filter(employment => employment.type === 'education' & 
+            employment.state === 'United States' &
+            employment.attribution === 'deaf Latinx' &
+            employment.status === 'bachelor').map(
+            employment => employment.percentage)}
+          % of Latinx deaf people. To learn more, explore educational attainment data on the national and state tabs.
+        </div>
       </div>
     </div>
   )
