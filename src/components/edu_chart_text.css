@@ -14,7 +14,7 @@
 
 .super-edu-body{
     display: flex;
-    background: var(--light_teal);
+    background: var(--boxbackground);
     padding: 50px;
 }
 

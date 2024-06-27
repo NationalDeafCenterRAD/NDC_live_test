@@ -14,7 +14,7 @@
 
 .super-emp-body{
     display: flex;
-    background: var(--light_teal);
+    background: var(--boxbackground);
     padding: 50px;
 }
 
@@ -115,7 +115,7 @@
 }
 
 .aboutdata-body{
-    max-width: 600px;
+    max-width: 1000px;
     margin: auto;
     margin-top: 50px;
     hyphens: auto;
