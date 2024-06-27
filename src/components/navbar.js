@@ -30,9 +30,6 @@ import {
   Route
 } from 'react-router-dom';
 
-// Persistent shareable link
-const url_to_share = "https://www.nationaldeafcenter.org/dashboard/"
-
 /*Icons and fonts*/
 import 'font-awesome/css/font-awesome.min.css';
 import 'font-awesome/css/font-awesome.css';
@@ -51,17 +48,10 @@ import HC_accessible from "highcharts/modules/accessibility";
 import {CirclePicker} from 'react-color';
 
 // Iframe supports
-// Try https://www.npmjs.com/package/iframe-resizer/v/3.6.6
 import '@iframe-resizer/child'
 
-window.parent.postMessage({
-	type: "connect",
-	url: window.location.href
-}, "*",);
-
-window.iFrameResizer = {
-  targetOrigin: '*'
-}
+// Persistent shareable link
+const url_to_share = "https://www.nationaldeafcenter.org/dashboard/"
 
 // Add pattern in Highcharts
 HCPattern(Highcharts);
@@ -643,7 +633,7 @@ const Navbar = () => {
                   readOnly='readonly'
                   id = 'text' 
                   onClick={copyToClipBoard}
-                  value = {url_to_share+location.search}
+                  value = {url_to_share+window.location.search}
                   tabIndex={!openGETAPI ? -1 : 0}
                 />
                 <input type = 'submit' id = 'submit' value = {copyLinked}  tabIndex={!openGETAPI ? -1 : 0} onClick={copyToClipBoard}/>
