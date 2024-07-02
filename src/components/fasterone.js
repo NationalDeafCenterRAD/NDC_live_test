@@ -719,6 +719,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       searchParams.set('attr','overall');
       searchParams.set('main','Education Attainment');
       searchParams.set('status',"Bachelor's");
+      searchParams.set('chart_type', 'column');
     }
     setSearchParams(
       searchParams
@@ -738,8 +739,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
 
     setDeafLabels(['deaf people'])
     setHearLabels(['hearing people'])
-
-    setChartType('column')
 
     setInsideChartSchema({label: "Bachelor's", value: "Bachelor's"})
     setInsideChartStatus('bachelor')
@@ -766,14 +765,16 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   const maintitle = whenNull(searchParams.get('main'),'Education Attainment');
   const statusCateg = whenNull(searchParams.get('status'),national_options.filter(e => e.value === maintitle).map(e => e.set_for_chart)[0].map(e => e.value)[0]);
   const selected_attributions = whenNull(searchParams.get('attr'),'overall');
+  const chartType = whenNull(searchParams.get('chart_type'),'column');
 
   const [nationSelectDisplay, setNationSelectDisplay] = useState(national_options.filter(e => e.value === maintitle).map(e => e.display)[0]);
   const [title_by, setTitleBy] = useState(national_options.filter(e => e.value === maintitle).map(e => e.title_by)[0]);
   const [nationalSchema, setNationalSchema] = useState(national_options.filter(e => e.value === maintitle));
   const [groupInsideChart, setGroupInsideChart] = useState(national_options.filter(e => e.value === maintitle).map(e => e.variable)[0]);
-  const [metrics, setMetrics] = useState(national_options.filter(e => e.value === maintitle).map(e => e.metrics)[0]);
   const [scope, setScope] = useState(national_options.filter(e => e.value === maintitle).map(e => e.scope)[0])
 
+  const [metrics, setMetrics] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.metrics)[0],
+    national_options.filter(e => e.value === maintitle).map(e => e.metrics)[0]));
   const [nationalTitle, setNationalTitle] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.title)[0],
     national_options.filter(e => e.value === maintitle).map(e => e.title)[0]));
   const [nationDescript, setNationDescript] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.description)[0],
@@ -786,8 +787,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     national_options.filter(e => e.value === maintitle).map(e => e.type)[0]));
   const [insidechartStatus, setInsideChartStatus] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.variable)[0],
     national_options.filter(e => e.value === maintitle).map(e => e.subvariable)[0]));
-  const [chartType, setChartType] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.chartype)[0],
-    national_options.filter(e => e.value === maintitle).map(e => e.chartype)[0]));
   const [sentence, setSentence] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.sentence)[0],
     national_options.filter(e => e.value === maintitle).map(e => e.sentence)[0]));
   const [limit_age, setAge] = useState(whenNull(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.age)[0],
@@ -827,6 +826,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }
     searchParams.set('main', e.value);
     searchParams.set('attr','overall');
+    searchParams.set('chart_type', e.chartype);
+
     if(e.set_for_chart[0].value === 'Nothing'){
       searchParams.delete('status');
     }else{
@@ -847,8 +848,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
 
     setDeafLabels(['deaf people'])
     setHearLabels(['hearing people'])
-
-    setChartType(e.chartype)
 
     setInsideChartSchema(e.set_for_chart)
     setInsideChartStatus(e.subvariable)
@@ -906,6 +905,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   // Change Information inside Chart using Inside Chart Option - third selection options
   const changeInsideChart = (e) => {
     searchParams.set('status',e.value);
+    searchParams.set('chart_type', e.chartype);
     
     setSearchParams(
       searchParams
@@ -915,7 +915,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     setInsideChartType(e.type)
     setNationalTitle(e.title)
     setMetrics(e.metrics)
-    setChartType(e.chartype);
     setNationDisabled(e.disabled);
     setSecondDisabled(e.disabled);
     setNationDescript(e.description)
@@ -3950,11 +3949,6 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     <>
       <div className = 'container'>
         <div className = 'main-grid'>
-          <div className = 'main-a'>
-            <div id = 'title'>
-              Deaf Postsecondary Data from the American Community Survey ({year})
-            </div>
-          </div>  
           <div className = 'main-b'/>                
         </div>
         <Tabs onSelect={changeTabNumber} selectedIndex={reportTrigger}>

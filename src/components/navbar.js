@@ -8,8 +8,6 @@ import './navbar.css';
 import './dashboard.css';
 
 import Loading from './Loading.js';
-import EducationChart from './educationchart.js';
-import EmploymentChart from './employmentchart.js';
 import AboutData from './aboutdata.js';
 import Method from './method.js';
 import StateReport from './state_report_page.js'
@@ -666,12 +664,6 @@ const Navbar = () => {
       </Routes>
       </Suspense>
     </Router>
-    <EducationChart colors={colors}
-                    justcolor={justcolor}
-                    colorfill={colorfill}/>
-    <EmploymentChart  colors={colors}
-                      justcolor={justcolor}
-                      colorfill={colorfill}/>
     <StateReport />
     <AboutData/>
     <Method/>

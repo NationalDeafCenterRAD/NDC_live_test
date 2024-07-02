@@ -18,31 +18,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 
-/*The data for this project were taken from the Public Use Microdata Sample (PUMS) of the 2021 American Community Survey (ACS), conducted by the United States census. The PUMS provides a confidential subset of the ACS for the public to analyze. 
-The ACS is a legally mandated questionnaire sent to a random sample of addresses of homes and group quarters in the US. The questionnaire includes questions about both housing units and their individual occupants. The PUMS dataset includes survey 
-weights, designed to produce estimates that generalize to US people, along with a set of replicate weights used to estimate sampling error. These weights account for the complex probability sample design as well as for non-response. 
-Although the census bureau goes to great lengths to minimize non-sampling error, it is impossible to fully eliminate, so estimates should be interpreted with care. More information can be found at American Community Surveys.
-
-The sample of interest in these analyses was non-institutionalized people between the ages of 25 and 64. Recall that the U.S. Census collects data on functional limitations and not disability or identity labels. The disability categories used in 
-the ACS ask respondents to report if they have any serious difficulty in the following areas:
-
-Hearing
-Vision
-Cognitive ability
-Ambulatory ability
-Self-care ability
-Independent living ability
-
-Survey respondents who stated that they had “hearing difficulties” were used to represent the deaf population in these analyses. More than XX,XXX deaf people were in the final sample. The comparison group was those who did not report having any 
-“hearing difficulties,” what we label as hearing people. For the most part, the data for the group of hearing people are largely comparable to data for the general population. But for comparison purposes, this analysis focuses on people in the 
-general population that did not report any type of “hearing difficulties,” which allows for an understanding of what employment experiences may be unique to the deaf population, and what may not be.
-
-The descriptive statistics in this report are all corrected by the person-level survey weights provided by the census. When numbers are compared to each other in this report, we used a t-test, with standard errors calculated using provided survey 
-replicate weights, to determine if difference in the numbers were due to statistical noise. These statistical tests are purely descriptive in nature, and we do not intend to suggest that any of the associations described are causal in nature. 
-As such, we did not correct for any other variables in providing these descriptive statistics.
-The R syntax for all the statistical estimates in the paper can be accessed at url.*/
-
-
 const Method = () => {
   const population_percentage = employment.filter(e => e.type === 'population' & 
     e.attribution === 'deaf' & e.state === 'United States' & e.variable === 'overall').map(e => e.percentage)[0]
@@ -69,6 +44,15 @@ const Method = () => {
   }, [sidebarWidth])
 
   const [items, setItems] = useState([
+    {question: 'What does “deaf” mean in this dashboard?',
+      answer:
+      <div className = 'paragraph-method'>The Census Bureau convened a task force to develop the disability questions 
+      for the American Community Survey. They decided to <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>avoid disability and identity labels and instead use functional limitations</a>. 
+      The purpose is to capture more people with disabilities, especially those who do not identify with having a disability. Anyone who answers yes to the question are you, <b>"deaf or have serious difficulty hearing"</b> is 
+      considered deaf in our dashboard. With this dataset there is no way to identify who is deaf, hard of hearing, or late deafened.
+     </div>,
+      open: false   
+     },
     {question: 'How many deaf people live in the United States?',
      answer:
      <div className = 'paragraph-method'>According to the {most_recent_year}, 
@@ -169,7 +153,7 @@ const Method = () => {
         <div className = 'faq-title'>Data Dashboard FAQs</div>
         <div className = 'faqs'>
           {items.map((value, index)=>{
-            return <FAQ value = {value} index = {index} toggleFAQ = {toggleFAQ}/>
+            return <FAQ value = {value} key = {index} index = {index} toggleFAQ = {toggleFAQ}/>
           })}
         </div>
       </div>

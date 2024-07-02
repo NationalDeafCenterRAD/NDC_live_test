@@ -14,6 +14,8 @@
     --black: #282729;
     --hover_color: #0d7777;
     --secondary_color: #8362aa;
+    --third_color: #E05A43;
+    --ndc_second: #8DC63F;
 }
 /*[data-theme='dark'] {
     --bodybackground: #151515;
@@ -323,6 +325,10 @@ a:hover .map_line{
     grid-column-end: 6;
     height: 100%;
 }
+#pdf-a{
+    grid-column-start: 1;
+    grid-column-end: 8;
+}
 .b{
     grid-column-start: 6;
     grid-column-end: 8;
@@ -460,14 +466,14 @@ a:hover .map_line{
     width: 90%;
     overflow-y: hidden;
     border-radius: 10px 10px 10px 10px;
-    max-width: 600px;
+    max-width: 1000px;
     height: 100%;
 }
 .Jonah-text-contain-about{
     margin-left: auto;
     margin-right: auto;
     border-radius: 10px 10px 10px 10px;
-    max-width: 600px;
+    max-width: 1000px;
     height: 100%;
 }
 
@@ -1192,4 +1198,59 @@ table{
         margin-left: 0px;
         margin-bottom: 15px;
     }
+}
+
+/*SVG Map Reports*/
+.us-map-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.us-map-svg{
+    stroke-width: 1px;
+    stroke: var(--boxbackground);
+    fill: var(--selected_tab);
+    transition: all 0.1s ease-out;
+    max-width: 1000px;
+}
+
+.us-map-svg a:hover{
+    fill: var(--ndc_second);
+    transition: all 0.1s ease-out;
+}
+.us-map-svg a:visited:hover{
+    fill: var(--ndc_second);
+    transition: all 0.1s ease-out;
+}
+.us-map-svg a:visited{
+    fill: var(--selected_tab);
+    transition: all 0.1s ease-out;
+}
+  
+#hoveringText {
+  position: fixed;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  color: var(--black);
+  background: white;
+  display: block;
+  padding: 5px;
+  transition: 0.2s opacity ease-in-out;
+  height: 20px;
+  width: 25px;
+  text-align: center;
+  border: 0.1px solid var(--black);
+  border-radius: 4px;
+}
+
+#textCenter{
+    justify-content: center;
+}
+
+#stateSelect{
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 20px;
+    max-width: 350px;
 }
