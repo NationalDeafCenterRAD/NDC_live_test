@@ -1713,6 +1713,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2053,6 +2054,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2327,6 +2329,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2593,6 +2596,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2864,6 +2868,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -3541,6 +3546,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       chartOptions: { // specific options for the exported image
         plotOptions: {
           series: {
@@ -3824,6 +3830,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
+      url: 'https://export.highcharts.com/',
       buttons: {
           contextButton: {
             text: downloadText,
