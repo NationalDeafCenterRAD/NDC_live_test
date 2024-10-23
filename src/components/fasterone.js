@@ -1713,7 +1713,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2054,7 +2054,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2329,7 +2329,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2596,7 +2596,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2868,7 +2868,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
         contextButton: {
           text: downloadText,
@@ -3546,7 +3546,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       chartOptions: { // specific options for the exported image
         plotOptions: {
           series: {
@@ -3830,7 +3830,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      url: '/exporting',
+      libURL: 'https://code.highcharts.com/10.0.0/lib/',
       buttons: {
           contextButton: {
             text: downloadText,
