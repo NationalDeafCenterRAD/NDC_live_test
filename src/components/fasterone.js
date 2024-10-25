@@ -1724,7 +1724,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         contextButton: {
           text: downloadText,
           symbol: 'download',
-          menuItems: ["downloadPNG","downloadPDF"]
+          menuItems: ["downloadPNG"]
         }
       },
       chartOptions: { // specific options for the exported image
@@ -2066,7 +2066,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         contextButton: {
           text: downloadText,
           symbol: 'download',
-          menuItems: ["downloadPNG","downloadPDF"]
+          menuItems: ["downloadPNG"]
         }
       },
       chartOptions: { // specific options for the exported image
@@ -2342,7 +2342,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         contextButton: {
           text: downloadText,
           symbol: 'download',
-          menuItems: ["downloadPNG","downloadPDF"]
+          menuItems: ["downloadPNG"]
         }
       },
       chartOptions: { // specific options for the exported image
@@ -2610,7 +2610,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         contextButton: {
           text: downloadText,
           symbol: 'download',
-          menuItems: ["downloadPNG","downloadPDF"]
+          menuItems: ["downloadPNG"]
         }
       },
       chartOptions: { // specific options for the exported image
@@ -2883,7 +2883,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         contextButton: {
           text: downloadText,
           symbol: 'download',
-          menuItems: ["downloadPNG","downloadPDF"]
+          menuItems: ["downloadPNG"]
         }
       },
       chartOptions: { // specific options for the exported image
@@ -3714,7 +3714,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           contextButton: {
             text: downloadText,
             symbol: 'download',
-            menuItems: ["downloadPNG","downloadPDF"]
+            menuItems: ["downloadPNG"]
           }
       }
     }
@@ -3847,7 +3847,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           contextButton: {
             text: downloadText,
             symbol: 'download',
-            menuItems: ["downloadPNG","downloadPDF"]
+            menuItems: ["downloadPNG"]
           }
       },
       chartOptions: { // specific options for the exported image
