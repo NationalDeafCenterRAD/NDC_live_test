@@ -26,6 +26,7 @@ import warning_sign from './images/warning_sign.svg';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HC_exporting from 'highcharts/modules/exporting';
+import HC_offlineExporting from 'highcharts/modules/offline-exporting';
 import HC_accessible from "highcharts/modules/accessibility";
 import HCMore from 'highcharts/highcharts-more';
 
@@ -34,8 +35,12 @@ import { useSearchParams } from 'react-router-dom';
 
 // Extensive Version of Highcharts
 HC_exporting(Highcharts);          //exporting function
+HC_offlineExporting(Highcharts);   // Offline on Highcharts
 HC_accessible(Highcharts);         //accessible function 
 HCMore(Highcharts);                //Add more chart options
+
+const exportURL = 'https://export.highcharts.com/'; //'http://localhost:5000/chart'
+const fallbackToExportServer = true;
 
 // National Option List
 let national_options = [
@@ -1713,7 +1718,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2054,7 +2060,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2329,7 +2336,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2596,7 +2604,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2868,7 +2877,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -3546,7 +3556,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       chartOptions: { // specific options for the exported image
         plotOptions: {
           series: {
@@ -3830,7 +3841,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       sourceWidth: 1200,
       sourceHeight: 600,
-      libURL: 'https://code.highcharts.com/10.0.0/lib/',
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
       buttons: {
           contextButton: {
             text: downloadText,
