@@ -3,10 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "start": "node ../server/app.js",
-        "dev": "nodemon ../server/app.js",
-        "build": "cd client && npm run build",
-        "install-client": "cd client && npm install",
-        "heroku-postbuild": "npm run install-client && npm run build"
+        "build": "cd ../client && npm install && npm run build && cp -r build/* ../public_html/",
     },
     "dependencies": {
         "express": "^4.21.1",
