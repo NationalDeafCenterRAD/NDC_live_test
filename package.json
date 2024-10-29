@@ -2,8 +2,8 @@
     "name": "public_html",
     "version": "1.0.0",
     "scripts": {
-        "start": "node ../server/app.js",
-        "build": "cd ../client && npm install && npm run build && cp -r build/* ../public_html/",
+        "start": "node server/app.js",
+        "build": "cd client && npm install && npm run build"
     },
     "dependencies": {
         "express": "^4.21.1",
