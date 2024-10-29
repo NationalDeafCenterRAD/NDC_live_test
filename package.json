@@ -2,15 +2,10 @@
     "name": "public_html",
     "version": "1.0.0",
     "scripts": {
-        "start": "node server/app.js",
-        "build": "cd client && npm install && npm run build"
-    },
-    "dependencies": {
-        "express": "^4.21.1",
-        "path": "^0.12.7"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "description": "Dashboard consists of ReactJS, NodeJS, and ExpressJS where R analyzes data and sends info over.",
-    "main": "index.js",
+    "main": "server/app.js",
     "author": "Jonah Winninghoff",
     "license": "ISC"
 }
