@@ -610,7 +610,7 @@ const Navbar = () => {
       <div className='flex-invisible-button'>
         <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {openAPIMenu} ref = {buttonpopupRef} aria-label = 'Share Link - Copy link to share' aria-expanded = {collapse} aria-hidden = 'true'>
           <FontAwesome className='iconButton' name = 'share-alt' style = {{fontSize: '20px'}}/>
-          <div className = 'Jonah-nav-text'>SHARE</div>
+          <div className = 'Jonah-nav-text'>SHARING</div>
         </button>
         <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
           <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '20px'}}/>
