@@ -5,7 +5,7 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "description": "Dashboard consists of ReactJS, NodeJS, and ExpressJS where R analyzes data and sends info over.",
-    "main": "server/app.js",
+    "main": "app/app.js",
     "author": "Jonah Winninghoff",
     "license": "ISC"
 }
