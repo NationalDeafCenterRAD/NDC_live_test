@@ -1,11 +1,5 @@
 DirectoryIndex disabled
+# Redirect traffic to your port 3000
 RewriteEngine On
-
-# Internally rewrite /app to /
-RewriteCond %{REQUEST_URI} ^/app
-RewriteRule ^app(.*)$ $1 [L]
-
-# Proxy all requests to Node.js application
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+RewriteBase /app
+RewriteRule ^(.*)?$ http://127.0.0.1:3000/$1 [P,L]
