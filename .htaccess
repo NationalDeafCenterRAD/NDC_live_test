@@ -2,4 +2,4 @@ DirectoryIndex disabled
 # Redirect traffic to your port 3000 
 RewriteEngine On 
 RewriteBase / 
-RewriteRule ^(.*)?$ http://127.0.0.1:3000/$1 [P,L]
+RewriteRule ^(.*)?$ /app/$1 [P,L]
