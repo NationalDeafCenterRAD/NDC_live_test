@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node public_html/app.js",
+    "start": "node server/app.js",
     "build": "cd ../client && npm install && npm run build"
   },
   "author": "",
