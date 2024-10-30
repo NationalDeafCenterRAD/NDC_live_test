@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "node app/app.js",
-    "build": "cd ../client && npm install && npm run build"
+    "start": "node app.js",
+    "build": "npm install && cd ../client && npm install && npm run build && cd ../app"
   },
   "author": "",
   "license": "ISC",
