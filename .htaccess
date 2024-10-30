@@ -2,8 +2,8 @@ DirectoryIndex disabled
 RewriteEngine On
 
 # Internally rewrite /app to /
-RewriteCond %{REQUEST_URI} ^/public_html/app
-RewriteRule ^public_html/app/(.*)$ /public_html/$1 [L]
+RewriteCond %{REQUEST_URI} ^/app
+RewriteRule ^app(.*)$ $1 [L]
 
 # Proxy all requests to Node.js application
 RewriteCond %{REQUEST_FILENAME} !-f
