@@ -1,0 +1,82 @@
+# Workflow
+name: Cloudways Deployment
+
+# Branch
+on:
+  push:
+    branches:
+      - main
+
+# Workflow begins
+jobs:
+  ssh-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: SSH Cleanup
+        run: |
+          sshpass -p "${{ secrets.MASTER_PASSWORD }}" \
+          ssh -o StrictHostKeyChecking=no ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }} \
+          "cd ~/applications/${{ secrets.APP_CRED }}/private_html/ && rm -rf * && cd ../public_html && rm -rf *"
+
+      - name: SSH Private_HTML Setup
+        working-directory: ./client
+        run: |
+          sshpass -p "${{ secrets.MASTER_PASSWORD }}" \
+          rsync -avz --no-perms --no-times \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./ \
+          ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }}:~/applications/${{ secrets.APP_CRED }}/private_html/
+
+      - name: SSH Public_HTML Setup
+        working-directory: ./app
+        run: |
+          sshpass -p "${{ secrets.MASTER_PASSWORD }}" \
+          rsync -avz --no-perms --no-times \
+          -e "ssh -o StrictHostKeyChecking=no" \
+          ./ \
+          ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }}:~/applications/${{ secrets.APP_CRED }}/public_html/
+
+      - name: SSH Deployment Process
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PUBLIC_IP }}
+          username: ${{ secrets.MASTER_CRED }}
+          password: ${{ secrets.MASTER_PASSWORD }}
+          script: |
+            # Check if the PM2 is installed
+            if ! /home/master/bin/npm/lib/node_modules/bin/pm2 -v &> /dev/null; then
+              cd  && echo "export PATH='$PATH:/home/master/bin/npm'" >> .bash_aliases
+              cd ~ && echo "export NODE_PATH='$NODE_PATH:/home/master/bin/npm/lib/node_modules'" >> .bash_aliases
+              npm config set prefix "/home/master/bin/npm/lib/node_modules"
+              cd  && echo "alias pm2='/home/master/bin/npm/lib/node_modules/bin/pm2'" >> .bash_aliases
+              npm install -g pm2@latest
+              echo "alias pm2='/home/master/bin/npm/lib/node_modules/bin/pm2'" >> ~/.bashrc
+              echo "export PATH=$PATH:/home/master/bin/npm/bin" >> ~/.bashrc
+              source ~/.bashrc
+              /home/master/bin/npm/lib/node_modules/bin/pm2 -v
+            else
+              echo "PM2 exists."
+            fi
+
+            # Verify if pm2 exists
+            if ! /home/master/bin/npm/lib/node_modules/bin/pm2 -v &> /dev/null; then
+              echo "command PM2 not found."
+              exit 1
+            fi
+
+            # Build everything needed for app.js to run
+            cd && cd ~/applications/${{ secrets.APP_CRED }}/public_html/
+            npm run build
+
+            # Check if the app is already running in PM2
+            if /home/master/bin/npm/lib/node_modules/bin/pm2 list | grep -q "app"; then
+              /home/master/bin/npm/lib/node_modules/bin/pm2 reload app
+            else
+              /home/master/bin/npm/lib/node_modules/bin/pm2 start app.js --name app
+            fi
+            
+            /home/master/bin/npm/lib/node_modules/bin/pm2 save
+
