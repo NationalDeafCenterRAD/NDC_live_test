@@ -11,6 +11,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../private_html/build', 'index.html'));
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 3001, () => {
     console.log('Server is running');
 })
