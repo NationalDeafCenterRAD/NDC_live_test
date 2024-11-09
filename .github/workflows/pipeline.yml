@@ -73,7 +73,9 @@ jobs:
 
             # Check if the app is already running in PM2
             if /home/master/bin/npm/lib/node_modules/bin/pm2 list | grep -q "app"; then
-              /home/master/bin/npm/lib/node_modules/bin/pm2 reload app
+              /home/master/bin/npm/lib/node_modules/bin/pm2 delete app
+              /home/master/bin/npm/lib/node_modules/bin/pm2 start app.js --name app
+              /home/master/bin/npm/lib/node_modules/bin/pm2 save
             else
               /home/master/bin/npm/lib/node_modules/bin/pm2 start app.js --name app
             fi
