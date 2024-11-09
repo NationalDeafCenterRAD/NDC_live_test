@@ -6,6 +6,7 @@ updates:
       interval: 'weekly'
     commit-message:
       prefix: 'fix'
+    open-pull-requests-limit: 0 # Increase the limit as needed
 
   - package-ecosystem: "npm"
     directory: '/app' # Location of package.json
@@ -13,3 +14,4 @@ updates:
       interval: 'weekly'
     commit-message:
       prefix: 'fix'
+    open-pull-requests-limit: 0 # Increase the limit as needed
