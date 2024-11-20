@@ -23,8 +23,8 @@ jobs:
         run: |
           sshpass -p "${{ secrets.MASTER_PASSWORD }}" \
           ssh -o StrictHostKeyChecking=no ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }} \
-          "cd ~/applications/${{ secrets.APP_CRED }}/private_html/ && rm -rf * && cd ../public_html && rm -rf *"
-      
+          "cd ~/applications/${{ secrets.APP_CRED }}/private_html/ && echo $SHELL && rm -rf * && cd ../public_html && rm -rf *"
+
       - name: SSH Private_HTML Setup
         working-directory: ./client
         run: |
@@ -33,7 +33,7 @@ jobs:
           -e "ssh -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }}:~/applications/${{ secrets.APP_CRED }}/private_html/
-      
+
       - name: SSH Public_HTML Setup
         working-directory: ./app
         run: |
@@ -42,7 +42,7 @@ jobs:
           -e "ssh -o StrictHostKeyChecking=no" \
           ./ \
           ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }}:~/applications/${{ secrets.APP_CRED }}/public_html/
-      
+
       - name: SSH Deployment Process
         uses: appleboy/ssh-action@master
         with:
@@ -64,17 +64,17 @@ jobs:
             else
               echo "PM2 exists."
             fi
-      
+
             # Verify if pm2 exists
             if ! /home/master/bin/npm/lib/node_modules/bin/pm2 -v &> /dev/null; then
               echo "command PM2 not found."
               exit 1
             fi
-      
+
             # Build everything needed for app.js to run
             cd && cd ~/applications/${{ secrets.APP_CRED }}/public_html/
             npm run build
-      
+
             # Check if the app is already running in PM2
             if /home/master/bin/npm/lib/node_modules/bin/pm2 list | grep -q "app"; then
               /home/master/bin/npm/lib/node_modules/bin/pm2 delete app
@@ -82,6 +82,5 @@ jobs:
             else
               /home/master/bin/npm/lib/node_modules/bin/pm2 start app.js --name app
             fi
-            
+
             /home/master/bin/npm/lib/node_modules/bin/pm2 save
-      
