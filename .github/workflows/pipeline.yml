@@ -23,7 +23,7 @@ jobs:
         run: |
           sshpass -p "${{ secrets.MASTER_PASSWORD }}" \
           ssh -o StrictHostKeyChecking=no ${{ secrets.MASTER_CRED }}@${{ secrets.PUBLIC_IP }} \
-          "cd ~/applications/${{ secrets.APP_CRED }}/private_html/ && echo $SHELL && rm -rf * && cd ../public_html && rm -rf *"
+          "cd ~/applications/${{ secrets.APP_CRED }}/private_html/ && find . -maxdepth 1 ! -name 'dash' ! -name '.' -exec rm -rf {} + && cd ../public_html && find . -maxdepth 1 ! -name 'dash' ! -name '.' -exec rm -rf {} +"
 
       - name: SSH Private_HTML Setup
         working-directory: ./client
