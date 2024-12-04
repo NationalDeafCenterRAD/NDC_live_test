@@ -39,44 +39,68 @@ HC_offlineExporting(Highcharts);   // Offline on Highcharts
 HC_accessible(Highcharts);         //accessible function 
 HCMore(Highcharts);                //Add more chart options
 
-const exportURL = 'https://export.highcharts.com/'; //'http://localhost:5000/chart'
+const exportURL = /*process.env.REACT_APP_BACKEND_URL*/ 'https://export.highcharts.com/';
 const fallbackToExportServer = true;
 
 // National Option List
 let national_options = [
+  {label: 'Education', value: 'Education',isTitle: true,
+   variable: 'education', title: "Bachelor's Degree Attainment or Higher", title_by:'', disabled: false, second_disabled: false, display: 'unset', 
+   set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: '', group: 'education',
+   chartype: 'column', metrics: 'percentage', categories: '', accordion: 'nothing', scope: ''
+  },
   {label: 'Education Attainment', value: 'Education Attainment', variable: 'education', title: "Bachelor's Degree Attainment or Higher", title_by:'', disabled: false, second_disabled: false, display: 'unset', 
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: '', group: 'education',
    chartype: 'column', metrics: 'percentage', categories: '', accordion: 'nothing', scope: ''
+  },
+  {label: 'Enrollment Rate', value: 'Enrollment Rate', variable: 'enrollment', title: 'Enrollment Rate', title_by:'', disabled: false, second_disabled: false, display: 'None',
+    set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training', description1: '', sentence: '', group: 'enrollment',
+    chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
+  },
+  {label: 'Most Popular Majors', value: 'Most Popular Majors',variable: 'mostpopular', title: 'College Graduate Rates Across 5 Most Popular Majors', title_by:'', disabled: true, second_disabled: true, display: 'unset',
+    set_for_chart: [{label: "Bachelor’s Degrees", value: "Bachelor’s Degrees"}], subvariable: 'Graduate', type: 'Field of Degree', age: '25-64', description: '', description1: '', sentence: '', group: 'popular',
+    chartype: 'popular',metrics: 'percentage',categories: '', accordion: 'accordion-is', scope: ''
+  },
+  {label: 'Employment', value: 'Employment',isTitle: true,
+   variable: 'employment', title: 'Employment Rate', title_by:'', disabled: false, second_disabled: false, display: 'unset',
+   set_for_chart: [{label: "Employed", value: "Employed"}], subvariable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: '', group: 'employment',
+   chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Employment Status', value: 'Employment Status', variable: 'employment', title: 'Employment Rate', title_by:'', disabled: false, second_disabled: false, display: 'unset',
    set_for_chart: [{label: "Employed", value: "Employed"}], subvariable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: '', group: 'employment',
    chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
   },
-  {label: 'Enrollment Rate', value: 'Enrollment Rate', variable: 'enrollment', title: 'Enrollment Rate', title_by:'', disabled: false, second_disabled: false, display: 'None',
-   set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training', description1: '', sentence: '', group: 'enrollment',
-   chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
+  {label: 'Class of Worker', value: 'Class of Worker', variable: 'cow', title: "Percentage of Federal Gov't Employees", title_by:'', disabled: false, second_disabled: false, display: 'unset',
+    set_for_chart: [{label: "Federal gov't", value: "Federal gov't"}], subvariable: "Federal gov't",type: 'cow',age: '16-64', description: '  are federal government employees',description1: '  are federal government employees', sentence: '', group: 'cow',
+    chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
   },
-  {label: 'Most Popular Majors', value: 'Most Popular Majors',variable: 'mostpopular', title: 'College Graduate Rates Across 5 Most Popular Majors', title_by:'', disabled: true, second_disabled: true, display: 'unset',
-   set_for_chart: [{label: "Bachelor’s Degrees", value: "Bachelor’s Degrees"}], subvariable: 'Graduate', type: 'Field of Degree', age: '25-64', description: '', description1: '', sentence: '', group: 'popular',
-   chartype: 'popular',metrics: 'percentage',categories: '', accordion: 'accordion-is', scope: ''
+  {label: 'Type of Employment', value: 'Type of Employment', variable: 'self-employment', title: 'Self-Employment Rate', title_by:'', disabled: false, second_disabled: false, display: 'unset',
+   set_for_chart: [{label: 'Self-Employed', value: 'Self-Employed Rate'}], subvariable: 'self-employed', type: 'self-employment', age: '16-64', description: ' are self-employed, which is defined as not working for a specific employer who pays them a consistent salary or wage', description1: '', sentence: '', group: 'self-employment',
+   chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ' and who are employed'
+  },
+  {label: 'Income', value: 'Income',isTitle: true,
+   variable: 'earning', title: 'Median Earning', title_by:'', disabled: false, second_disabled: false, display: 'None',
+   set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'salary-range',
+   chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Median Earning', value: 'Median Earning', variable: 'earning', title: 'Median Earning', title_by:'', disabled: false, second_disabled: false, display: 'None',
   set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'salary-range',
    chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Mean Earning', value: 'Mean Earning', variable: 'earning', title: 'Mean Earning', title_by:'', disabled: false, second_disabled: false, display: 'None',
-  set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'mean-salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'mean-salary-range',
+   set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'earning', type: 'mean-salary-range',age: '16-64', description: ' who have full-time job earn', description1: '', sentence: '', group: 'mean-salary-range',
    chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
   },
-  {label: 'Type of Employment', value: 'Type of Employment', variable: 'self-employment', title: 'Self-Employment Rate', title_by:'', disabled: false, second_disabled: false, display: 'unset',
-  set_for_chart: [{label: 'Self-Employed', value: 'Self-Employed Rate'}], subvariable: 'self-employed', type: 'self-employment', age: '16-64', description: ' are self-employed, which is defined as not working for a specific employer who pays them a consistent salary or wage', description1: '', sentence: '', group: 'self-employment',
-   chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ' and who are employed'
+  {label: 'Trends', value: 'Trends',isTitle: true,
+   variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-13]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
+   set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education', age: '25-64', description: " have completed a bachelor's degree or higher", description1: '', sentence: "bachelor's degree attainment rate", group: 'TimeSeries',
+   chartype: 'spline', metrics: 'percentage', categories: '', accordion: 'accordion-is-open', scope: ''
   },
   {label: 'Change Over Time', value: 'Change Over Time', variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-13]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education', age: '25-64', description: " have completed a bachelor's degree or higher", description1: '', sentence: "bachelor's degree attainment rate", group: 'TimeSeries',
    chartype: 'spline', metrics: 'percentage', categories: '', accordion: 'accordion-is-open', scope: ''
   },
-  {label: 'Education x Employment & Earnings', value: 'Education x Employment & Earnings', variable: 'levels of education', title: 'Employment Rate',title_by: ' By Level of Education', disabled: true, second_disabled: true, display: 'unset',
+  {label: 'Employment/Earnings by Education', value: 'Employment/Earnings by Education', variable: 'levels of education', title: 'Employment Rate',title_by: ' By Level of Education', disabled: true, second_disabled: true, display: 'unset',
    set_for_chart: [{label: "Employment Rates", value: "Employment Rates"}], subvariable: "employed", type: 'levels of education', age: '25-64', description: 'employment rate', description1: '', sentence: '', group: 'levels of education',
    chartype: 'levels', metrics: 'percentage', categories: '', accordion: 'accordion-is', scope: ''
   }
@@ -139,7 +163,15 @@ let inside_chart_options = [
   {label: "Employed", value: "Employed", title: "Employment Rate", variable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Unemployed", value: "Unemployed", title: "Unemployment Rate", variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Not in Labor Force", value: "Not in Labor Force", title: "People not in Labor Force", variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work', description1: ' are not in the labor force', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
-  
+
+  {label: 'All Classes', value: 'All Classes', title: "Percentage of Worker Classes", variable: 'every_class', type: 'cow',age: '25-64', description: '', description1: '', sentence: '', group: 'cow', metrics: 'percentage', chartype: 'every_class', disabled: true, second_disabled: true},
+  {label: "For-Profit", value: "For-Profit", title: "Percentage of For-Profit Employees", variable: 'For-profit',type: 'cow',age: '16-64', description: '  are for-profit employees',description1: '  are for-profit employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "Non-Profit", value: "Non-Profit", title: "Percentage of Non-Profit Employees", variable: 'Non-profit',type: 'cow',age: '16-64', description: '  are non-profit employees',description1: '  are non-profit employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "Local Gov't", value: "Local Gov't", title: "Percentage of Local Gov't Employees", variable: "Local gov't",type: 'cow',age: '16-64', description: '  are local government employees',description1: '  are local government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "State Gov't", value: "State Gov't", title: "Percentage of State Gov't Employees", variable: "State gov't",type: 'cow',age: '16-64', description: '  are state government employees',description1: '  are state government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "Federal Gov't", value: "Federal Gov't", title: "Percentage of Federal Gov't Employees", variable: "Federal gov't",type: 'cow',age: '16-64', description: '  are federal government employees',description1: '  are federal government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "Self-Employed/Business", value: "Self-Employed/Business", title: "Percentage of Self-Employed/Business Employees", variable: "Self-employed/Business",type: 'cow',age: '16-64', description: '  are self-employed or business owners',description1: '  are self-employed or business owners', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+
   {label: "Bachelor’s Degrees", value: "Bachelor’s Degrees", title: "College Graduate Rate Across 5 Most Popular Majors", variable: 'Graduate',type: 'Field of Degree',age: '25-64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage',chartype: 'popular',disabled: true, second_disabled: true},
   {label: "Degrees x Employment Rate", value: "Degrees x Employment Rate", title: "Employment Rate By 5 Most Popular Majors", variable: 'Employment',type: 'Field of Degree',age: '25-64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage', chartype: 'popular',disabled: true, second_disabled: true},
   
@@ -147,13 +179,16 @@ let inside_chart_options = [
   {label: "Business Owners", value: "Business Owners", title: "Percentage of Business Owners", variable: "business owner", type: "self-employment", age: "16-64", description: ' are business owners', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Full-Time Workers", value: "Full-Time Workers", title: "Percentage of Full-Time Workers", variable: "full-time", type: "self-employment", age: "16-64", description: ' are full-time workers', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   
+  {label: 'Enrollment', value: 'Enrollment',isTitle: true,title: "Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Enrolled", value: "Enrolled", title: "Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
+  {label: 'Education', value: 'Education',isTitle: true, title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "the high school's attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "the high school's attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college', sentence: 'some college attainment rate', group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Associate's", value: "Associate's", title: "Associate's Degree Attainment or Higher", variable: 'associate',type: 'education',age: '25-64', description: " have completed an associate's degree or higher", description1: " have completed an associate's degree or higher", sentence: "the associate's degree attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Bachelor's", value: "Bachelor's", title: "Bachelor's Degree Attainment or Higher", variable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: "the bachelor's degree attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Master's", value: "Master's", title: "Master's Degree Attainment or Higher", variable: 'master',type: 'education',age: '25-64', description: " have completed a master's degree or higher", description1: " have completed a master's degree or higher", sentence: "the master's degree attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: "PhD, JD or MD", value: "PhD, JD or MD", title: "PhD, JD, or MD Attainment", variable: 'phd/dr',type: 'education',age: '25-64', description: ' have completed doctoral degree or equivalent',description1: ' have completed doctoral degree or equivalent', sentence: 'the doctoral attainment rate', group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
+  {label: 'Employment', value: 'Employment',isTitle: true, title: "Employment Rate", variable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: 'the employment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Employed", value: "Employed", title: "Employment Rate", variable: 'employed',type: 'employment',age: '16-64', description: '  are employed',description1: '  are employed', sentence: 'the employment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Unemployed", value: "Unemployed", title: "Unemployment Rate", variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work,', description1: ' are unemployed', sentence: 'the unemployment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: "Not in Labor Force", value: "Not in Labor Force", title: "People not in Labor Force", variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work,', description1: ' are not in the labor force', sentence: 'the non-labor force participation rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
@@ -350,17 +385,19 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   const sortarray = employment.filter(employment => employment.type === 'Field of Degree' & // Sorting by another array
    employment.variable ===  'Graduate' &
    employment.state === 'United States' &
-   employment.attribution.includes('deaf')).map(
+   employment?.attribution?.includes('deaf')).map(
    employment => employment.status)
 
   // Stylize selection styles
   const chart_side_style = {
     option: (provided, state) => ({
       ...provided,
-      background: state.isSelected ? '#0d7777' : state.isFocused ? '#ECEDF0' : 'white',
-      color: state.isSelected ? 'white': 'black',
-      cursor: state.isDisabled ? 'default' : 'pointer',
-      fontWeight: state.isDisabled ? 900 : 300
+      background: state.data?.isTitle ? 'white' : state.isSelected ? '#0d7777' : state.isFocused ? '#ECEDF0' : 'white',
+      color: state.data?.isTitle ? 'black' : state.isSelected ? 'white': 'black',
+      cursor: state.data?.isTitle ? 'default' : state.isDisabled ? 'default' : 'pointer',
+      fontWeight: state.data?.isTitle ? 900 : state.isDisabled ? 900 : 300,
+      paddingLeft: state.data?.isTitle ? '10px' : '30px',
+      pointerEvents: state.data?.isTitle ? 'none' : 'auto'
     }),
     indicatorSeparator: () => {},
     dropdownIndicator: (provided) => ({
@@ -809,7 +846,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     employment.filter(employment => employment.type === 'Field of Degree' &
     employment.variable ===  'Graduate' &
     employment.state === 'United States' &
-    employment.attribution.includes('deaf')).map(
+    employment?.attribution?.includes('deaf')).map(
     employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
     return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
     }).slice(0,5).reverse())
@@ -818,7 +855,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     employment.filter(employment => employment.type === 'Field of Degree' &
     employment.variable ===  'Graduate' &
     employment.state === 'United States' &
-    employment.attribution.includes('hearing')).map(
+    employment?.attribution?.includes('hearing')).map(
     employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
     return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
     }).slice(0,5).reverse())
@@ -873,7 +910,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         employment.filter(employment => employment.type === 'Field of Degree' &
         employment.variable ===  'Graduate' &
         employment.state === 'United States' &
-        employment.attribution.includes('deaf')).map(
+        employment?.attribution?.includes('deaf')).map(
         employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
         }).slice(0,5).reverse()
@@ -883,7 +920,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         employment.filter(employment => employment.type === 'Field of Degree' &
         employment.variable ===  'Graduate' &
         employment.state === 'United States' &
-        employment.attribution.includes('hearing')).map(
+        employment?.attribution?.includes('hearing')).map(
         employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
         }).slice(0,5).reverse()
@@ -949,7 +986,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           employment.filter(employment => employment.type === 'Field of Degree' &
           employment.variable ===  'Graduate' &
           employment.state === 'United States' &
-          employment.attribution.includes('deaf')).map(
+          employment?.attribution?.includes('deaf')).map(
           employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
           return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
           }).slice(0,5).reverse()
@@ -958,7 +995,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           employment.filter(employment => employment.type === 'Field of Degree' &
           employment.variable ===  'Graduate' &
           employment.state === 'United States' &
-          employment.attribution.includes('hearing')).map(
+          employment?.attribution?.includes('hearing')).map(
           employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
           return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
           }).slice(0,5).reverse()
@@ -968,7 +1005,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           employment.filter(employment => employment.type === 'Field of Degree' &
           employment.variable ===  'Employment' &
           employment.state === 'United States' &
-          employment.attribution.includes('deaf')).map(
+          employment?.attribution?.includes('deaf')).map(
           employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
           return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
           }).slice(0,5).reverse()
@@ -977,7 +1014,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           employment.filter(employment => employment.type === 'Field of Degree' &
           employment.variable ===  'Employment' &
           employment.state === 'United States' &
-          employment.attribution.includes('hearing')).map(
+          employment?.attribution?.includes('hearing')).map(
           employment => [employment.status,employment.percentage,employment.margin_errors]).sort(function(a,b){
           return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
           }).slice(0,5).reverse()
@@ -1296,7 +1333,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         in_the_b+state_label_b+', among people aged 16-64'+
         (employment.filter(employment => employment.type === insidechartType & 
           employment.variable === selected_attributions & employment.state === chosen_state_b &
-          employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+          employment.status !== 'no HS diploma' & employment?.attribution?.includes('deaf') &
           employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
         ', an estimated'+
         employment.filter(employment => employment.attribution === 'deaf' & 
@@ -1331,13 +1368,13 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               percentage: 
               employment.filter(employment => employment.type === insidechartType & 
                 employment.variable === selected_attributions & employment.state === chosen_state_b &
-                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                 employment.percentage !== 0).length === 0 ?
               in_the_b+state_label_b+", among people aged 16-64, the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
               in_the_b+state_label_b+', among people aged 16-64, an estimated'+
               employment.filter(employment => employment.type === insidechartType & 
                 employment.variable === selected_attributions & employment.state === chosen_state_b &
-                employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                 employment.percentage !== 0).map(
                 function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                 ' and '+
@@ -1348,7 +1385,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               nationDescript+', compared to '+
               employment.filter(employment => employment.type === insidechartType & 
                 employment.variable === selected_attributions & employment.state === chosen_state_b &
-                employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                 employment.percentage !== 0).map(
                 function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
                 ' and '+
@@ -1390,7 +1427,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 'In the United States, among people aged 25-64'+scope+', an estimated'+
                 employment.filter(employment => employment.type === insidechartType & 
                   employment.variable === selected_attributions & employment.state === 'United States' &
-                  employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                  employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                   employment.percentage !== 0).map(
                   function(employment,index,row){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index] && row.length > 1) ? 
                   ' and '+
@@ -1401,7 +1438,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 nationDescript+', compared to '+
                 employment.filter(employment => employment.type === insidechartType & 
                   employment.variable === selected_attributions & employment.state === 'United States' &
-                  employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                  employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                   employment.percentage !== 0).map(
                   function(employment, index){ return (index  !== 0 && hear_labels[deaf_labels.length - 1] === hear_labels[employment.index]) ? 
                   ' and '+
@@ -1415,7 +1452,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.variable === selected_attributions &
-                  employment.attribution.includes('deaf') &
+                  employment?.attribution?.includes('deaf') &
                   employment.median_income !== 0).map(
                     function(employment,index){ return (index !== 0 && deaf_labels[deaf_labels.length - 1] === deaf_labels[employment.index]) ? 
                     ' and '+
@@ -1431,7 +1468,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.variable === selected_attributions &
-                  employment.attribution.includes('hearing') &
+                  employment?.attribution?.includes('hearing') &
                   employment.median_income !== 0).map(
                     function(employment,index){ return (index !== 0 && hear_labels[hear_labels.length - 1] === hear_labels[employment.index]) ? 
                     ' and '+
@@ -1508,6 +1545,268 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     return path;
   };
 
+  // Class of Work
+  const statusOrder = ['For-profit', 'Non-profit', "Local gov't", "State gov't", "Federal gov't", "Self-employed/Business"];
+  const cowLabels = ['self-employed or business owners', 'federal government employees', 'state government employees', 'local government employees', 'non-profit employees', 'for-profit employees']
+  let nation_every_class = {
+    chart:{
+      width: HCwidth,
+      height: 330
+    },
+    legend: {
+      align: 'center',
+      verticalAlign: 'top',
+    },
+    title: {
+      text: ""
+    },
+    xAxis: {
+      categories: ['For-Profit','Non-Profit',"Local Gov't","State Gov't","Federal Gov't","Self-Employed"],
+      type: 'category',
+      visible: true,
+      title: {
+        text: null
+      },
+      crosshair: true,
+      gridLineColor: '#ffffff',
+      gridLineWidth: 0
+    },
+    yAxis: {
+      min: 0,
+      max: 100,
+      gridLineColor: '#ffffff',
+      gridLineWidth: 0,
+      title: {
+        text: ''
+      },
+      labels: {
+        overflow: 'justify',
+        formatter: function(){
+          return this.value+'%'
+        }
+      }
+    },
+    tooltip: {
+      formatter: function () {
+        return this.x+'<br><br>'+this.series.name+': <b>'+this.y+'%</b>'
+      },
+      shared: false,
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      borderWidth: 0,
+      borderRadius: 20,
+      border: 'none',
+      style: {
+        fontSize: '16px',
+        color: '#fff'
+      }
+    },
+    credits: {
+      enabled: false
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0,
+        borderWidth: 0,
+      },
+    },
+    series: [{
+      showInLegend: true,
+      name: 'deaf',
+      color: colorfill[0],
+      borderColor: colorfill[0],
+      type: 'column',
+      borderWidth: 1,
+      data: employment.filter(employment => employment.attribution === 'deaf' & 
+        employment.type === 'cow' & 
+        employment.state === 'United States').sort(
+          (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
+        ).map(employment => employment.percentage),
+      dataLabels: {
+        enabled: true,
+        formatter: function () {
+          if(
+            (employment.filter(employment => employment.attribution === 'deaf' & 
+            employment.type === 'cow' & 
+            employment.state === 'United States' &
+            employment.percentage === this.y).map(
+            function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
+          ){
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
+          }else{
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
+          }
+        },
+      }
+    },
+    { showInLegend: true,
+      name: 'hearing',
+      color: colorfill[6],
+      borderColor: colorfill[6],
+      type: 'column',
+      borderWidth: 1,
+      data: employment.filter(employment => employment.attribution === 'hearing' & 
+        employment.type === 'cow' & 
+        employment.state === 'United States').sort(
+          (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
+        ).map(employment => employment.percentage),
+      dataLabels: {
+        enabled: true,
+        formatter: function () {
+          if(
+            (employment.filter(employment => employment.attribution === 'hearing' & 
+            employment.type === 'cow' & 
+            employment.state === 'United States' &
+            employment.percentage === this.y).map(
+            function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
+          ){
+            if(this.y === 0){
+              return ''
+            }else{
+              return '\u26a0'+this.y + '%'
+            }
+          }else{
+            if(this.y === 0){
+              return ''
+            }else{
+              return this.y + '%';
+            }
+          }
+        },
+      }
+    }],
+    exporting: {
+      allowHTML: true,
+      url: exportURL,
+      fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
+      buttons: {
+        contextButton: {
+          text: downloadText,
+          symbol: 'download',
+          menuItems: ["downloadPNG"]
+        }
+      },
+      chartOptions: { // specific options for the exported image
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              style: {
+                fontSize: '18px'
+              }
+            }
+          }
+        },
+        title: {
+          text: 'Class of Worker',
+          align: 'left',
+          x: 25,
+          y: 60,
+          margin:50,
+          widthadjust: -200,
+          style: {
+            color: '#070707',
+            fontSize: '40px',
+            fontFamily: 'Roboto slab',
+            marginRight: 20
+          }
+        },
+        caption: {
+          text: nationalTitle+' in the United States ('+acs_one_year+')',
+          style: {
+            fontSize: '16px',
+            fontFamily: 'Roboto',
+            marginRight: 20,
+            fontWeight: 700,
+            color: '#565C5B'
+          },
+          verticalAlign: 'top',
+          align: 'left',
+          y: 85,
+          x: 25
+        },
+        subtitle: {
+          text: 
+            '<p>In the United States, among people aged '+limit_age+', an estimated'+
+            employment.filter(employment => employment.attribution === 'deaf' & 
+              employment.type === 'cow' & 
+              employment.state === 'United States').sort(
+                (a, b) => statusOrder.indexOf(b.status) - statusOrder.indexOf(a.status)
+              ).map(
+              function(employment, index){ return index === 0 ? 
+              ' and '+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              cowLabels[index] : cowLabels[cowLabels.length - 1] === cowLabels[index] ? ' '+
+              (employment.percentage === 0 ? 'N/A of deaf people are ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people are ' : employment.percentage + '% of deaf people are ')+
+              cowLabels[index] :
+              ' '+employment.percentage+'% '+cowLabels[index]}).reverse()+
+            ', compared to '+
+            employment.filter(employment => employment.attribution === 'hearing' & 
+              employment.type === 'cow' & 
+              employment.state === 'United States').sort(
+                (a, b) => statusOrder.indexOf(b.status) - statusOrder.indexOf(a.status)
+              ).map(
+              function(employment, index){ return index === 0 ? 
+              ' and '+
+              (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+              cowLabels[index] : cowLabels[cowLabels.length - 1] === cowLabels[index] ? ' '+
+              (employment.percentage === 0 ? 'N/A of hearing people are ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people are ' : employment.percentage + '% of hearing people are ')+
+              cowLabels[index] :
+              ' '+employment.percentage+'% '+cowLabels[index]}).reverse()+
+              ' '+citation[2]+'</p>',
+          verticalAlign: 'bottom',
+          margin:80,
+          useHTML: true,
+          x: 0,
+          y: 0,
+          style: {
+            fontSize: '16px',
+            fontFamily: 'Roboto slab',
+            paddingTop: '40px',
+            color: '#565C5B',
+          },
+          widthadjust: -220
+        },
+        chart: {
+          backgroundColor: {
+            linearGradient: [0, 0, 0, 600],
+            stops:
+              [
+                [0, 'rgb(243, 243, 243)'],
+                [0.2, 'rgb(243, 243, 243)'],
+                [0.2, 'rgb(255,255,255)'],
+                [0.71, 'rgb(255,255,255)'],
+                [0.71, 'rgb(243, 243, 243)']
+              ]      
+          },
+          plotBackgroundColor: '#ffffff',
+          events: {
+            render() {
+              const chart = this,
+                width = 190;
+                chart.renderer.image(thelogo,
+                  chart.plotLeft + chart.plotSizeX - width, //x
+                  30, //y
+                  2.37216657881*70, //width
+                  70//height
+              ).add();
+            }
+          }
+        }
+      }
+    }
+  };
+  
+  // Rest of charts
   let nation = {
     chart:{
       width: HCwidth,
@@ -1612,7 +1911,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === 'United States' &
-            employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('deaf')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
             employment.filter(employment => employment.type === insidechartType & 
@@ -1626,7 +1925,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === 'United States' &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -1672,7 +1971,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === 'United States' &
-            employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('hearing')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
           employment.filter(employment => employment.type === insidechartType & 
@@ -1686,7 +1985,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === 'United States' &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -1716,10 +2015,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -1780,7 +2079,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   'In the United States, among people aged '+limit_age+scope+', an estimated'+
                   employment.filter(employment => employment.type === insidechartType & 
                     employment.variable === selected_attributions & employment.state === 'United States' &
-                    employment.status === insidechartStatus & employment.attribution.includes('deaf')  &
+                    employment.status === insidechartStatus & employment?.attribution?.includes('deaf')  &
                     employment.percentage !== 0).map(
                     function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                     ' and '+
@@ -1791,7 +2090,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                   nationDescript+', compared to '+
                   employment.filter(employment => employment.type === insidechartType & 
                     employment.variable === selected_attributions & employment.state === 'United States' &
-                    employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                    employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                     employment.percentage !== 0).map(
                     function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                     ' and '+
@@ -1805,7 +2104,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
-                    employment.attribution.includes('deaf') &
+                    employment?.attribution?.includes('deaf') &
                     employment.median_income !== 0).map(
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
@@ -1821,7 +2120,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.variable === selected_attributions &
-                    employment.attribution.includes('hearing') &
+                    employment?.attribution?.includes('hearing') &
                     employment.median_income !== 0).map(
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
@@ -2058,10 +2357,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2193,7 +2492,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       categories: employment.filter(employment => employment.type === 'Field of Degree' &
         employment.variable ===  insidechartStatus &
         employment.state === 'United States' &
-        employment.attribution.includes('deaf')).map(
+        employment?.attribution?.includes('deaf')).map(
         employment => [employment.status,employment.percentage]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
         }).map(el => el[0]).slice(0,5).map(function(x,i){
@@ -2262,7 +2561,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       data: employment.filter(employment => employment.type === 'Field of Degree' &
       employment.variable ===  insidechartStatus &
       employment.state === 'United States' &
-      employment.attribution.includes('deaf')).map(
+      employment?.attribution?.includes('deaf')).map(
       employment => [employment.status,employment.percentage]).sort(function(a,b){
       return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
       }).map(el => el[1]).slice(0,5),
@@ -2273,7 +2572,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             (employment.filter(employment => employment.type === 'Field of Degree' &
               employment.variable ===  insidechartStatus &
               employment.state === 'United States' &
-              employment.attribution.includes('deaf') &
+              employment?.attribution?.includes('deaf') &
               employment.percentage === this.y).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
@@ -2301,7 +2600,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       data: employment.filter(employment => employment.type === 'Field of Degree' &
       employment.variable ===  insidechartStatus &
       employment.state === 'United States' &
-      employment.attribution.includes('hearing')).map(
+      employment?.attribution?.includes('hearing')).map(
       employment => [employment.status,employment.percentage]).sort(function(a,b){
       return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
       }).map(el => el[1]).slice(0,5),
@@ -2312,7 +2611,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             (employment.filter(employment => employment.type === 'Field of Degree' &
               employment.variable ===  insidechartStatus &
               employment.state === 'United States' &
-              employment.attribution.includes('hearing') &
+              employment?.attribution?.includes('hearing') &
               employment.percentage === this.y).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
@@ -2334,10 +2633,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2602,10 +2901,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -2875,10 +3174,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
         contextButton: {
           text: downloadText,
@@ -3101,7 +3400,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === chosen_state_a &
-            employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('deaf')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
             employment.filter(employment => employment.type === insidechartType & 
@@ -3115,7 +3414,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === chosen_state_a &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -3161,7 +3460,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === chosen_state_a &
-            employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('hearing')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
           employment.filter(employment => employment.type === insidechartType & 
@@ -3175,7 +3474,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === chosen_state_a &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -3450,7 +3749,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === chosen_state_b &
-            employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('deaf')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
             employment.filter(employment => employment.type === insidechartType & 
@@ -3464,7 +3763,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === chosen_state_b &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -3510,7 +3809,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         'accordion-is':
           employment.filter(employment => employment.type === insidechartType & 
             employment.variable === selected_attributions & employment.state === chosen_state_b &
-            employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
+            employment.status === insidechartStatus & employment?.attribution?.includes('hearing')).map(
             employment => [employment.index,employment[metrics]]),
         'accordion-is-open':
           employment.filter(employment => employment.type === insidechartType & 
@@ -3524,7 +3823,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           if(
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === chosen_state_b &
-              employment.status === insidechartStatus & employment[metrics] === this.y & employment.attribution.includes(this.series.name)).map(
+              employment.status === insidechartStatus & employment[metrics] === this.y & employment?.attribution?.includes(this.series.name)).map(
               function(employment){return (((employment.margin_errors/100)/1.962937))})/(this.y/100) > 0.3)
           ){
             if(this.y === 0){
@@ -3554,10 +3853,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       chartOptions: { // specific options for the exported image
         plotOptions: {
           series: {
@@ -3610,14 +3909,14 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     percentage: 
                     employment.filter(employment => employment.type === insidechartType & 
                       employment.variable === selected_attributions & employment.state === chosen_state_b &
-                      employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                      employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                       employment.percentage !== 0).length === 0 ?
                     in_the_b+state_label_b+', among people aged '+limit_age+
                     ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
                     in_the_b+state_label_b+', among people aged '+limit_age+', an estimated'+
                     employment.filter(employment => employment.type === insidechartType & 
                       employment.variable === selected_attributions & employment.state === chosen_state_b &
-                      employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                      employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                       employment.percentage !== 0).map(
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                       ' and '+
@@ -3628,7 +3927,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                     nationDescript+', compared to '+
                     employment.filter(employment => employment.type === insidechartType & 
                       employment.variable === selected_attributions & employment.state === chosen_state_b &
-                      employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                      employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                       employment.percentage !== 0).map(
                       function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
                       ' and '+
@@ -3839,10 +4138,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
     }],
     exporting: {
       allowHTML: true,
-      sourceWidth: 1200,
-      sourceHeight: 600,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      sourceWidth: 1200,
+      sourceHeight: 600,
       buttons: {
           contextButton: {
             text: downloadText,
@@ -3894,7 +4193,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             '<p>'+in_the_b+state_label_b+', among people aged '+limit_age+
             (employment.filter(employment => employment.type === insidechartType & 
               employment.variable === selected_attributions & employment.state === chosen_state_b &
-              employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+              employment.status !== 'no HS diploma' & employment?.attribution?.includes('deaf') &
               employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
             ', an estimated'+
             employment.filter(employment => employment.attribution === 'deaf' & 
@@ -4074,7 +4373,8 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                         spline: <HighchartsReact highcharts={Highcharts} options={time}/>,                       
                         popular:<HighchartsReact highcharts={Highcharts} options={most_popular}/>, 
                         levels: <HighchartsReact highcharts={Highcharts} options={edulevels}/>,
-                        all:    <HighchartsReact highcharts={Highcharts} options={nation_all}/>
+                        all:    <HighchartsReact highcharts={Highcharts} options={nation_all}/>,
+                        every_class: <HighchartsReact highcharts={Highcharts} options={nation_every_class}/>
                       }[chartType]
                     }
                   <div className = 'content-for-accordion'>
@@ -4098,7 +4398,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         'In the United States, among people aged '+limit_age+scope+', an estimated'+
                                         employment.filter(employment => employment.type === insidechartType & 
                                           employment.variable === selected_attributions & employment.state === 'United States' &
-                                          employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                          employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                           employment.percentage !== 0).map(
                                           function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                           ' and '+
@@ -4109,7 +4409,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                         nationDescript+', compared to '+
                                         employment.filter(employment => employment.type === insidechartType & 
                                           employment.variable === selected_attributions & employment.state === 'United States' &
-                                          employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                          employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                                           employment.percentage !== 0).map(
                                           function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                           ' and '+
@@ -4123,7 +4423,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                           employment.type === insidechartType & 
                                           employment.state === 'United States' &  
                                           employment.variable === selected_attributions &
-                                          employment.attribution.includes('deaf') &
+                                          employment?.attribution?.includes('deaf') &
                                           employment.median_income !== 0).map(
                                             function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                             ' and '+
@@ -4139,7 +4439,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                           employment.type === insidechartType & 
                                           employment.state === 'United States' &  
                                           employment.variable === selected_attributions &
-                                          employment.attribution.includes('hearing') &
+                                          employment?.attribution?.includes('hearing') &
                                           employment.median_income !== 0).map(
                                             function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?   
                                             ' and '+
@@ -4267,7 +4567,34 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                   edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
                                   (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
                                   edulist[index] :
-                                  ' '+employment.percentage+'% '+edulist[index]}).reverse()+'.'
+                                  ' '+employment.percentage+'% '+edulist[index]}).reverse()+'.',
+                              every_class: 
+                                'In the United States, among people aged '+limit_age+', an estimated'+
+                                employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').sort(
+                                    (a, b) => statusOrder.indexOf(b.status) - statusOrder.indexOf(a.status)
+                                  ).map(
+                                  function(employment, index){ return index === 0 ? 
+                                  ' and '+
+                                  (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                  cowLabels[index] : cowLabels[cowLabels.length - 1] === cowLabels[index] ? ' '+
+                                  (employment.percentage === 0 ? 'N/A of deaf people are ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of deaf people are ' : employment.percentage + '% of deaf people are ')+
+                                  cowLabels[index] :
+                                  ' '+employment.percentage+'% '+cowLabels[index]}).reverse()+
+                                ', compared to '+
+                                employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').sort(
+                                    (a, b) => statusOrder.indexOf(b.status) - statusOrder.indexOf(a.status)
+                                  ).map(
+                                  function(employment, index){ return index === 0 ? 
+                                  ' and '+
+                                  (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 ' : employment.percentage + '% ')+
+                                  cowLabels[index] : cowLabels[cowLabels.length - 1] === cowLabels[index] ? ' '+
+                                  (employment.percentage === 0 ? 'N/A of hearing people are ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people are ' : employment.percentage + '% of hearing people are ')+
+                                  cowLabels[index] :
+                                  ' '+employment.percentage+'% '+cowLabels[index]}).reverse()
                             }[chartType]
                           }
                           </div>
@@ -4281,13 +4608,13 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     'In this chart, estimates are based on a sample size of '+
                                     size_checker(employment.filter(employment => employment.type === insidechartType & 
                                       employment.variable === selected_attributions & employment.state === 'United States' &
-                                      employment.status === insidechartStatus & employment.attribution.includes('deaf')).map(
+                                      employment.status === insidechartStatus & employment?.attribution?.includes('deaf')).map(
                                       employment => employment.n).reduce(
                                         (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                     ' deaf people and '+
                                     size_checker(employment.filter(employment => employment.type === insidechartType & 
                                       employment.variable === selected_attributions & employment.state === 'United States' &
-                                      employment.status === insidechartStatus & employment.attribution.includes('hearing')).map(
+                                      employment.status === insidechartStatus & employment?.attribution?.includes('hearing')).map(
                                       employment => employment.n).reduce(
                                         (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                     ' hearing people in the United States who participated in the '+year+
@@ -4412,6 +4739,36 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                   employment.status === 'HS diploma' & 
                                   employment.type === 'education' & 
                                   employment.state === 'United States').map(employment => employment.margin_errors)+
+                                '% for hearing people.',
+                              every_class:
+                                'In this chart, estimates are based on a sample size of '+
+                                size_checker(employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.status === 'For-profit' & employment.type === 'cow' & 
+                                  employment.state === 'United States').map(employment => employment.denominator).reduce(
+                                    (sum, a) => sum + a, 0)).toLocaleString('en-US')+' deaf people and '+
+                                size_checker(employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.status === 'For-profit' & employment.type === 'cow' & 
+                                  employment.state === 'United States').map(employment => employment.denominator).reduce(
+                                    (sum, a) => sum + a, 0)).toLocaleString('en-US')+
+                                ' hearing people in the United States who participated in the American Community '+year+
+                                ' American Community Survey. The margin of errors are between '+
+                                Math.min(...employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').map(
+                                  employment => employment.margin_errors))+
+                                '% and '+
+                                Math.max(...employment.filter(employment => employment.attribution === 'deaf' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').map(
+                                  employment => employment.margin_errors))+
+                                '% for deaf people, and between '+
+                                Math.min(...employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').map(employment => employment.margin_errors))+
+                                '% and '+
+                                Math.max(...employment.filter(employment => employment.attribution === 'hearing' & 
+                                  employment.type === 'cow' & 
+                                  employment.state === 'United States').map(employment => employment.margin_errors))+
                                 '% for hearing people.'
                             }[chartType]
                           }
@@ -4719,12 +5076,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             in_the_a+state_label_a+', among people aged '+limit_age+
                                             (employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                              employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                               employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript : 
                                               ', an estimated'+
                                             employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                              employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                               employment.percentage !== 0).map(
                                               function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                               ' and '+
@@ -4735,11 +5092,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             nationDescript+', compared to '+
                                             (employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                              employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                                               employment.percentage !== 0).length === 0 ? ' N/A of ' : '')+
                                             employment.filter(employment => employment.type === insidechartType & 
                                             employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                            employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                            employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                                             employment.percentage !== 0).map(
                                             function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                             ' and '+
@@ -4749,18 +5106,18 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             hear_labels[employment.index]}).reverse())+
                                             (employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & (employment.state === chosen_state_a | employment.state === chosen_state_b) &
-                                              employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                               employment.percentage !== 0).length === 0 ? ". This issue is also present "+in_the_b.toLowerCase()+state_label_b+'.' : 
                                             employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                              employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                               employment.percentage !== 0).length === 0 ?
                                             '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+
                                             ", the sample size is not sufficient to accurately report the percentage of deaf people who"+nationDescript :
                                             '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated'+
                                             employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                              employment.status === insidechartStatus & employment.attribution.includes('deaf') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
                                               employment.percentage !== 0).map(
                                               function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ? 
                                               ' and '+
@@ -4771,7 +5128,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                             nationDescript+', compared to '+
                                             employment.filter(employment => employment.type === insidechartType & 
                                               employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                              employment.status === insidechartStatus & employment.attribution.includes('hearing') &
+                                              employment.status === insidechartStatus & employment?.attribution?.includes('hearing') &
                                               employment.percentage !== 0).map(
                                               function(employment,index,row){ return (index === 0 && (deaf_labels.length - 1) > 0 && row.length > 1) ?
                                               ' and '+
@@ -4815,7 +5172,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                       in_the_a+state_label_a+', among people aged '+limit_age+
                                       (employment.filter(employment => employment.type === insidechartType & 
                                         employment.variable === selected_attributions & employment.state === chosen_state_a &
-                                        employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                        employment.status !== 'no HS diploma' & employment?.attribution?.includes('deaf') &
                                         employment.percentage !== 0).length === 0 ? ", the sample size is not sufficient to accurately report the deaf education attainment" :
                                       ', an estimated'+
                                         employment.filter(employment => employment.attribution === 'deaf' & 
@@ -4843,11 +5200,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                           ' '+employment.percentage+'% '+edulist[index]}).reverse())+
                                         (employment.filter(employment => employment.type === insidechartType & 
                                           employment.variable === selected_attributions & (employment.state === chosen_state_a | employment.state === chosen_state_b) &
-                                          employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                          employment.status !== 'no HS diploma' & employment?.attribution?.includes('deaf') &
                                           employment.percentage !== 0).length === 0 ? ". This issue is also present "+in_the_b.toLowerCase()+state_label_b : 
                                         employment.filter(employment => employment.type === insidechartType & 
                                           employment.variable === selected_attributions & employment.state === chosen_state_b &
-                                          employment.status !== 'no HS diploma' & employment.attribution.includes('deaf') &
+                                          employment.status !== 'no HS diploma' & employment?.attribution?.includes('deaf') &
                                           employment.percentage !== 0).length === 0 ?
                                         '. While '+in_the_b.toLowerCase()+state_label_b+", the sample size is not sufficient to accurately report the deaf education attainment" : 
                                         '. While '+in_the_b.toLowerCase()+state_label_b+', among people aged '+limit_age+', an estimated'+
