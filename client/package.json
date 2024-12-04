@@ -40,7 +40,7 @@
     "react-tabs": "^6.0.2",
     "require-context": "^1.1.0",
     "sweetalert": "^2.1.2",
-    "web-vitals": "^3.5.2"
+    "web-vitals": "^4.2.4"
   },
   "browserslist": {
     "production": [
