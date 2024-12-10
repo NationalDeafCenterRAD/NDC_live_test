@@ -47,7 +47,7 @@ const Method = () => {
     {question: 'What does “deaf” mean in this dashboard?',
       answer:
       <div className = 'paragraph-method'>The Census Bureau convened a task force to develop the disability questions 
-      for the American Community Survey. They decided to <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>avoid disability and identity labels and instead use functional limitations</a>. 
+      for the American Community Survey. They decided to <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>avoid disability and identity labels and instead use functional limitations</a>. 
       The purpose is to capture more people with disabilities, especially those who do not identify with having a disability. Anyone who answers yes to the question are you, <b>"deaf or have serious difficulty hearing"</b> is 
       considered deaf in our dashboard. With this dataset there is no way to identify who is deaf, hard of hearing, or late deafened.
      </div>,
@@ -60,14 +60,14 @@ const Method = () => {
      consider themselves deaf or have serious difficulty hearing. More information at: 
       <ul>
         <li>
-          <a href='https://www.disabilitystatistics.org/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.disabilitystatistics.org</a>
+          <a href='https://www.disabilitystatistics.org/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.disabilitystatistics.org</a>
         </li>
         <li>
-          <a href='https://www.researchondisability.org/ADSC/build-your-own-statistics' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.researchondisability.org/ADSC/build-your-own-statistics</a>
+          <a href='https://www.researchondisability.org/ADSC/build-your-own-statistics' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.researchondisability.org/ADSC/build-your-own-statistics</a>
         </li>
       </ul>
      <p/>
-     The Hearing Loss Association of America estimates that <a href='https://www.hearingloss.org/wp-content/uploads/HLAA_HearingLoss_Facts_Statistics.pdf' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>48 million Americans have some degree of hearing loss</a>.  
+     The Hearing Loss Association of America estimates that <a href='https://www.hearingloss.org/wp-content/uploads/HLAA_HearingLoss_Facts_Statistics.pdf' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>48 million Americans have some degree of hearing loss</a>.  
     </div>,
      open: false   
     },
@@ -99,7 +99,7 @@ const Method = () => {
       <div className = 'paragraph-method'>The American Community Survey does not collect data 
       about the type of school deaf people attend so we do not know which educational environment 
       people in this sample had attended. For estimates about deaf students in different educational 
-      environments, see <a href='https://www.jstor.org/stable/27023781' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www2.ed.gov/programs/osepidea/618-data/state-level-data-files/index.html' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
+      environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www2.ed.gov/programs/osepidea/618-data/state-level-data-files/index.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
       </div>,
      open: false
     },
@@ -108,7 +108,7 @@ const Method = () => {
      <div className = 'paragraph-method'>The American Community Survey collects information about how 
      well a person speaks English, and allows people to write in the additional languages used in the home. 
      The ACS does not ask about knowledge or use of sign language. For current estimates about sign language use, 
-     see <a href='https://academic.oup.com/jdsde/article/28/1/1/6845390?login=false' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Mitchell & Young, (2022)</a>.
+     see <a href='https://academic.oup.com/jdsde/article/28/1/1/6845390?login=false' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Mitchell & Young, (2022)</a>.
      </div>,
      open: false
     },
@@ -128,8 +128,8 @@ const Method = () => {
      people ages 16-64, commonly considered to be the working-age population, and education data 
      for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
      to learn more about deaf people younger than 16, 
-     check out <a href='https://www.disabilitystatistics.org/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Disability Statistics</a>, 
-     or the <a href='https://data.census.gov/mdat/#/' style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
+     check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
+     or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
      </div>,
      open: false
     }
