@@ -42,6 +42,9 @@ HCMore(Highcharts);                //Add more chart options
 const exportURL = /*process.env.REACT_APP_BACKEND_URL*/ 'https://export.highcharts.com/';
 const fallbackToExportServer = true;
 
+// Filter BIPOC out as NDC requests
+employment = employment.filter(employment => employment.attribution !== 'deaf BIPOC' && employment.attribution !== 'hearing BIPOC');
+
 // National Option List
 let national_options = [
   {label: 'Education', value: 'Education',isTitle: true,
@@ -114,9 +117,9 @@ let variables = [
    hearing: ['hearing people in 16-24 age people','hearing people in 25-34 age group','hearing people in 35-44 age group','hearing people in 45-54 age group','hearing people in 55-64 age people'],
    more_options: ' Age ', title_by: ' by Age', age: '16-64'
   },
-  {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white','BIPOC'],
-   deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people','deaf BIPOC'],
-   hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people','hearing BIPOC'],
+  {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latine','Native American','multiracial','white'/*,'BIPOC'*/],
+   deaf: ['Asian deaf people','Black deaf people','Latine deaf people','Native American deaf people','multiracial deaf people','white deaf people'/*,'deaf BIPOC'*/],
+   hearing: ['Asian hearing people','Black hearing people','Latine hearing people','Native American hearing people','multiracial hearing','white hearing people'/*,'hearing BIPOC'*/],
    more_options: ' Race ', title_by: ' by Race', age: '16-64'
   },
   {label: 'Gender', value: 'Gender', variable: 'gender', variables: ['women','men'],
@@ -136,9 +139,9 @@ let variables = [
   hearing: ['hearing people in 25-34 age group','hearing people in 35-44 age group','hearing people in 45-54 age group','hearing people in 55-64 age people'],
   more_options: ' Age ', title_by: ' by Age', age: '25-64'
  },
- {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latinx','Native American','multiracial','white','BIPOC'],
-  deaf: ['deaf Asian people','deaf Black people','deaf Latinx people','deaf Native American people','deaf multiracial people','deaf white people','deaf BIPOC'],
-  hearing: ['hearing Asian people','hearing Black people','hearing Latinx people','hearing Native American people','hearing multiracial','hearing white people','hearing BIPOC'],
+ {label: 'Race', value: 'Race', variable: 'race', variables: ['Asian','Black','Latine','Native American','multiracial','white'/*,'BIPOC'*/],
+  deaf: ['Asian deaf people','Black deaf people','Latine deaf people','Native American deaf people','multiracial deaf people','white deaf people'/*,'deaf BIPOC'*/],
+  hearing: ['Asian hearing people','Black hearing people','Latine hearing people','Native American hearing people','multiracial hearing','white hearing people'/*,'hearing BIPOC'*/],
   more_options: ' Race ', title_by: ' by Race', age: '25-64'
  },
  {label: 'Gender', value: 'Gender', variable: 'gender', variables: ['women','men'],
@@ -216,20 +219,20 @@ let attributions = [
   {label: 'deaf men', value: 'deaf men', variable: 'gender', color: 'teal', words: 'deaf men'},
   {label: 'hearing women', value: 'hearing women', variable: 'gender', color: 'black', words: 'hearing women'},
   {label: 'hearing men', value: 'hearing men', variable: 'gender', color: 'black', words: 'hearing men'},
-  {label: 'deaf Asian', value: 'deaf Asian', variable: 'race', color: 'teal', words: 'deaf Asians'},
-  {label: 'deaf Black', value: 'deaf Black', variable: 'race', color: 'teal', words: 'deaf Black people'},
-  {label: 'deaf Latinx', value: 'deaf Latinx', variable: 'race', color: 'teal', words: 'deaf Latinx people'},
-  {label: 'deaf Native American', value: 'deaf Native American', variable: 'race', color: 'teal', words: 'deaf Native Americans'},
-  {label: 'deaf multiracial', value: 'deaf multiracial', variable: 'race', color: 'teal', words: 'deaf multiracial people'},
-  {label: 'deaf white', value: 'deaf white', variable: 'race', color: 'teal', words: 'deaf white people'},
-  {label: 'deaf BIPOC', value: 'deaf BIPOC', variable: 'race', color: 'teal', words: 'deaf BIPOC'},
-  {label: 'hearing Asian', value: 'hearing Asian', variable: 'race', color: 'black', words: 'hearing Asians'},
-  {label: 'hearing Black', value: 'hearing Black', variable: 'race', color: 'black', words: 'hearing Black'},
-  {label: 'hearing Latinx', value: 'hearing Latinx', variable: 'race', color: 'black', words: 'hearing Latinx'},
-  {label: 'hearing Native American', value: 'hearing Native American', variable: 'race', color: 'black', words: 'hearing Native Americans'},
-  {label: 'hearing multiracial', value: 'hearing multiracial', variable: 'race', color: 'black', words: 'hearing multiracial people'},
-  {label: 'hearing white', value: 'hearing white', variable: 'race', color: 'black', words: 'hearing white people'},
-  {label: 'hearing BIPOC', value: 'hearing BIPOC', variable: 'race', color: 'black', words: 'hearing BIPOC'},
+  {label: 'Asian deaf', value: 'Asian deaf', variable: 'race', color: 'teal', words: 'Asian deaf people'},
+  {label: 'Black deaf', value: 'Black deaf', variable: 'race', color: 'teal', words: 'Black deaf people'},
+  {label: 'Latine deaf', value: 'Latine deaf', variable: 'race', color: 'teal', words: 'Latine deaf people'},
+  {label: 'Native American deaf', value: 'Native American deaf', variable: 'race', color: 'teal', words: 'Native American deaf people'},
+  {label: 'multiracial deaf', value: 'multiracial deaf', variable: 'race', color: 'teal', words: 'multiracial deaf people'},
+  {label: 'white deaf', value: 'white deaf', variable: 'race', color: 'teal', words: 'white deaf people'},
+  //{label: 'deaf BIPOC', value: 'deaf BIPOC', variable: 'race', color: 'teal', words: 'deaf BIPOC'},
+  {label: 'Asian hearing', value: 'Asian hearing', variable: 'race', color: 'black', words: 'Asian hearing people'},
+  {label: 'Black hearing', value: 'Black hearing', variable: 'race', color: 'black', words: 'Black hearing people'},
+  {label: 'Latine hearing', value: 'Latine hearing', variable: 'race', color: 'black', words: 'Latine hearing'},
+  {label: 'Native American hearing', value: 'Native American hearing', variable: 'race', color: 'black', words: 'Native American hearing people'},
+  {label: 'multiracial hearing', value: 'multiracial hearing', variable: 'race', color: 'black', words: 'multiracial hearing people'},
+  {label: 'white hearing', value: 'white hearing', variable: 'race', color: 'black', words: 'white hearing people'},
+  //{label: 'hearing BIPOC', value: 'hearing BIPOC', variable: 'race', color: 'black', words: 'hearing BIPOC'},
   {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
