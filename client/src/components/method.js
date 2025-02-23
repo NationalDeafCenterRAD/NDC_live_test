@@ -44,15 +44,59 @@ const Method = () => {
   }, [sidebarWidth])
 
   const [items, setItems] = useState([
-    {question: 'What does “deaf” mean in this dashboard?',
+    {question: 'How are the racial categories decided?',
       answer:
-      <div className = 'paragraph-method'>The Census Bureau convened a task force to develop the disability questions 
-      for the American Community Survey. They decided to <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>avoid disability and identity labels and instead use functional limitations</a>. 
-      The purpose is to capture more people with disabilities, especially those who do not identify with having a disability. Anyone who answers yes to the question are you, <b>"deaf or have serious difficulty hearing"</b> is 
-      considered deaf in our dashboard. With this dataset there is no way to identify who is deaf, hard of hearing, or late deafened.
+      <div className = 'paragraph-method'>This dashboard uses racial and ethnic categories from the American Community Survey (ACS), based on how people identify themselves. 
+      <ul>
+        <li>
+          <span><b>Black</b> or African American and <b>white</b> include those who selected only that race.</span>
+        </li>
+        <li>
+          <span><b>Native American</b> includes American Indian, Alaska Native, or a specific tribe.</span>
+        </li>
+        <li>
+          <span><b>Asian</b> includes Asian and Pacific Islander groups like Chinese, Filipino, Korean, and Native Hawaiian.</span>
+        </li>
+        <li>
+          <span><b>Latine</b> includes people of Hispanic, Latino/a, or Spanish origin (asked separately from race).</span>
+        </li>
+        <li>
+        <span><b>Multiracial</b> includes those who selected two or more races or another race not listed.</span>
+        </li>
+      </ul>
+      <p/>
+      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
      </div>,
       open: false   
-     },
+    },
+    {question: 'How are deaf and other disability categories defined?',
+      answer:
+      <div className = 'paragraph-method'>The American Community Survey (ACS) does not define "deaf" as an identity. Instead, it collects data based on functional 
+      abilities by asking, "<b>Is this person deaf or does he/she have serious difficulty hearing?</b>" It categorizes people broadly by disability type, asking about 
+      difficulties related to seeing, walking, remembering, dressing, or doing errands. For more information, see <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>How Disability Data are Collected from The American Community Survey</a>.
+      <p/>
+      In the Dashboard:<br/>
+      We do our best to create categories based on terminology used in the community.
+      <ul>
+        <li>
+          <span><b>deaf</b> – Anyone who is deaf or has serious difficulty hearing.</span>
+        </li>
+        <li>
+          <span><b>deafblind</b> – Anyone who is deaf and blind, or deaf with difficulty seeing.</span>
+        </li>
+        <li>
+          <span><b>deafdisabled</b> – Anyone who is deaf and has any other disability (excluding blindness).</span>
+        </li>
+        <li>
+          <span><b>deaf with no disability</b> – Anyone who is deaf and reports no other disabilities.</span>
+        </li>
+        <li>
+        <span><b>deaf with additional disabilities</b> – Anyone who is deaf and reports one or more additional disabilities.</span>
+        </li>
+      </ul>
+     </div>,
+      open: false   
+    },
     {question: 'How many deaf people live in the United States?',
      answer:
      <div className = 'paragraph-method'>According to the {most_recent_year}, 
@@ -133,12 +177,12 @@ const Method = () => {
      </div>,
      open: false
     }
-  ])
+  ]);
 
   const toggleFAQ = index => {
     setItems(items.map((value, i) => {
       if (i === index) {
-        value.open = !value.open
+        value.open = true
       } else {
         value.open = false;
       }
