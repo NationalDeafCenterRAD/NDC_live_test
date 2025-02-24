@@ -10,7 +10,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 
-// Data
+// Data for dashboard
 import employment from './assets/employment.json';
 
 //Font Awesomes
