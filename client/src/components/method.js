@@ -44,30 +44,49 @@ const Method = () => {
   }, [sidebarWidth])
 
   const [items, setItems] = useState([
-    {question: 'How are the racial categories decided?',
+    {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
+      answer: 
+       <div className = 'paragraph-method'>
+       The American Community Survey provides data in 1-year and 5-year estimates. The dashboard uses 1-year estimates for 
+       the national-level data to provide the most current employment and education rates. 5-year estimates, which are larger, 
+       are used for state-level data to ensure that the sample size is large enough to be representative.
+       The {most_recent_year} 1-year ACS sample for deaf people is {
+       employment.filter(employment => employment.type === 'employment' & 
+         employment.attribution === 'deaf' & 
+         employment.state === 'United States' &
+         (employment.status === 'unemployed' | employment.status === 'employed' | 
+         employment.status === 'notinLF')).map(employment => employment.n).reduce(
+         (sum, a) => sum + a, 0).toLocaleString('en-US')} while the {(most_recent_year1-4)+'-'+(most_recent_year1)} 5-year ACS sample is {
+       employment.filter(employment => employment.type === 'employment' & 
+         employment.attribution === 'deaf' & 
+         employment.state !== 'United States' &
+         (employment.status === 'unemployed' | employment.status === 'employed' | 
+         employment.status === 'notinLF')).map(employment => employment.n).reduce(
+         (sum, a) => sum + a, 0).toLocaleString('en-US')
+       }. 
+       </div>,
+      open: false
+    },
+    {question: 'Why are some of the age ranges 16-64 and other age ranges 25-64?',
       answer:
-      <div className = 'paragraph-method'>This dashboard uses racial and ethnic categories from the American Community Survey (ACS), based on how people identify themselves. 
-      <ul>
-        <li>
-          <span><b>Black</b> or African American and <b>white</b> include those who selected only that race.</span>
-        </li>
-        <li>
-          <span><b>Native American</b> includes American Indian, Alaska Native, or a specific tribe.</span>
-        </li>
-        <li>
-          <span><b>Asian</b> includes Asian and Pacific Islander groups like Chinese, Filipino, Korean, and Native Hawaiian.</span>
-        </li>
-        <li>
-          <span><b>Latine</b> includes people of Hispanic, Latino/a, or Spanish origin (asked separately from race).</span>
-        </li>
-        <li>
-        <span><b>Multiracial</b> includes those who selected two or more races or another race not listed.</span>
-        </li>
-      </ul>
-      <p/>
-      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
-     </div>,
-      open: false   
+      <div className = 'paragraph-method'>This dashboard includes employment data for deaf 
+      people ages 16-64, commonly considered to be the working-age population, and education data 
+      for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
+      to learn more about deaf people younger than 16, 
+      check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
+      or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
+      </div>,
+      open: false
+    },
+    {question: 'What is the difference between unemployed and not in the labor force?',
+      answer:
+      <div className = 'paragraph-method'>The federal government describes people without a 
+      job as people who are unemployed or not in the labor force. People who reported being 
+      currently, or recently, looking for work, are counted as unemployed. People who are not currently 
+      employed, and are not looking for work, are counted as not in the labor force. This latter group may 
+      include students, parents, caretakers, or retired people, for example.
+      </div>,
+      open: false
     },
     {question: 'How are deaf and other disability categories defined?',
       answer:
@@ -97,6 +116,31 @@ const Method = () => {
      </div>,
       open: false   
     },
+    {question: 'How are the racial categories decided?',
+      answer:
+      <div className = 'paragraph-method'>This dashboard uses racial and ethnic categories from the American Community Survey (ACS), based on how people identify themselves. 
+      <ul>
+        <li>
+          <span><b>Black</b> or African American and <b>white</b> include those who selected only that race.</span>
+        </li>
+        <li>
+          <span><b>Native American</b> includes American Indian, Alaska Native, or a specific tribe.</span>
+        </li>
+        <li>
+          <span><b>Asian</b> includes Asian and Pacific Islander groups like Chinese, Filipino, Korean, and Native Hawaiian.</span>
+        </li>
+        <li>
+          <span><b>Latine</b> includes people of Hispanic, Latino/a, or Spanish origin (asked separately from race).</span>
+        </li>
+        <li>
+        <span><b>Multiracial</b> includes those who selected two or more races or another race not listed.</span>
+        </li>
+      </ul>
+      <p/>
+      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
+     </div>,
+      open: false   
+    },
     {question: 'How many deaf people live in the United States?',
      answer:
      <div className = 'paragraph-method'>According to the {most_recent_year}, 
@@ -115,38 +159,6 @@ const Method = () => {
     </div>,
      open: false   
     },
-    {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
-     answer: 
-      <div className = 'paragraph-method'>
-      The American Community Survey provides data in 1-year and 5-year estimates. The dashboard uses 1-year estimates for 
-      the national-level data to provide the most current employment and education rates. 5-year estimates, which are larger, 
-      are used for state-level data to ensure that the sample size is large enough to be representative.
-      The {most_recent_year} 1-year ACS sample for deaf people is {
-      employment.filter(employment => employment.type === 'employment' & 
-        employment.attribution === 'deaf' & 
-        employment.state === 'United States' &
-        (employment.status === 'unemployed' | employment.status === 'employed' | 
-        employment.status === 'notinLF')).map(employment => employment.n).reduce(
-        (sum, a) => sum + a, 0).toLocaleString('en-US')} while the {(most_recent_year1-4)+'-'+(most_recent_year1)} 5-year ACS sample is {
-      employment.filter(employment => employment.type === 'employment' & 
-        employment.attribution === 'deaf' & 
-        employment.state !== 'United States' &
-        (employment.status === 'unemployed' | employment.status === 'employed' | 
-        employment.status === 'notinLF')).map(employment => employment.n).reduce(
-        (sum, a) => sum + a, 0).toLocaleString('en-US')
-      }. 
-      </div>,
-     open: false
-    },
-    {question: 'How many deaf people attend residential schools and mainstream schools?', 
-     answer:
-      <div className = 'paragraph-method'>The American Community Survey does not collect data 
-      about the type of school deaf people attend so we do not know which educational environment 
-      people in this sample had attended. For estimates about deaf students in different educational 
-      environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www.ed.gov/idea-section-618-data-products-static-files' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
-      </div>,
-     open: false
-    },
     {question: 'How many deaf people use sign language?',
      answer:
      <div className = 'paragraph-method'>The American Community Survey collects information about how 
@@ -156,26 +168,14 @@ const Method = () => {
      </div>,
      open: false
     },
-    {question: 'What is the difference between unemployed and not in the labor force?',
-     answer:
-     <div className = 'paragraph-method'>The federal government describes people without a 
-     job as people who are unemployed or not in the labor force. People who reported being 
-     currently, or recently, looking for work, are counted as unemployed. People who are not currently 
-     employed, and are not looking for work, are counted as not in the labor force. This latter group may 
-     include students, parents, caretakers, or retired people, for example.
-     </div>,
-     open: false
-    },
-    {question: 'Why are some of the age ranges 16-64 and other age ranges 25-64?',
-     answer:
-     <div className = 'paragraph-method'>This dashboard includes employment data for deaf 
-     people ages 16-64, commonly considered to be the working-age population, and education data 
-     for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
-     to learn more about deaf people younger than 16, 
-     check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
-     or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
-     </div>,
-     open: false
+    {question: 'How many deaf people attend residential schools and mainstream schools?', 
+      answer:
+       <div className = 'paragraph-method'>The American Community Survey does not collect data 
+       about the type of school deaf people attend so we do not know which educational environment 
+       people in this sample had attended. For estimates about deaf students in different educational 
+       environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www.ed.gov/idea-section-618-data-products-static-files' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
+       </div>,
+      open: false
     }
   ]);
 
@@ -187,7 +187,7 @@ const Method = () => {
         value.open = false;
       }
       return value;
-    }))
+    }));
   }
 
   return(
