@@ -44,51 +44,7 @@ const Method = () => {
   }, [sidebarWidth])
 
   const [items, setItems] = useState([
-    {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
-      answer: 
-       <div className = 'paragraph-method'>
-       The American Community Survey provides data in 1-year and 5-year estimates. The dashboard uses 1-year estimates for 
-       the national-level data to provide the most current employment and education rates. 5-year estimates, which are larger, 
-       are used for state-level data to ensure that the sample size is large enough to be representative.
-       The {most_recent_year} 1-year ACS sample for deaf people is {
-       employment.filter(employment => employment.type === 'employment' & 
-         employment.attribution === 'deaf' & 
-         employment.state === 'United States' &
-         (employment.status === 'unemployed' | employment.status === 'employed' | 
-         employment.status === 'notinLF')).map(employment => employment.n).reduce(
-         (sum, a) => sum + a, 0).toLocaleString('en-US')} while the {(most_recent_year1-4)+'-'+(most_recent_year1)} 5-year ACS sample is {
-       employment.filter(employment => employment.type === 'employment' & 
-         employment.attribution === 'deaf' & 
-         employment.state !== 'United States' &
-         (employment.status === 'unemployed' | employment.status === 'employed' | 
-         employment.status === 'notinLF')).map(employment => employment.n).reduce(
-         (sum, a) => sum + a, 0).toLocaleString('en-US')
-       }. 
-       </div>,
-      open: false
-    },
-    {question: 'Why are some of the age ranges 16-64 and other age ranges 25-64?',
-      answer:
-      <div className = 'paragraph-method'>This dashboard includes employment data for deaf 
-      people ages 16-64, commonly considered to be the working-age population, and education data 
-      for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
-      to learn more about deaf people younger than 16, 
-      check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
-      or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
-      </div>,
-      open: false
-    },
-    {question: 'What is the difference between unemployed and not in the labor force?',
-      answer:
-      <div className = 'paragraph-method'>The federal government describes people without a 
-      job as people who are unemployed or not in the labor force. People who reported being 
-      currently, or recently, looking for work, are counted as unemployed. People who are not currently 
-      employed, and are not looking for work, are counted as not in the labor force. This latter group may 
-      include students, parents, caretakers, or retired people, for example.
-      </div>,
-      open: false
-    },
-    {question: 'How are deaf and other disability categories defined?',
+    {question: 'How are deaf and other disability categories decided?',
       answer:
       <div className = 'paragraph-method'>The American Community Survey (ACS) does not define "deaf" as an identity. Instead, it collects data based on functional 
       abilities by asking, "<b>Is this person deaf or does he/she have serious difficulty hearing?</b>" It categorizes people broadly by disability type, asking about 
@@ -140,6 +96,44 @@ const Method = () => {
       More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
      </div>,
       open: false   
+    },
+    {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
+      answer: 
+       <div className = 'paragraph-method'>
+       State data report numbers are sourced from the American Community Survey (ACS) 5-year estimates, which provide a more precise 
+       representation by using a larger sample size. The national-level data used in the dashboard rely on ACS 1-year estimates to offer 
+       the most current employment and education rates. Therefore, you will notice small differences. For example, the deaf bachelor's or 
+       higher attainment rate is {
+       employment.filter(e => e.type === 'education' & 
+         e.attribution === 'deaf' & 
+         e.state === 'United States' & e.status === 'bachelor').map(e => e.percentage)+'%'} for {most_recent_year} (national level tab) 
+       but it averages {
+       employment.filter(e => e.type === 'education' & 
+        e.attribution === 'deaf' & 
+        e.state === 'US' & e.status === 'bachelor').map(e => e.percentage)+'%'} from {(most_recent_year1-4)+'-'+(most_recent_year1)} (state level tab). 
+       </div>,
+      open: false
+    },
+    {question: 'What is the difference between unemployed and not in the labor force?',
+      answer:
+      <div className = 'paragraph-method'>The federal government describes people without a 
+      job as people who are unemployed or not in the labor force. People who reported being 
+      currently, or recently, looking for work, are counted as unemployed. People who are not currently 
+      employed, and are not looking for work, are counted as not in the labor force. This latter group may 
+      include students, parents, caretakers, or retired people, for example.
+      </div>,
+      open: false
+    },
+    {question: 'Why are some of the age ranges 16-64 and other age ranges 25-64?',
+      answer:
+      <div className = 'paragraph-method'>This dashboard includes employment data for deaf 
+      people ages 16-64, commonly considered to be the working-age population, and education data 
+      for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
+      to learn more about deaf people younger than 16, 
+      check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
+      or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
+      </div>,
+      open: false
     },
     {question: 'How many deaf people live in the United States?',
      answer:
