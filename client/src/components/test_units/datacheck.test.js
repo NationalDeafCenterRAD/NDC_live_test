@@ -197,11 +197,11 @@ describe('Data Integrity Checks', () => {
     allStatuses.forEach(status => {
       allVariables.forEach(variable => {
         const time = timeSeriesData.filter(item => item.variable === variable && item.status === status).map(item => item.percentage);
-        const areAllZeroesOr100s = status === 'no HS diploma' ? 
-          time.length > 0 && time.every(value => value === 0) !== true : 
-          time.length > 0 && time.every(value => value === 0 || value === 100) !== true;
+        const isOk = status === 'no HS diploma'
+          ? !(time.length > 0 && time.every(value => value === 0))
+          : !(time.length > 0 && time.every(value => value === 0 || value === 100));
         try{
-          expect(areAllZeroesOr100s).toBe(true);
+          expect(isOk).toBe(true);
         } catch(error){
           const explanation = `Found missing info in data. In the status "${status}" and variable "${variable}", this data returns array of percentages: [${time}]. Please review your R script work. If good, revise the datacheck.test.js.`
           /*console.log({
