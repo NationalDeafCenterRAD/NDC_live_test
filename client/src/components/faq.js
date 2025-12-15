@@ -1,5 +1,3 @@
-import React from 'react';
-
 const faq = ({value,index, toggleFAQ})=>{
     return(
 		<div

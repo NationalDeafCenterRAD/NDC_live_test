@@ -170,6 +170,22 @@ const Method = () => {
        environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www.ed.gov/idea-section-618-data-products-static-files' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
        </div>,
       open: false
+    },
+    {question: 'Why is the 2020 data point missing from the trend?',
+      answer:
+      <div className = 'paragraph-method'>In each trend on the NDC dashboard, 2020 data point is missing
+      because the response rate in that year was 71.2%, unusually low due to the COVID-19 pandemic. At
+      that time, policies aimed at slowing the spread of coronavirus (such as community-level stay-at-home orders)
+      resulted in organizations adjusting their operations, which in turn complicated the ACS data collection.
+      <p/>
+      Even with the Census Bureau applying mitigation measures to address collection disruptions and modifying 
+      the weighting adjustments, their assessment concluded that the estimates did not meet their criteria 
+      (as per the Census Bureau's Statistical Quality Standards). For example, in the 2020 ACS 1-Y data, the 
+      people with higher education, higher incomes, and who lived in single-family housing units were 
+      overrepresented. If you want to learn more about this, 
+      see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>ACS Research and Evaluation Report Memorandum Series #ACS21-RER-04</a>.
+       </div>,
+       open: false
     }
   ]);
 

@@ -4493,9 +4493,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     }[metrics]
                                 }[accordion_is],
                               spline: 
-                                'In the United States from '+(acs_one_year-13)+'-'+acs_one_year+
+                                'In the United States from '+(acs_one_year-13)+' to '+acs_one_year+
                                 ', among people aged '+limit_age+', '+sentence+' has '+crease+'. '+
-                                'From '+(acs_one_year-13)+' to '+acs_one_year+', '+sentence+'s '+crease_word+' by '+                                 
+                                'For example, '+sentence+'s '+crease_word+' by '+                                 
                                 percentage_difference(timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === min_year &
                                   timeseries.status === insidechartStatus & timeseries.attribution === attribute[0]).map(
                                   timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === max_year &
