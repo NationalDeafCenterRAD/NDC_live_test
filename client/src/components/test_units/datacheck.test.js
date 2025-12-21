@@ -177,9 +177,9 @@ describe('Data Integrity Checks', () => {
       });
     });
 
-    // Check if time series is 13 year period and most recent year equal to acs_1_year
+    // Check if time series is 10 year period and most recent year equal to acs_1_year
     const allYears = [...new Set(timeSeriesData.map(variable => variable.year))];
-    expect(Math.max(...allYears) - Math.min(...allYears)).toEqual(13);
+    expect(Math.max(...allYears) - Math.min(...allYears)).toEqual(9);
     expect(Math.max(...allYears)).toEqual(acs1y);
 
     // Scan data for no group missing - status by variable
