@@ -130,26 +130,27 @@ const Method = () => {
       people ages 16-64, commonly considered to be the working-age population, and education data 
       for deaf people ages 25-64, used to calculate educational attainment rates. If you would like 
       to learn more about deaf people younger than 16, 
-      check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, 
-      or the <a href='https://data.census.gov/mdat/#/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
+      check out <a href="https://www.disabilitystatistics.org/" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: '#0000EE', fontWeight: 900 }}>Disability Statistics</a>, <a href='http://www.researchondisability.org/ADSC/build-your-own-statistics' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Center for Research on Disability</a>, 
+      or <a href='https://data.census.gov/mdat/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a>.
       </div>,
       open: false
     },
     {question: 'How many deaf people live in the United States?',
      answer:
-     <div className = 'paragraph-method'>According to the {most_recent_year}, 
-     American Community Survey (ACS), about {population_percentage+'%'} of the U.S. population 
+     <div className = 'paragraph-method'>According to the {most_recent_year} American 
+     Community Survey (ACS), about {population_percentage+'%'} of the U.S. population 
      consider themselves deaf or have serious difficulty hearing. More information at: 
       <ul>
         <li>
-          <a href='https://www.disabilitystatistics.org/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.disabilitystatistics.org</a>
+          <a href='https://www.disabilitystatistics.org/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Disability Statistics</a>
         </li>
         <li>
-          <a href='https://www.researchondisability.org/ADSC/build-your-own-statistics' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>www.researchondisability.org/ADSC/build-your-own-statistics</a>
+          <a href='https://www.researchondisability.org/ADSC/build-your-own-statistics' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Center for Research on Disability</a>
         </li>
+        <li><a href='https://data.census.gov/mdat/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>American Community Survey Table Generator</a></li>
       </ul>
      <p/>
-     The Hearing Loss Association of America estimates that <a href='https://www.hearingloss.org/wp-content/uploads/HLAA_HearingLoss_Facts_Statistics.pdf' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>48 million Americans have some degree of hearing loss</a>.  
+     The Hearing Loss Association of America estimates that <a href='https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1106004' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>48 million Americans have some degree of hearing loss</a>. 
     </div>,
      open: false   
     },
@@ -183,7 +184,7 @@ const Method = () => {
       (as per the Census Bureau's Statistical Quality Standards). For example, in the 2020 ACS 1-Y data, the 
       people with higher education, higher incomes, and who lived in single-family housing units were 
       overrepresented. If you want to learn more about this, 
-      see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>ACS Research and Evaluation Report Memorandum Series #ACS21-RER-04</a>.
+      see <a href='https://www.census.gov/content/dam/Census/library/working-papers/2021/acs/2021_CensusBureau_01.pdf' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>ACS Research and Evaluation Report Memorandum Series #ACS21-RER-04</a>.
        </div>,
        open: false
     }

@@ -95,11 +95,11 @@ let national_options = [
    chartype: 'column',metrics: 'median_income',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Trends', value: 'Trends',isTitle: true,
-   variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-13]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
+   variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-9]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education', age: '25-64', description: " have completed a bachelor's degree or higher", description1: '', sentence: "bachelor's degree attainment rate", group: 'TimeSeries',
    chartype: 'spline', metrics: 'percentage', categories: '', accordion: 'accordion-is-open', scope: ''
   },
-  {label: 'Change Over Time', value: 'Change Over Time', variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-13]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
+  {label: 'Change Over Time', value: 'Change Over Time', variable: 'TimeSeries', title: "Bachelor's Degree Attainment or Higher",title_by: ' By Year '+[acs_one_year-9]+'-'+acs_one_year, disabled: false, second_disabled: false, display: 'unset',
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education', age: '25-64', description: " have completed a bachelor's degree or higher", description1: '', sentence: "bachelor's degree attainment rate", group: 'TimeSeries',
    chartype: 'spline', metrics: 'percentage', categories: '', accordion: 'accordion-is-open', scope: ''
   },
@@ -2773,7 +2773,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       verticalAlign: 'top',
     },
     xAxis: {
-      categories: [acs_one_year-13, acs_one_year-12, acs_one_year-11, acs_one_year-10, acs_one_year-9,
+      categories: [acs_one_year-9,
                   acs_one_year-8, acs_one_year-7, acs_one_year-6, acs_one_year-5,
                   acs_one_year-4,acs_one_year-3,acs_one_year-2,acs_one_year-1,acs_one_year],
       type: 'category'
@@ -2944,7 +2944,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           }
         }, 
         caption: {
-          text: nationalTitle+' by Year in the United States ('+(acs_one_year-13)+'-'+acs_one_year+')',
+          text: nationalTitle+' by Year in the United States ('+(acs_one_year-9)+'-'+acs_one_year+')',
           style: {
             fontSize: '16px',
             fontFamily: 'Roboto',
@@ -2959,9 +2959,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         },
         subtitle: {
           text:
-          '<p>In the United States from '+(acs_one_year-13)+'-'+acs_one_year+
+          '<p>In the United States from '+(acs_one_year-9)+'-'+acs_one_year+
           ', among people aged '+limit_age+', '+sentence+' has '+crease+'. '+
-          'From '+(acs_one_year-13)+' to '+acs_one_year+', '+sentence+'s '+crease_word+' by '+                                 
+          'From '+(acs_one_year-9)+' to '+acs_one_year+', '+sentence+'s '+crease_word+' by '+                                 
           percentage_difference(timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === min_year &
             timeseries.status === insidechartStatus & timeseries.attribution === attribute[0]).map(
             timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === max_year &
@@ -4493,7 +4493,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                                     }[metrics]
                                 }[accordion_is],
                               spline: 
-                                'In the United States from '+(acs_one_year-13)+' to '+acs_one_year+
+                                'In the United States from '+(acs_one_year-9)+' to '+acs_one_year+
                                 ', among people aged '+limit_age+', '+sentence+' has '+crease+'. '+
                                 'For example, '+sentence+'s '+crease_word+' by '+                                 
                                 percentage_difference(timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === min_year &
