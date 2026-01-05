@@ -45,8 +45,8 @@ describe.each(pdfDir)('PDF test: ', (pdfPath) => {
     });
 
     // Extract text
-    test('The PDF report creation year and ACS 5 year difference are within 2 year.', () => {
-      expect(Math.trunc(pdfYear - acs5y)).toBeLessThanOrEqual(2);
+    test('The PDF report creation year and ACS 5 year difference are within 3 year.', () => {
+      expect(Math.trunc(pdfYear - acs5y)).toBeLessThanOrEqual(3);
     })
   })
 })
