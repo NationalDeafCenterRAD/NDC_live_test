@@ -93,7 +93,7 @@ const Method = () => {
         </li>
       </ul>
       <p/>
-      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/health/disability/guidance/data-collection-acs.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
+      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/population/race.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
      </div>,
       open: false   
     },
