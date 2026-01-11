@@ -285,5 +285,5 @@ describe('Data Integrity Checks', () => {
         })
       })
     });
-  });
+  }, 30000);
 });

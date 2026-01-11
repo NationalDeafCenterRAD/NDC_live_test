@@ -4,9 +4,9 @@ import most_recent_year from './assets/acs_year.json';
 import most_recent_year1 from './assets/acs_5_year.json';
 import './dashboard.css'
 
-//Widget This faq.js is developed by Tyler Potts who provided "Easy React JS Accordion" tutorial through https://www.youtube.com/watch?v=jwp-cYZbgic
-import FAQ from './faq.js'
-import 'font-awesome/css/font-awesome.min.css';
+//Widget This faq.jsx is developed by Tyler Potts who provided "Easy React JS Accordion" tutorial through https://www.youtube.com/watch?v=jwp-cYZbgic
+import FAQ from './faq.jsx'
+//import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 
@@ -14,7 +14,7 @@ import "@fontsource/roboto";
 import employment from './assets/employment.json';
 
 //Font Awesomes
-import 'font-awesome/css/font-awesome.min.css';
+//import 'font-awesome/css/font-awesome.min.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 

@@ -7,10 +7,10 @@
 import './navbar.css';
 import './dashboard.css';
 
-import Loading from './Loading.js';
-import AboutData from './aboutdata.js';
-import Method from './method.js';
-import StateReport from './state_report_page.js'
+import Loading from './Loading.jsx';
+import AboutData from './aboutdata.jsx';
+import Method from './method.jsx';
+import StateReport from './state_report_page.jsx'
 
 // Data
 import us25_64 from './assets/us25_64.json';
@@ -21,7 +21,7 @@ import us25_64 from './assets/us25_64.json';
 //import OSEP from './images/OSEP-Ideas-That-Work-white.png';
 
 /*React and Switching Page Function and Click Outside Function*/
-import React, { useState, useRef, useEffect, lazy, Suspense } from "react";
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -29,18 +29,17 @@ import {
 } from 'react-router-dom';
 
 /*Icons and fonts*/
-import 'font-awesome/css/font-awesome.min.css';
-import 'font-awesome/css/font-awesome.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShareAlt, faUniversalAccess } from '@fortawesome/free-solid-svg-icons';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
-import FontAwesome from 'react-fontawesome';
 
 //Charts
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HCPattern from 'highcharts-pattern-fill';
-import HC_exporting from 'highcharts/modules/exporting';
-import HC_accessible from "highcharts/modules/accessibility";
+import "highcharts/modules/exporting";
+import "highcharts/modules/accessibility";
+import "highcharts-pattern-fill";
 
 // Widgets
 import {CirclePicker} from 'react-color';
@@ -51,13 +50,8 @@ import '@iframe-resizer/child'
 // Persistent shareable link
 const url_to_share = "https://www.nationaldeafcenter.org/dashboard/"
 
-// Add pattern in Highcharts
-HCPattern(Highcharts);
-HC_exporting(Highcharts);
-HC_accessible(Highcharts)
-
 /*Functional Pages*/
-const Faster = lazy(() => import('./fasterone.js'));
+const Faster = lazy(() => import('./fasterone.jsx'));
 
 const Navbar = () => {
   // Color Accessibility Options
@@ -609,11 +603,11 @@ const Navbar = () => {
     <Router>
       <div className='flex-invisible-button'>
         <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {openAPIMenu} ref = {buttonpopupRef} aria-label = 'Share Link - Copy link to share' aria-expanded = {collapse} aria-hidden = 'true'>
-          <FontAwesome className='iconButton' name = 'share-alt' style = {{fontSize: '20px'}}/>
+          <FontAwesomeIcon className='iconButton' icon={faShareAlt} style = {{fontSize: '20px'}}/>
           <div className = 'Jonah-nav-text'>SHARING</div>
         </button>
         <button className = 'invisible-button' tabIndex={0} value = 'accessibility' onClick = {changePopup} ref = {buttonpopupRef} aria-label = 'Accessibility - Color Options' aria-expanded = {collapse} aria-hidden = 'true'>
-          <FontAwesome className='iconButton' name = 'universal-access' style = {{fontSize: '20px'}}/>
+          <FontAwesomeIcon className='iconButton' icon={faUniversalAccess} style = {{fontSize: '20px'}}/>
           <div className = 'Jonah-nav-text'>ACCESSIBILITY</div>
         </button>
       </div>
@@ -658,9 +652,7 @@ const Navbar = () => {
       </div>
       <Suspense fallback={<Loading/>}>
       <Routes>
-        <Route exact path='/' element={<Faster colors={colors}
-                                                  justcolor={justcolor}
-                                                  colorfill={colorfill}/>}/>
+        <Route exact path='/' element={<Faster colorfill={colorfill}/>}/>
       </Routes>
       </Suspense>
     </Router>

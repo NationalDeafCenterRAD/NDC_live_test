@@ -1,49 +1,43 @@
 //Import React, CSS, logo, and global level citation
-import React, { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import './dashboard.css';
-import thelogo from './logo_export.js'
-import citation from './citation.js'
+import thelogo from "./images/NDC_logo_color_horizontal-black-text.png"
+import { useCitation } from './citation.jsx'
 
 //Data
 import acs_one_year from './assets/acs_year.json';
 import acs_five_year from './assets/acs_5_year.json';
-import employment from './assets/employment.json';
+import raw_employment from './assets/employment.json';
 import timeseries from './assets/timeseries.json';
 
 //Widgets
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import Select, { components } from 'react-select';
-import Table from './table.js';
+import Select, { components as Components } from 'react-select';
+import Table from './table.jsx';
 
 /*Icons and fonts*/
-import 'font-awesome/css/font-awesome.min.css';
-import "@fontsource/roboto-slab";
-import "@fontsource/roboto";
-import FontAwesome from 'react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import warning_sign from './images/warning_sign.svg';
 
 //Charts
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import HC_exporting from 'highcharts/modules/exporting';
-import HC_offlineExporting from 'highcharts/modules/offline-exporting';
-import HC_accessible from "highcharts/modules/accessibility";
-import HCMore from 'highcharts/highcharts-more';
+import "highcharts/modules/exporting";
+import "highcharts/modules/accessibility";
+import "highcharts-pattern-fill";
+import 'highcharts/highcharts-more';
 
 // Persistent shareable link
 import { useSearchParams } from 'react-router-dom';
 
-// Extensive Version of Highcharts
-HC_exporting(Highcharts);          //exporting function
-HC_offlineExporting(Highcharts);   // Offline on Highcharts
-HC_accessible(Highcharts);         //accessible function 
-HCMore(Highcharts);                //Add more chart options
-
+// Standard definition of exporting charts
 const exportURL = /*process.env.REACT_APP_BACKEND_URL*/ 'https://export.highcharts.com/';
-const fallbackToExportServer = true;
+const fallbackToExportServer = false;
+const useHTML = true;
 
 // Filter BIPOC out as NDC requests
-employment = employment.filter(employment => employment.attribution !== 'deaf BIPOC' && employment.attribution !== 'hearing BIPOC');
+const employment = raw_employment.filter(employment => employment.attribution !== 'deaf BIPOC' && employment.attribution !== 'hearing BIPOC');
 
 // National Option List
 let national_options = [
@@ -167,7 +161,7 @@ let inside_chart_options = [
   {label: "Unemployed", value: "Unemployed", title: "Unemployment Rate", variable: 'unemployed',type: 'employment',age: '16-64', description: ' are unemployed, which is defined as being currently or recently looking for work', description1: ' are unemployed', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Not in Labor Force", value: "Not in Labor Force", title: "People not in Labor Force", variable: 'notinLF',type: 'employment',age: '16-64', description: ' are not in the labor force, which is defined as not currently employed and not looking for work', description1: ' are not in the labor force', sentence: '', group: 'employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
 
-  {label: 'All Classes', value: 'All Classes', title: "Percentage of Worker Classes", variable: 'every_class', type: 'cow',age: '25-64', description: '', description1: '', sentence: '', group: 'cow', metrics: 'percentage', chartype: 'every_class', disabled: true, second_disabled: true},
+  {label: 'All Classes', value: 'All Classes', title: "Percentage of Worker Classes", variable: 'every_class', type: 'cow',age: '16-64', description: '', description1: '', sentence: '', group: 'cow', metrics: 'percentage', chartype: 'every_class', disabled: true, second_disabled: true},
   {label: "For-Profit", value: "For-Profit", title: "Percentage of For-Profit Employees", variable: 'For-profit',type: 'cow',age: '16-64', description: '  are for-profit employees',description1: '  are for-profit employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Non-Profit", value: "Non-Profit", title: "Percentage of Non-Profit Employees", variable: 'Non-profit',type: 'cow',age: '16-64', description: '  are non-profit employees',description1: '  are non-profit employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Local Gov't", value: "Local Gov't", title: "Percentage of Local Gov't Employees", variable: "Local gov't",type: 'cow',age: '16-64', description: '  are local government employees',description1: '  are local government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
@@ -332,7 +326,7 @@ let edulist = ["doctoral degree or equivalent","master’s degree or higher","ba
 const Option = (props) => {
   return (
     <div>
-      <components.Option {...props}>
+      <Components.Option {...props}>
         <div className='checkbox_grid'>
           <input
           type="checkbox"
@@ -345,12 +339,12 @@ const Option = (props) => {
           />
           <label role="checkbox" aria-checked="false" aria-labelledby={props} tabIndex="-1" style = {{fontFamily: 'Roboto', fontSize: '16px', cursor: 'pointer'}}>{props.label}</label>
         </div>
-      </components.Option>
+      </Components.Option>
     </div>
   );
 };
 
-const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
+const Dashboard = ({colorfill}) => {
   // Generate unique urls
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -839,11 +833,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
   const [inside_chart_schema, setInsideChartSchema] = useState(inside_chart_options.filter(e => e.value === statusCateg));
   const [title_color,setTitleColor] = useState(inside_chart_options.filter(e => e.value === statusCateg).map(e => e.second_disabled)[0] === true ? '#bfbfbf' : '#0d7777');
 
-  const [categories, setCategories] = useState(variables.filter(e => e.variable === selected_attributions).map(e => e.variables)[0]);
+  const [categories, setCategories] = useState(variables.filter(e => e.variable === selected_attributions && e.age === limit_age).map(e => e.variables)[0]);
   const [deaf_labels, setDeafLabels] = useState(variables.filter(e => e.variable === selected_attributions).map(e => e.deaf)[0]);
   const [hear_labels, setHearLabels] = useState(variables.filter(e => e.variable === selected_attributions).map(e => e.hearing)[0]);
   const [secondSchema, setSecondSchema] = useState(variables.filter(e => e.variable === selected_attributions))
-  const [more_options, setMoreOptions] = useState(variables.filter(e => e.variable === selected_attributions).map(e => e.more_options)[0])
+  const [more_options, setMoreOptions] = useState(variables.filter(e => e.variable === selected_attributions).map(e => e.more_options)[0]);
 
   const [dgraduate, setDGrad] = useState(
     employment.filter(employment => employment.type === 'Field of Degree' &
@@ -1361,7 +1355,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
           (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
           edulist[index] :
-          ' '+employment.percentage+'% '+edulist[index]}).reverse())+citation[2]
+          ' '+employment.percentage+'% '+edulist[index]}).reverse())+useCitation[2]
       )
     }else if(reportTrigger === 1){
       wordCounter(
@@ -1419,7 +1413,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 words[1],
               median_income: '.'
             }[metrics]
-        }[accordion_is]+' '+citation[2]
+        }[accordion_is]+' '+useCitation[2]
       )
     }else{
       wordCounter(
@@ -1520,7 +1514,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                       ' '+words[1]+' earn $'+
                       +Math.round(employment.median_income/1000) + 'K')})
           }[metrics]
-        }[accordion_is]+' '+citation[2]
+        }[accordion_is]+' '+useCitation[2]
       )
     }
   },[accordion_is,attribute,deaf_labels,hear_labels,
@@ -1689,6 +1683,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -1738,6 +1737,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>In the United States, among people aged '+limit_age+', an estimated'+
             employment.filter(employment => employment.attribution === 'deaf' & 
@@ -1765,10 +1765,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               (employment.percentage === 0 ? 'N/A of hearing people are ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people are ' : employment.percentage + '% of hearing people are ')+
               cowLabels[index] :
               ' '+employment.percentage+'% '+cowLabels[index]}).reverse()+
-              ' '+citation[2]+'</p>',
+              ' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
           x: 0,
           y: 0,
           style: {
@@ -2020,6 +2019,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -2072,6 +2076,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: '<p>'+
           {
             column:
@@ -2181,10 +2186,9 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             
             all: 
               ''
-          }[chartType]+' '+citation[2]+'</p>',
+          }[chartType]+' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
           x: 0,
           y: 0,
           style: {
@@ -2195,7 +2199,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         },
-        chart: {
+        chart: {          
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops: 
@@ -2362,6 +2366,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -2411,6 +2420,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>In the United States, among people aged '+limit_age+', an estimated'+
             employment.filter(employment => employment.attribution === 'deaf' & 
@@ -2436,10 +2446,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
               edulist[index] :
               ' '+employment.percentage+'% '+edulist[index]}).reverse()+
-              ' '+citation[2]+'</p>',
+              ' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -2450,7 +2460,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         },
-        chart: {
+        chart: {         
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops:
@@ -2498,7 +2508,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
         employment?.attribution?.includes('deaf')).map(
         employment => [employment.status,employment.percentage]).sort(function(a,b){
         return sortarray.indexOf(a[0]) - sortarray.indexOf(b[0]);
-        }).map(el => el[0]).slice(0,5).map(function(x,i){
+        }).map(el => el[0]).slice(0,5).map(function(x){
           if(x === 'Science and\nEngineering Related\nFields'){
             return('Science and Engineering Related Fields')
           }else{
@@ -2638,6 +2648,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -2687,6 +2702,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>In the United States, among people aged 25-64, an estimated '+
             dgraduate.map(function(dgraduate, index){ return index === 0 ?
@@ -2705,10 +2721,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             (hgraduate[1] === 0 ? 'N/A of hearing people have completed a bachelor’s degree or higher in ' : ((hgraduate[2]/100)/1.962937)/(hgraduate[1]/100) > 0.3 ? ' '+hgraduate[1] + "% \u26a0 of hearing people in "+hgraduate[0].toLowerCase() :
             (insidechartStatus === 'Employment' ? ' '+hgraduate[1] + "% of hearing people in "+hgraduate[0].toLowerCase()+' being employed': 
             ' '+hgraduate[1] + "% of hearing people with degrees in "+hgraduate[0].toLowerCase())):
-            ' '+hgraduate[1]+'% in '+hgraduate[0].toLowerCase()}).reverse()+' '+citation[2]+'</p>',
+            ' '+hgraduate[1]+'% in '+hgraduate[0].toLowerCase()}).reverse()+' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -2719,7 +2735,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         },
-        chart: {
+        chart: {         
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops: 
@@ -2906,6 +2922,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -2958,6 +2979,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text:
           '<p>In the United States from '+(acs_one_year-9)+'-'+acs_one_year+
           ', among people aged '+limit_age+', '+sentence+' has '+crease+'. '+
@@ -2972,10 +2994,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
             timeseries.status === insidechartStatus & timeseries.attribution === attribute[1]).map(
             timeseries => timeseries['percentage']),timeseries.filter(timeseries => timeseries.type === insidechartType & timeseries.year === max_year &
             timeseries.status === insidechartStatus & timeseries.attribution === attribute[1]).map(
-            timeseries => timeseries['percentage']))+' for '+words[1]+' '+citation[2]+'</p>',
+            timeseries => timeseries['percentage']))+' for '+words[1]+' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -2986,7 +3008,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         },
-        chart: {
+        chart: {        
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops: 
@@ -3179,6 +3201,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -3235,6 +3262,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>In the United States, among deaf people ages 16-64, the '+nationDescript+
             ' of deaf people increases with level of education, from '+
@@ -3254,10 +3282,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
                 return '$'+Math.round(x/1000)+'K'
               }else{
                 return x+'%'
-              }})+' for those with a master’s degree '+citation[2],
+              }})+' for those with a master’s degree '+useCitation[2],
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -3268,7 +3296,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         },
-        chart: {
+        chart: {          
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops: 
@@ -3858,6 +3886,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       chartOptions: { // specific options for the exported image
@@ -3903,6 +3936,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>'+{
               column:
@@ -3970,10 +4004,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               
               all: 
                 ''
-            }[chartType]+' '+citation[2]+'</p>',
+            }[chartType]+' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -3984,7 +4018,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           },
           widthadjust: -220
         }, 
-        chart: {
+        chart: {         
           inverted: false,
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
@@ -4143,6 +4177,11 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
       allowHTML: true,
       url: exportURL,
       fallbackToExportServer: fallbackToExportServer,
+      error: (options, error) => {
+        console.log('Export error:', error);
+        // Optional: User-friendly message
+        // alert('Export failed. Please try again or contact support.');
+      },
       sourceWidth: 1200,
       sourceHeight: 600,
       buttons: {
@@ -4192,6 +4231,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           x: 25
         },
         subtitle: {
+          useHTML: useHTML,
           text: 
             '<p>'+in_the_b+state_label_b+', among people aged '+limit_age+
             (employment.filter(employment => employment.type === insidechartType & 
@@ -4221,10 +4261,10 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               edulist[index] : edulist[edulist.length - 1] === edulist[index] ? ' '+
               (employment.percentage === 0 ? 'N/A of hearing people have completed ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of hearing people have completed ' : employment.percentage + '% of hearing people have completed ')+
               edulist[index] :
-              ' '+employment.percentage+'% '+edulist[index]}).reverse())+' '+citation[2]+'</p>',
+              ' '+employment.percentage+'% '+edulist[index]}).reverse())+' '+useCitation[2]+'</p>',
           verticalAlign: 'bottom',
           margin:80,
-          useHTML: true,
+
           x: 0,
           y: 0,
           style: {
@@ -4236,7 +4276,7 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           widthadjust: -220
         },
         chart: {
-          inverted: false,
+          inverted: false,          
           backgroundColor: {
             linearGradient: [0, 0, 0, 600],
             stops:
@@ -4290,12 +4330,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               </p>
               <p className='aria-text'>Beginning of Interactive Chart</p>
               <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                <FontAwesomeIcon name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
               </button>
               <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
                 <div className='data_sidebar_interface'>
                   <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
-                    <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                    <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
                   </button>
                   <div style={{marginTop:'10px'}}/>
                   <Select 
@@ -4907,12 +4947,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
               </p>
               <p className='aria-text'>Beginning of Interactive Chart</p>
               <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
               </button>
               <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
                 <div className='data_sidebar_interface'>
                   <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
-                    <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                    <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
                   </button>
                   <div style={{marginTop:'10px'}}/>
                   <Select 
@@ -5496,12 +5536,12 @@ const Dashboard = ({colors, justcolor, colorfill, navmenu}) => {
           <TabPanel>
             <div className='inside_container'>
               <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
               </button>
               <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
                 <div className='data_sidebar_interface'>
                   <button className = 'data_sidebar_button1' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex}>
-                    <FontAwesome name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                    <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
                   </button>
                   <div style={{marginTop:'10px'}}/>
                   <div className = 'Jonah-text-contain-with-background'>

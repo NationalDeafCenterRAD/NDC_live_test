@@ -1,5 +1,5 @@
 // React
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 //Widgets
 import Select from 'react-select';
@@ -8,8 +8,8 @@ import Select from 'react-select';
 import './dashboard.css';
 
 //Icons and fonts
-import 'font-awesome/css/font-awesome.min.css';
-import 'font-awesome/css/font-awesome.css';
+//import 'font-awesome/css/font-awesome.min.css';
+//import 'font-awesome/css/font-awesome.css';
 import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 //import FontAwesome from 'react-fontawesome';
@@ -18,19 +18,14 @@ import "@fontsource/roboto";
 import USmap from './assets/usmap.json'
 
 // Import multiple PDFs
-function importAll(r) {
-  let files = {};
-   r.keys().forEach((item) => { files[item.replace('./', '')] = r(item); });
-  return files
- }
- const PDFs = importAll(require.context('./assets/Reports', false, /\.pdf$/));
+const PDFs = import.meta.glob('./assets/Reports/*.pdf', { eager: true, as: 'url' });
 
-const StateReport = ({colors, justcolor, colorfill, navmenu}) => {
+const StateReport = () => {
   // Functions for "Report" tab
   const [report_multi_state, setReportMultiState] = useState([  {label: 'Select a state to read...', value: 'Select a state to read...'}])
   const changeReportGeoState = (e) => {
     setReportMultiState(e)
-    window.open(PDFs['NDC_'+e.variable+'_report.pdf'])
+    window.open(PDFs['./assets/Reports/NDC_'+e.variable+'_report.pdf'])
   }
 
   // React selection
@@ -180,18 +175,20 @@ const StateReport = ({colors, justcolor, colorfill, navmenu}) => {
               <svg width="100%" height="100%" className = 'us-map-svg' viewBox='0 0 930 590' xmlns="http://www.w3.org/2000/svg">
                 {itemPDF.map((value)=>{
                   return (
-                    <a href = {PDFs['NDC_'+value.label+'_report.pdf']} 
-                       type="application/pdf" title={value.label}
-                       media="print" 
-                       target = '_blank' rel="noreferrer noopener" className = 'pdf-block' 
-                       onMouseEnter = {() => textforStateAppear(value.id)} onMouseLeave={textforStateDisappear}
-                       tabIndex={-1} key={value.id}>
+                    <a href = {PDFs['./assets/Reports/NDC_'+value.label+'_report.pdf']} 
+                      type="application/pdf" title={value.label}
+                      media="print" 
+                      target = '_blank' rel="noreferrer noopener" className = 'pdf-block' 
+                      onMouseEnter = {() => textforStateAppear(value.id)} onMouseLeave={textforStateDisappear}
+                      tabIndex={-1} key={value.id}
+                    >
                       <path d={value.shape}/>
                     </a>
                   )
                 })}
               </svg>
               <div id="hoveringText" style={{top: positions[0], left:positions[1], opacity: hiddenBox}}>{stateLabel}</div>
+
             </div>
             <div className = 'Jonah-text-contain' style = {{marginBottom: '20px', marginTop: '20px'}}>
               <div className = 'Jonah-thep'>

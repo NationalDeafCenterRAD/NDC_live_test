@@ -12,11 +12,15 @@ import warning_sign from './images/warning_sign.svg';
 const ContentDowndrop = ({ buttonLabel, content, symbol, tabindex, clickedId, textContent, textContent1, background, your_color, onClick, textwidth,n,title, id}) => {
   const [warning_sty,setWarningSty] = useState('not-warning')
   useEffect(() => {
-    if(n > 0.3){
-      setWarningSty('shown-warning')
-    }else{
-      setWarningSty('not-warning')
+    const warningTrigger = () => {
+      if(n > 0.3){
+        setWarningSty('shown-warning')
+      }else{
+        setWarningSty('not-warning')
+      }
     }
+
+    warningTrigger();
   }, [n])
   
   return (

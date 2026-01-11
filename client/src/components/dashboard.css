@@ -303,6 +303,8 @@ a:hover .map_line{
     box-shadow: 0 1px 3px var(--shadow);
     overflow-y:hidden;
     overflow-x:hidden;
+    height: min-content;
+    transition: 0.3s ease-in-out height;
 }
 .inside_container-border-radius-all-rounds{
     position: relative;
@@ -407,7 +409,7 @@ a:hover .map_line{
     background: transparent;
     font-size: 30px;
     font-family: 'Roboto';
-    color: var(--black);
+    color: var(--selected_tab);
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
@@ -1217,6 +1219,10 @@ table{
 .us-map-svg a:hover{
     fill: var(--ndc_second);
     transition: all 0.1s ease-out;
+}
+
+.us-map-svg a:focus{
+    outline: none;
 }
 .us-map-svg a:visited:hover{
     fill: var(--ndc_second);

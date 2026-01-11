@@ -6,7 +6,7 @@ import './emp_chart_text.css';
 import acs_five_year from './assets/acs_5_year.json';
 import acs_one_year from './assets/acs_year.json';
 import employment from './assets/employment.json';
-import citation from "./citation";
+import { useCitation } from "./citation";
 
 // Font Families
 import "@fontsource/roboto-slab";
@@ -44,7 +44,7 @@ const AboutData = () => {
           </div>
           <p className = 'aboutdata-title'>Recommended Citation</p>
           <div className = 'text-for-chart' id = 'for-citation'>
-            {citation[0]}<b><a href = 'https://dashboard.nationaldeafcenter.org' style = {{textDecoration: 'none', color: '#0000EE'}}>{citation[1]}</a></b>
+            {useCitation[0]}<b><a href = 'https://dashboard.nationaldeafcenter.org' style = {{textDecoration: 'none', color: '#0000EE'}}>{useCitation[1]}</a></b>
           </div>
         </div>
       </div>
