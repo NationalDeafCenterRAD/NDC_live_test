@@ -50,7 +50,7 @@ let national_options = [
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: '', group: 'education',
    chartype: 'column', metrics: 'percentage', categories: '', accordion: 'nothing', scope: ''
   },
-  {label: 'Enrollment Rate', value: 'Enrollment Rate', variable: 'enrollment', title: 'Enrollment Rate', title_by:'', disabled: false, second_disabled: false, display: 'None',
+  {label: 'College Enrollment Rate', value: 'College Enrollment Rate', variable: 'enrollment', title: 'College Enrollment Rate', title_by:'', disabled: false, second_disabled: false, display: 'None',
     set_for_chart: [{label: "Nothing", value: "Nothing"}], subvariable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training', description1: '', sentence: '', group: 'enrollment',
     chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
   },
@@ -167,7 +167,7 @@ let inside_chart_options = [
   {label: "Local Gov't", value: "Local Gov't", title: "Percentage of Local Gov't Employees", variable: "Local gov't",type: 'cow',age: '16-64', description: '  are local government employees',description1: '  are local government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "State Gov't", value: "State Gov't", title: "Percentage of State Gov't Employees", variable: "State gov't",type: 'cow',age: '16-64', description: '  are state government employees',description1: '  are state government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Federal Gov't", value: "Federal Gov't", title: "Percentage of Federal Gov't Employees", variable: "Federal gov't",type: 'cow',age: '16-64', description: '  are federal government employees',description1: '  are federal government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
-  {label: "Self-Employed/Business", value: "Self-Employed/Business", title: "Percentage of Self-Employed/Business Employees", variable: "Self-employed/Business",type: 'cow',age: '16-64', description: '  are self-employed or business owners',description1: '  are self-employed or business owners', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
+  {label: "Self-Employed and Business", value: "Self-Employed and Business", title: "Percentage of Self-Employed and Business Employees", variable: "Self-employed/Business",type: 'cow',age: '16-64', description: '  are self-employed or business owners',description1: '  are self-employed or business owners', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
 
   {label: "Bachelor’s Degrees", value: "Bachelor’s Degrees", title: "College Graduate Rate Across 5 Most Popular Majors", variable: 'Graduate',type: 'Field of Degree',age: '25-64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage',chartype: 'popular',disabled: true, second_disabled: true},
   {label: "Degrees x Employment Rate", value: "Degrees x Employment Rate", title: "Employment Rate By 5 Most Popular Majors", variable: 'Employment',type: 'Field of Degree',age: '25-64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage', chartype: 'popular',disabled: true, second_disabled: true},
@@ -176,8 +176,8 @@ let inside_chart_options = [
   {label: "Business Owners", value: "Business Owners", title: "Percentage of Business Owners", variable: "business owner", type: "self-employment", age: "16-64", description: ' are business owners', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Full-Time Workers", value: "Full-Time Workers", title: "Percentage of Full-Time Workers", variable: "full-time", type: "self-employment", age: "16-64", description: ' are full-time workers', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   
-  {label: 'Enrollment', value: 'Enrollment',isTitle: true,title: "Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
-  {label: "Enrolled", value: "Enrolled", title: "Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
+  {label: 'College Enrollment', value: 'College Enrollment',isTitle: true,title: "College Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the college enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
+  {label: "Enrolled", value: "Enrolled", title: "College Enrollment Rate", variable: 'Enrolled',type: 'enrollment',age: '16-64', description: ' are enrolled in postsecondary education and training,', description1: ' are enrolled', sentence: 'the college enrollment rate', group: 'TimeSeries', metrics: 'percentage', chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'Education', value: 'Education',isTitle: true, title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "the high school's attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'High School', value: 'High School', title: "High School Attainment or Higher", variable: 'HS diploma',type: 'education',age: '25-64', description: ' have completed high school or higher', description1: ' have completed high school or higher', sentence: "the high school's attainment rate", group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
   {label: 'Some College', value: 'Some College', title: "Some College Attainment or Higher", variable: 'some college',type: 'education',age: '25-64',description: ' have completed some college', description1: ' have completed some college', sentence: 'some college attainment rate', group: 'TimeSeries', metrics: 'percentage',chartype: 'spline',disabled: false, second_disabled: false},
@@ -234,7 +234,7 @@ let attributions = [
   {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
   {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'},
-  {label: 'hearing with additional disabilities', value: 'hearing with additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with additional disabilities'}
+  //{label: 'hearing with additional disabilities', value: 'hearing with additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with additional disabilities'}
 ]
 
 // State Option List
@@ -1444,7 +1444,7 @@ const Dashboard = ({colorfill}) => {
                   (((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                   hear_labels[employment.index]}),
               median_income:
-                'In the United States, among people aged 16-64,'+
+                'In the United States, among people aged 16-64 who are working full time,'+
                 employment.filter(employment => employment.status === 'earning' &  
                   employment.type === insidechartType & 
                   employment.state === 'United States' &  
@@ -1456,7 +1456,7 @@ const Dashboard = ({colorfill}) => {
                     deaf_labels[employment.index]+
                     ' $'+Math.round(employment.median_income/1000) + 'K': 
                     index === 0 ?
-                    ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
+                    ' '+deaf_labels[employment.index] +` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                     +Math.round(employment.median_income/1000) + 'K':
                     ' '+deaf_labels[employment.index]+
                     ' $'+Math.round(employment.median_income/1000) + 'K'})+
@@ -1472,7 +1472,7 @@ const Dashboard = ({colorfill}) => {
                     hear_labels[employment.index]+
                     ' $'+Math.round(employment.median_income/1000) + 'K': 
                     index === 0 ?
-                    ' '+hear_labels[employment.index] +' earn $'+
+                    ' '+hear_labels[employment.index] +'  at $'+
                     +Math.round(employment.median_income/1000) + 'K':
                     ' '+hear_labels[employment.index]+
                     ' $'+Math.round(employment.median_income/1000) + 'K'})
@@ -1497,13 +1497,13 @@ const Dashboard = ({colorfill}) => {
                   )+
                 words[1],
               median_income:
-                'In the United States, among people aged 16-64,'+
+                'In the United States, among people aged 16-64 who are working full time,'+
                 employment.filter(employment => employment.status === 'earning' &  
                   employment.type === insidechartType & 
                   employment.state === 'United States' &  
                   employment.attribution === attribute[0]).map(
                     function(employment){return (
-                    ' '+words[0]+' who are working full-time earn $'+
+                    ' '+words[0]+` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                     +Math.round(employment.median_income/1000) + 'K')})+
                 ', compared to '+
                 employment.filter(employment => employment.status === 'earning' &  
@@ -1511,7 +1511,7 @@ const Dashboard = ({colorfill}) => {
                   employment.state === 'United States' &  
                   employment.attribution === attribute[1]).map(
                     function(employment){return (
-                      ' '+words[1]+' earn $'+
+                      ' '+words[1]+'  at $'+
                       +Math.round(employment.median_income/1000) + 'K')})
           }[metrics]
         }[accordion_is]+' '+useCitation[2]
@@ -1906,7 +1906,10 @@ const Dashboard = ({colorfill}) => {
         'accordion-is': colorfill[0],
         'accordion-is-open': colorfill[num_col[0]]
       }[accordion_is],
-      borderColor: colorfill[0],
+      borderColor: {
+        'accordion-is': colorfill[0],
+        'accordion-is-open': colorfill[num_col[0]]
+      }[accordion_is],
       type: 'column',
       borderWidth: 1,
       data: {
@@ -2107,7 +2110,7 @@ const Dashboard = ({colorfill}) => {
                     (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                     hear_labels[employment.index]}).reverse(),
                 median_income:
-                  'In the United States, among people aged 16-64,'+
+                  'In the United States, among people aged 16-64 who are working full time,'+
                   employment.filter(employment => employment.status === 'earning' &  
                     employment.type === insidechartType & 
                     employment.state === 'United States' &  
@@ -2119,7 +2122,7 @@ const Dashboard = ({colorfill}) => {
                       deaf_labels[employment.index]+
                       ' $'+Math.round(employment.median_income/1000) + 'K': 
                       index === (row.length-1) ?
-                      ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
+                      ' '+deaf_labels[employment.index] +` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                       +Math.round(employment.median_income/1000) + 'K':
                       ' '+deaf_labels[employment.index]+
                       ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+
@@ -2135,7 +2138,7 @@ const Dashboard = ({colorfill}) => {
                       hear_labels[employment.index]+
                       ' $'+Math.round(employment.median_income/1000) + 'K': 
                       index === (row.length-1) ?
-                      ' '+hear_labels[employment.index] +' earn $'+
+                      ' '+hear_labels[employment.index] +'  at $'+
                       +Math.round(employment.median_income/1000) + 'K':
                       ' '+hear_labels[employment.index]+
                       ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()
@@ -2160,13 +2163,13 @@ const Dashboard = ({colorfill}) => {
                     )+
                   words[1],
                 median_income:
-                  'In the United States, among people aged 16-64,'+
+                  'In the United States, among people aged 16-64 who are working full time,'+
                   employment.filter(employment => employment.status === 'earning' &  
                     employment.type === insidechartType & 
                     employment.state === 'United States' &  
                     employment.attribution === attribute[0]).map(
                       function(employment){return (
-                      ' '+words[0]+' who are working full-time earn $'+
+                      ' '+words[0]+` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                       +Math.round(employment.median_income/1000) + 'K')})+
                   ', compared to '+
                   employment.filter(employment => employment.status === 'earning' &  
@@ -2174,7 +2177,7 @@ const Dashboard = ({colorfill}) => {
                     employment.state === 'United States' &  
                     employment.attribution === attribute[1]).map(
                       function(employment){return (
-                        ' '+words[1]+' earn $'+
+                        ' '+words[1]+'  at $'+
                         +Math.round(employment.median_income/1000) + 'K')})
                   }[metrics]
               }[accordion_is],
@@ -3424,7 +3427,10 @@ const Dashboard = ({colorfill}) => {
         'accordion-is': colorfill[0],
         'accordion-is-open': colorfill[num_col[0]]
       }[accordion_is],
-      borderColor: colorfill[0],
+      borderColor: {
+        'accordion-is': colorfill[0],
+        'accordion-is-open': colorfill[num_col[0]]
+      }[accordion_is],
       type: 'column',
       borderWidth: 1,
       data: {
@@ -3773,7 +3779,10 @@ const Dashboard = ({colorfill}) => {
         'accordion-is': colorfill[0],
         'accordion-is-open': colorfill[num_col[0]]
       }[accordion_is],
-      borderColor: colorfill[0],
+      borderColor: {
+        'accordion-is': colorfill[0],
+        'accordion-is-open': colorfill[num_col[0]]
+      }[accordion_is],
       type: 'column',
       borderWidth: 1,
       data: {
@@ -4330,7 +4339,7 @@ const Dashboard = ({colorfill}) => {
               </p>
               <p className='aria-text'>Beginning of Interactive Chart</p>
               <button className = 'data_sidebar_button' ref={buttonRef} onClick= {changeSideBarWidth} style = {{display:data_sidebar}} tabIndex = {tabindex1} aria-hidden = 'true'>
-                <FontAwesomeIcon name = 'caret-left' className = 'icon_style' style={{transform: icon_rotate}}/>
+                <FontAwesomeIcon icon={faCaretLeft} className = 'icon_style' style={{transform: icon_rotate}}/>
               </button>
               <div className = 'data_sidebar' ref={sidebarRef} style={{display:data_sidebar,marginRight: sidebarWidth}} aria-hidden = 'true'>
                 <div className='data_sidebar_interface'>
@@ -4461,7 +4470,7 @@ const Dashboard = ({colorfill}) => {
                                           (employment.percentage === 0 ? 'N/A of ' : ((employment.margin_errors/100)/1.962937)/(employment.percentage/100) > 0.3 ? employment.percentage + '% \u26a0 of ' : employment.percentage + '% of ')+
                                           hear_labels[employment.index]}).reverse()+'.',
                                       median_income:
-                                        'In the United States, among people aged 16-64,'+
+                                        'In the United States, among people aged 16-64 who are working full time,'+
                                         employment.filter(employment => employment.status === 'earning' &  
                                           employment.type === insidechartType & 
                                           employment.state === 'United States' &  
@@ -4473,7 +4482,7 @@ const Dashboard = ({colorfill}) => {
                                             deaf_labels[employment.index]+
                                             ' $'+Math.round(employment.median_income/1000) + 'K': 
                                             index === (row.length-1) ?
-                                            ' '+deaf_labels[employment.index] +' who are full-time workers earn $'+
+                                            ' '+deaf_labels[employment.index] +` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                                             +Math.round(employment.median_income/1000) + 'K':
                                             ' '+deaf_labels[employment.index]+
                                             ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+
@@ -4489,7 +4498,7 @@ const Dashboard = ({colorfill}) => {
                                             hear_labels[employment.index]+
                                             ' $'+Math.round(employment.median_income/1000) + 'K': 
                                             index === (row.length-1) ?
-                                            ' '+hear_labels[employment.index] +' earn $'+
+                                            ' '+hear_labels[employment.index] +'  at $'+
                                             +Math.round(employment.median_income/1000) + 'K':
                                             ' '+hear_labels[employment.index]+
                                             ' $'+Math.round(employment.median_income/1000) + 'K'}).reverse()+'.'
@@ -4514,13 +4523,13 @@ const Dashboard = ({colorfill}) => {
                                           )+
                                         words[1]+'.',
                                       median_income:
-                                        'In the United States, among people aged 16-64,'+
+                                        'In the United States, among people aged 16-64 who are working full time,'+
                                         employment.filter(employment => employment.status === 'earning' &  
                                           employment.type === insidechartType & 
                                           employment.state === 'United States' &  
                                           employment.attribution === attribute[0]).map(
                                             function(employment){return (
-                                            ' '+words[0]+' who are working full-time earn $'+
+                                            ' '+words[0]+` have a ${insidechartType === 'mean-salary-range' ? 'mean' : 'median'} annual income of $`+
                                             +Math.round(employment.median_income/1000) + 'K')})+
                                         ', compared to '+
                                         employment.filter(employment => employment.status === 'earning' &  
@@ -4528,7 +4537,7 @@ const Dashboard = ({colorfill}) => {
                                           employment.state === 'United States' &  
                                           employment.attribution === attribute[1]).map(
                                             function(employment){return (
-                                              ' '+words[1]+' earn $'+
+                                              ' '+words[1]+'  at $'+
                                               +Math.round(employment.median_income/1000) + 'K.')})
                                     }[metrics]
                                 }[accordion_is],

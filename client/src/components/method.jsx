@@ -19,8 +19,17 @@ import "@fontsource/roboto-slab";
 import "@fontsource/roboto";
 
 const Method = () => {
+  const formatShort = (n) => {
+    if (n >= 1_000_000_000) return (n / 1_000_000_000).toFixed(1) + 'B';
+    if (n >= 1_000_000)     return (n / 1_000_000).toFixed(1) + 'M';
+    if (n >= 1_000)         return (n / 1_000).toFixed(1) + 'K';
+    return String(n);
+  }
+
   const population_percentage = employment.filter(e => e.type === 'population' & 
     e.attribution === 'deaf' & e.state === 'United States' & e.variable === 'overall').map(e => e.percentage)[0]
+  const population_estimator = formatShort(employment.filter(e => e.type === 'population' & 
+    e.attribution === 'deaf' & e.state === 'United States' & e.variable === 'overall').map(e => e.n)[0])
 
   //SideBar Width
   const [sidebarWidth, setSideBarWidth] = useState('-290px');
@@ -74,7 +83,9 @@ const Method = () => {
     },
     {question: 'How are the racial categories decided?',
       answer:
-      <div className = 'paragraph-method'>This dashboard uses racial and ethnic categories from the American Community Survey (ACS), based on how people identify themselves. 
+      <div className = 'paragraph-method'>This dashboard uses racial and ethnic categories from the American Community Survey (ACS), 
+      based on how individuals self-identify. We recognize that these categories may not fully align with how members of deaf communities 
+      understand, experience, or wish to describe their racial or ethnic identities.
       <ul>
         <li>
           <span><b>Black</b> or African American and <b>white</b> include those who selected only that race.</span>
@@ -83,19 +94,33 @@ const Method = () => {
           <span><b>Native American</b> includes American Indian, Alaska Native, or a specific tribe.</span>
         </li>
         <li>
-          <span><b>Asian</b> includes Asian and Pacific Islander groups like Chinese, Filipino, Korean, and Native Hawaiian.</span>
+          <span><b>Asian</b> includes Asian and Pacific Islander groups such as Chinese, Filipino, Korean, and Native Hawaiian.</span>
         </li>
         <li>
-          <span><b>Latine</b> includes people of Hispanic, Latino/a, or Spanish origin (asked separately from race).</span>
+          <span><b>Latine</b> includes people of Hispanic, Latino/a, or Spanish origin, which is collected separately  from race in the ACS.</span>
         </li>
         <li>
         <span><b>Multiracial</b> includes those who selected two or more races or another race not listed.</span>
         </li>
       </ul>
       <p/>
-      More information available at the U.S. Census Bureau: <a href='https://www.census.gov/topics/population/race.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
+      As federal data collection and reporting practices evolve, we will continue to review how race and ethnicity are represented in the dashboard to 
+      more accurately reflect the communities and cultures included in the data.
+      <p/>
+      More information available from the U.S. Census Bureau: <a href='https://www.census.gov/topics/population/race.html' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>About the Topic of Race</a>.      
      </div>,
       open: false   
+    },
+    {question: 'Why does the dashboard only include male and female gender categories?',
+      answer:
+      <div className = 'paragraph-method'>The data used in this dashboard come primarily from the American Community 
+      Survey (ACS), which currently collects sex information using only two categories: male and female. 
+      We acknowledge that these categories do not capture the full range of gender experiences within deaf communities. 
+      Discussions are underway at the federal level to expand data collection to include Sexual Orientation and Gender Identity 
+      questions, which would allow for more complete representation in the future. As data sources change, the dashboard will be 
+      updated accordingly.
+     </div>,
+      open: false  
     },
     {question: 'Why does the National Level data use a 1-year estimate while the State Level data uses 5-year estimates?', 
       answer: 
@@ -138,8 +163,8 @@ const Method = () => {
     {question: 'How many deaf people live in the United States?',
      answer:
      <div className = 'paragraph-method'>According to the {most_recent_year} American 
-     Community Survey (ACS), about {population_percentage+'%'} of the U.S. population 
-     consider themselves deaf or have serious difficulty hearing. More information at: 
+     Community Survey (ACS), about {population_percentage+'%'} of the U.S. population or {population_estimator} people
+     consider themselves deaf or have serious difficulty hearing (all ages). More information at: 
       <ul>
         <li>
           <a href='https://www.disabilitystatistics.org/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Disability Statistics</a>
@@ -168,7 +193,7 @@ const Method = () => {
        <div className = 'paragraph-method'>The American Community Survey does not collect data 
        about the type of school deaf people attend so we do not know which educational environment 
        people in this sample had attended. For estimates about deaf students in different educational 
-       environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www.ed.gov/idea-section-618-data-products-static-files' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-educational-environments-school-aged-children-disabilities/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2022)</a>.
+       environments, see <a href='https://www.jstor.org/stable/27023781' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>Palmer et al., 2020</a>; <a href='https://www.ed.gov/idea-section-618-data-products-static-files' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>IDEA Section 618 Data</a> or <a href='https://sites.ed.gov/idea/osep-fast-facts-ec-educational-environments-idea-part-b/' target = '_blank' rel="noreferrer noopener" style = {{textDecoration:'none',color:'#0000EE',fontWeight:900}}>OSEP Fast Facts (2025)</a>.
        </div>,
       open: false
     },
