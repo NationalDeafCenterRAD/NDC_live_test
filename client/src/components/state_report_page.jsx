@@ -18,7 +18,7 @@ import "@fontsource/roboto";
 import USmap from './assets/usmap.json'
 
 // Import multiple PDFs
-const PDFs = import.meta.glob('./assets/Reports/*.pdf', { eager: true, as: 'url' });
+const PDFs = import.meta.glob('./assets/Reports/*.pdf', { eager: true, query: '?url', import: 'default'});
 
 const StateReport = () => {
   // Functions for "Report" tab
