@@ -16,7 +16,6 @@ const getFileCreationDate = (filePath) => {
 };
 
 const pdfDirectory = path.join(assetDir, '/Reports');
-
 const pdfDir = fs.readdirSync(pdfDirectory)
   .filter(file => file.endsWith('.pdf'))
   .map(file => path.join(pdfDirectory, file));
