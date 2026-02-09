@@ -15,7 +15,7 @@ const getFileCreationDate = (filePath) => {
   return stats.birthtime.getFullYear(); // This returns the creation date
 };
 
-const pdfDirectory = path.join(assetDir, '/Reports');
+const pdfDirectory = path.join(assetDir, '/reports');
 const pdfDir = fs.readdirSync(pdfDirectory)
   .filter(file => file.endsWith('.pdf'))
   .map(file => path.join(pdfDirectory, file));
