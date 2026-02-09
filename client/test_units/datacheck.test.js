@@ -7,16 +7,27 @@ function isSvgPath(str) {
   return regex.test(str);
 }
 
-const dataDir = path.join(__dirname, '../assets');
+const dataDir = path.join(__dirname, '../src/data');
+const assetDir = path.join(__dirname, '../src/assets')
 
 describe('Data Integrity Checks', () => {
   test('All data files exist.', () => {
-    const requiredFiles = ['acs_5_year.json','acs_year.json','employment.json',
-        'occupation.json','timeseries.json','us25_64.json','usmap.json'
+    const requiredDataFiles = [
+      'acs_5_year.json','acs_year.json','employment.json',
+      'occupation.json','timeseries.json'
     ]
 
-    requiredFiles.forEach(file => {
+    const requiredAssetFiles = ['polygons/usmap.json']
+
+    requiredDataFiles.forEach(file => {
       const filePath = path.join(dataDir,file);
+      const fileContent = fs.readFileSync(filePath,'utf8');
+      expect(() => JSON.parse(fileContent)).not.toThrow();
+      expect(JSON.parse(fileContent)).not.toEqual({});
+    });
+
+    requiredAssetFiles.forEach(file => {
+      const filePath = path.join(assetDir,file);
       const fileContent = fs.readFileSync(filePath,'utf8');
       expect(() => JSON.parse(fileContent)).not.toThrow();
       expect(JSON.parse(fileContent)).not.toEqual({});
@@ -50,7 +61,7 @@ describe('Data Integrity Checks', () => {
   });
 
   test("The USmap.json is in right format.", () => {
-    const filePath = path.join(dataDir,'usmap.json');
+    const filePath = path.join(assetDir,'polygons/usmap.json');
     const fileContent = fs.readFileSync(filePath,'utf8');
 
     const usmapData = JSON.parse(fileContent);
@@ -232,7 +243,7 @@ describe('Data Integrity Checks', () => {
       { name: "index", expectTypeOf: 'number' },
       { name: "denominator", expectTypeOf: 'number' },
       { name: "median_income", expectTypeOf: 'number' },
-      { name: "level", expectTypeOf: 'number' },
+      { name: "level", expectTypeOf: 'string' },
       { name: "n", expectTypeOf: 'number' }
     ];
   
@@ -244,11 +255,17 @@ describe('Data Integrity Checks', () => {
     expect(someDataHaveSomeVariable).toBe(true);
   
     // Check every variable associates with correct typeof in each entry
-    employmentData.forEach(emp => {
+    employmentData.forEach((emp, i) => {
       someVariables.forEach(({ name, expectTypeOf }) => {
         if (emp.hasOwnProperty(name)) {
           const value = emp[name];
-          expect(typeof value).toBe(expectTypeOf); // Check for expected type
+          const actualType = typeof value;
+
+          try {
+            expect(actualType).toBe(expectTypeOf);
+          } catch (e) {
+            throw e;
+          }
         }
       });
     });

@@ -3,7 +3,8 @@ import path from 'path';
 import { PDFDocument } from 'pdf-lib';
 
 // Get all reports
-const dataDir = path.join(__dirname,'../assets');
+const dataDir = path.join(__dirname,'../src/data');
+const assetDir = path.join(__dirname,'../src/assets');
 const filePath = path.join(dataDir,'acs_5_year.json');
 const fileContent = fs.readFileSync(filePath,'utf8');
 const acs5y = JSON.parse(fileContent)[0];
@@ -14,7 +15,7 @@ const getFileCreationDate = (filePath) => {
   return stats.birthtime.getFullYear(); // This returns the creation date
 };
 
-const pdfDirectory = path.join(__dirname, '../assets/Reports');
+const pdfDirectory = path.join(assetDir, '/Reports');
 
 const pdfDir = fs.readdirSync(pdfDirectory)
   .filter(file => file.endsWith('.pdf'))
