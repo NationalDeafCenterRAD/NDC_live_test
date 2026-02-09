@@ -5,11 +5,11 @@ import './index.css'
 
 // Additional
 import './index.css';
-import NavBar from './components/navbar.jsx';
+import App from './app.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <NavBar />
+    <App />
   </StrictMode>,
 );
 

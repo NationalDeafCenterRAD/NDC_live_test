@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./buttongroup.css";
 
 const ButtonGroup = ({ buttons, AfterClick, thewidth }) => {

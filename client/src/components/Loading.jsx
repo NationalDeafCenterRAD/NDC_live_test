@@ -1,8 +1,5 @@
 //Import React and css
-import React from "react";
-import './loading.css';
-
-
+import '../assets/styles/loading.css';
 
 const Loading = () => {
   //Write HTML d scripts
