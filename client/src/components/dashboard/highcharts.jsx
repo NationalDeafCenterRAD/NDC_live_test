@@ -50,15 +50,9 @@ class customHighCharts {
 
   _dataLabelFormatter = ({y,name}) => {
     const { metric, series } = this.preparedData;
-    console.log(series.flatMap(seriesData => 
-      seriesData.filter(e => e[metric] === y & e?.attribution?.includes(name))))
     const isUnstable = series.flatMap(seriesData => 
       seriesData.filter(e => e[metric] === y & e?.attribution?.includes(name)))
       .some(e => ((e.margin_errors/100)/1.962937)/(y/100) > 0.3);
-
-    console.log(series.flatMap(seriesData => 
-      seriesData.filter(e => e[metric] === y & e?.attribution?.includes(name)))
-      .some(e => ((e.margin_errors/100)/1.962937)/(y/100) > 0.3))
     
     if(isUnstable){
       if(y === 0){

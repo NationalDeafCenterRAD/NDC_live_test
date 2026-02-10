@@ -320,7 +320,6 @@ const Dashboard = ({colorfill}) => {
   }
 
   // Screen Size Responsive Effects
-  const [HCwidth, setHC_Width] = useState(null)
   const [paddingSide, setPaddingSide] = useState('10px')
   const [slice_string, setSliceString] = useState([20,''])
   const [searchable, setSearchable] = useState(true)
@@ -335,21 +334,18 @@ const Dashboard = ({colorfill}) => {
       setPaddingSide(round(3+10*Math.pow(1.01, -650+window.innerWidth)/(1+Math.pow(1.01, -650+window.innerWidth)),2)+'px');
       setSliceString([round(20-12*Math.pow(1.01, 500-window.innerWidth)/(1+Math.pow(1.01, 500-window.innerWidth)),2),'']);
       if(window.innerWidth < 800){
-        setHC_Width(window.innerWidth/1.2)
         setInterface_Side('None')
         setData_SideBar('grid')
         setData_Grid('ungrid')
         setSearchable(false)
         setDownloadText('')
       }else if(window.innerWidth < 1200){
-        setHC_Width(null)
         setInterface_Side('unset')
         setData_SideBar('None')
         setData_Grid('grid')
         setSearchable(true)
         setDownloadText('')
       }else{
-        setHC_Width(null)
         setInterface_Side('unset')
         setData_SideBar('None')
         setData_Grid('grid')
@@ -407,6 +403,7 @@ const Dashboard = ({colorfill}) => {
   const [accordion_is, setAccordionIs] = useState(arrayAccordion[0] === 'closed' ? 'accordion-is' : 'accordion-is-open');
   const [textaccordion_is, setTextAccordionIs] = useState('accordion-is-open');
   const clickButton = () => {
+    if(title_color === '#bfbfbf') return;
     if(accordion_is === 'accordion-is-open'){
       setAccordionIs('accordion-is');
       searchParams.delete('groups');
@@ -462,7 +459,7 @@ const Dashboard = ({colorfill}) => {
     setTitleBy('')
     setNationDescript(" have completed a bachelor's degree or higher")
     setNationalSchema({label: 'Education Attainment', value: 'Education Attainment', variable: 'education', title: "Bachelor's Degree Attainment or Higher", title_by:'', disabled: false, second_disabled: false, display: 'unset', 
-      set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education',age: '25-64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: '', group: 'education',
+      set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education',age: '25–64', description: " have completed a bachelor's degree or higher", description1: " have completed a bachelor's degree or higher", sentence: '', group: 'education',
       chartype: 'column', metrics: 'percentage', categories: '', accordion: 'nothing', scope: ''
     })
     setGroupInsideChart('education')
@@ -477,7 +474,8 @@ const Dashboard = ({colorfill}) => {
     setCategories([''])
     setSentence('')
 
-    setAge('25-64')
+    setTitleColor('#0d7777')
+    setAge('25–64')
     setScope('')
     setSecondSchema([{label: 'Overall', value: 'Overall'}])
     setMoreOptions(' ')
@@ -898,7 +896,7 @@ const Dashboard = ({colorfill}) => {
         'accordion-is':
             {
               percentage: 
-                'In the United States, among people aged 25-64'+scope+', an estimated'+
+                'In the United States, among people aged 25–64'+scope+', an estimated'+
                 employment.filter(employment => employment.type === insidechartType & 
                   employment.variable === selectedAttributions & employment.state === 'United States' &
                   employment.status === insidechartStatus & employment?.attribution?.includes('deaf') &
@@ -957,7 +955,7 @@ const Dashboard = ({colorfill}) => {
         'accordion-is-open':
             {
               percentage:
-                'In the United States, among people aged 25-64'+scope+', an estimated '+
+                'In the United States, among people aged 25–64'+scope+', an estimated '+
                 employment.filter(employment => employment.attribution === attribute[0] & 
                   employment.status === insidechartStatus &  
                   employment.type === insidechartType & 

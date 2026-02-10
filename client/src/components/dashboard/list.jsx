@@ -15,7 +15,7 @@ export const national_options = [
     chartype: 'column',metrics: 'percentage',categories: '', accordion: 'nothing', scope: ''
   },
   {label: 'Most Popular Majors', value: 'Most Popular Majors',variable: 'mostpopular', title: 'College Graduate Rates Across 5 Most Popular Majors', title_by:'', disabled: true, second_disabled: true, display: 'unset',
-    set_for_chart: [{label: "Bachelor’s Degrees", value: "Bachelor’s Degrees"}], subvariable: 'Graduate', type: 'Field of Degree', age: '25–64', description: '', description1: '', sentence: '', group: 'popular',
+    set_for_chart: [{label: "Graduate Rate", value: "Graduate Rate"}], subvariable: 'Graduate', type: 'Field of Degree', age: '25–64', description: '', description1: '', sentence: '', group: 'popular',
     chartype: 'popular',metrics: 'percentage',categories: '', accordion: 'accordion-is', scope: ''
   },
   {label: 'Employment', value: 'Employment',isTitle: true,
@@ -131,7 +131,7 @@ export const inside_chart_options = [
   {label: "Federal Gov't", value: "Federal Gov't", title: "Percentage of Federal Gov't Employees", variable: "Federal gov't",type: 'cow',age: '16–64', description: '  are federal government employees',description1: '  are federal government employees', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
   {label: "Self-Employed and Business", value: "Self-Employed and Business", title: "Percentage of Self-Employed and Business Employees", variable: "Self-employed/Business",type: 'cow',age: '16–64', description: '  are self-employed or business owners',description1: '  are self-employed or business owners', sentence: '', group: 'cow', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
 
-  {label: "Bachelor’s Degrees", value: "Bachelor’s Degrees", title: "College Graduate Rate Across 5 Most Popular Majors", variable: 'Graduate',type: 'Field of Degree',age: '25–64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage',chartype: 'popular',disabled: true, second_disabled: true},
+  {label: "Graduate Rate", value: "Graduate Rate", title: "College Graduate Rate Across 5 Most Popular Majors", variable: 'Graduate',type: 'Field of Degree',age: '25–64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage',chartype: 'popular',disabled: true, second_disabled: true},
   {label: "Degrees x Employment Rate", value: "Degrees x Employment Rate", title: "Employment Rate By 5 Most Popular Majors", variable: 'Employment',type: 'Field of Degree',age: '25–64', description: ' have completed a bachelor’s degree or higher', description1: ' who have completed a bachelor’s degree or higher', sentence: '', group: 'mostpopular', metrics: 'percentage', chartype: 'popular',disabled: true, second_disabled: true},
   
   {label: "Self-Employed", value: "Self-Employed", title: "Self-Employment Rate", variable: "self-employed", type: "self-employment", age: "16–64", description: ' are self-employed, which is defined as not working for a specific employer who pays them a consistent salary or wage', description1: '', sentence: '', group: 'self-employment', metrics: 'percentage',chartype: 'column',disabled: false, second_disabled: false},
