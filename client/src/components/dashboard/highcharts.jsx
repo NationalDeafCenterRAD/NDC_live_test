@@ -8,6 +8,7 @@ import {
   edulist, attributions as listAttributions,
   level_of_education
 } from "./list.jsx";
+import '../../assets/styles/app.css';
 
 
 class customHighCharts {
@@ -29,7 +30,8 @@ class customHighCharts {
       limitAge: options.limitAge || '',
       nationDescript: options.nationDescript || '',
       deafLabels: options.deafLabels || [],
-      hearLabels: options.hearLabels || []
+      hearLabels: options.hearLabels || [],
+      titleBy: options.titleBy || ''
     }
     this.data = this._selectDataSet();
     this.preparedData = this._setup();
@@ -47,6 +49,13 @@ class customHighCharts {
     }
     return `$${Math.round(val / 1000)}K`;
   }
+
+  _capitalize = (str) => {
+    if (typeof str !== 'string' || str.length === 0) {
+      return ""; 
+    } // Handle empty strings or null
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
 
   _dataLabelFormatter = ({y,name}) => {
     const { metric, series } = this.preparedData;
@@ -168,7 +177,7 @@ class customHighCharts {
 
       arr1.push(...deafItems);
       arr2.push(...hearingItems); 
-    }else if (['all','popular','every_class'].includes(chartType) || !categories || categories.length === 0) {      
+    }else if (['all','popular','every_class'].includes(chartType)/* || !categories || categories.length === 0*/) {     
       const filtered = dataset.filter(
         (e) =>
           e.type === type &&
@@ -228,27 +237,25 @@ class customHighCharts {
     }
 
     // Add readable words to both arrays
-    arr1 = arr1.map(e => {
-      const match = listAttributions.find(list => list.label === e?.attribution);
+    const processSeries = (arr) => {
+      if (arr?.length > 0 && arr.every(e => e !== undefined)) {
+        return arr.map(e => {
+          const match = listAttributions.find(list => list.label === e?.attribution);
+          return {
+            ...e,
+            readable: match?.words
+          };
+        });
+      }
+      return null;
+    };
 
-      return {
-        ...e,
-        readable: match?.words
-      };
-    });
+    // Use the helper to push to series
+    const processed1 = processSeries(arr1);
+    if (processed1) series.push(processed1);
 
-    arr2 = arr2.map(e => {
-      const match = listAttributions.find(list => list.label === e?.attribution);
-
-      return {
-        ...e,
-        readable: match?.words
-      };
-    });
-
-    // Prepared data
-    series.push(arr1);
-    series.push(arr2);
+    const processed2 = processSeries(arr2);
+    if (processed2) series.push(processed2);
 
     // Redefine categories if levels
     if(chartType === 'levels'){
@@ -492,6 +499,7 @@ class customHighCharts {
     // Parameters
     let spline = {};
     let column = [];
+    let attribution = null; // Handle if attribute contains no value
 
     const { 
       chartType, type, status, 
@@ -501,7 +509,17 @@ class customHighCharts {
     const { metric, series } = this.preparedData
     const dataset = this.data;
 
-    // Calculate
+    // If user selects nonexistent group
+    if(series.length === 1){
+      attribution = [
+        ...new Set(
+          series.flatMap(seriesData =>
+            seriesData.map(e => ({attribution: e.attribution, readable: e.readable}))
+          )
+        )
+      ]
+    }
+    
     if(chartType === 'spline'){
       spline = this._calculateCrease();
     }else if(chartType === 'column'){
@@ -548,33 +566,62 @@ class customHighCharts {
       e.state === 'United States' &
       e?.attribution?.includes('deaf')).map(
       e => [e.status,e.percentage,e.margin_errors]).slice(0,5).reverse()
-
     
     const content = {
       column:
       {
         percentage:
-          'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
-          nationDescript+', compared to '+column[1],
+          series.length > 1 
+            ?
+              'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
+              nationDescript+', compared to '+column[1]
+            : series.length === 1
+              ?
+                'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
+                nationDescript+'.'
+              : 
+                '',
         median_income:
-          'In the United States, among people aged 16-64 who are working full time, '+column[0]+
-          ', compared to '+column[1]
+          series.length > 1 
+              ?
+                'In the United States, among people aged 16-64 who are working full time, '+column[0]+
+                ', compared to '+column[1]
+              : series.length === 1
+                ?
+                  'In the United States, among people aged 16-64 who are working full time, '+column[0]+'.'
+                :
+                  ''
       }[metric],
-      spline: 
-        'In the United States from '+(acs_one_year[0]-9)+' to '+acs_one_year[0]+
-        ', among people aged '+limitAge+', '+sentence+' has '+spline?.crease+'. '+
-        'For example, '+sentence+'s '+spline?.creaseAttr1+' by '+                                 
-        this._percentage_difference(dataset.filter(e => e.type === type & e.year === acs_one_year[0]-9 &
-          e.status === status & e.attribution === attributions[0]).map(
-          e => e['percentage']),dataset.filter(e => e.type === type & e.year === acs_one_year[0] &
-          e.status === status & e.attribution === attributions[0]).map(
-          e => e['percentage']))
-        +' for '+spline?.attr1Word+' and '+spline?.creaseAttr2+' by '+
-        this._percentage_difference(dataset.filter(e => e.type === type & e.year === acs_one_year[0]-9 &
-          e.status === status & e.attribution === attributions[1]).map(
-          e => e['percentage']),dataset.filter(e => e.type === type & e.year === acs_one_year[0] &
-          e.status === status & e.attribution === attributions[1]).map(
-          e => e['percentage']))+' for '+spline?.attr2Word,                                                  
+      spline:
+        series.length > 1 
+          ?
+            'In the United States from '+(acs_one_year[0]-9)+' to '+acs_one_year[0]+
+            ', among people aged '+limitAge+', '+sentence+' has '+spline?.crease+'. '+
+            'For example, '+sentence+'s '+spline?.creaseAttr1+' by '+                                 
+            this._percentage_difference(dataset.filter(e => e.type === type & e.year === acs_one_year[0]-9 &
+              e.status === status & e.attribution === attributions[0]).map(
+              e => e['percentage']),dataset.filter(e => e.type === type & e.year === acs_one_year[0] &
+              e.status === status & e.attribution === attributions[0]).map(
+              e => e['percentage']))
+            +' for '+spline?.attr1Word+' and '+spline?.creaseAttr2+' by '+
+            this._percentage_difference(dataset.filter(e => e.type === type & e.year === acs_one_year[0]-9 &
+              e.status === status & e.attribution === attributions[1]).map(
+              e => e['percentage']),dataset.filter(e => e.type === type & e.year === acs_one_year[0] &
+              e.status === status & e.attribution === attributions[1]).map(
+              e => e['percentage']))+' for '+spline?.attr2Word
+        : series.length === 1 
+          ?
+            'In the United States from '+(acs_one_year[0]-9)+' to '+acs_one_year[0]+
+            ', among people aged '+limitAge+', '+sentence+'s '+spline?.creaseAttr1+' by '+                                 
+            this._percentage_difference(dataset.filter(e => e.type === type & e.year === acs_one_year[0]-9 &
+              e.status === status & e.attribution === attribution?.[0]?.attribution).map(
+              e => e['percentage']),dataset.filter(e => e.type === type & e.year === acs_one_year[0] &
+              e.status === status & e.attribution === attribution?.[0]?.attribution).map(
+              e => e['percentage']))
+            +' for '+attribution?.[0]?.readable+'.'
+          :
+            ''
+      ,                                                  
       popular: 
         'In the United States, among people aged 25-64, an estimated '+
         dgraduate.map(function(dgraduate, index){ return index === 0 ?
@@ -669,7 +716,7 @@ class customHighCharts {
     }[chartType]
 
     return{
-      content,
+      content: series.length === 0 ? 'No data is available for the current selection. Try adjusting your selections or removing filters.' : content,
       add_stop: this._wordCounter(content+' '+useCitation[2])
     }
   }
@@ -677,6 +724,10 @@ class customHighCharts {
   getSampleInfo = () => {
     const { series, metric } = this.preparedData;
     const { state, openAccordion, chartType } = this.config;
+
+    const defineSampleSize = (x) => {
+      return(x > 351 ? x.toLocaleString('en-US') : '351 or less')
+    }
 
     const info = ['all','most_popular','every_class'].includes(chartType) 
       ? series.flatMap((seriesData, index) => {
@@ -712,82 +763,208 @@ class customHighCharts {
               : metric === 'percentage' ? `${min}%–${max}%` : `$${this._round(min)}–$${this._round(max)}`;
 
           return [{
-            denominator: aggregated.denominator.toLocaleString('en-US'),
+            denominator: defineSampleSize(aggregated.denominator),
             group: index === 0 ? 'deaf people' : 'hearing people',
             error: errorDisplay
           }];
         })
-      : openAccordion
-        ? series.flatMap(seriesData =>
-            seriesData.map(e => ({
-              denominator: e?.denominator?.toLocaleString('en-US'),
-              group: e?.readable,
-              error: e?.margin_errors + '%'
-            }))
-          )
-        : series.flatMap((seriesData, index) => {
+      : chartType === 'spline' 
+        ? series.flatMap((seriesData, index) => {
             if (!seriesData || seriesData.length === 0) return [];
-
             const aggregated = seriesData.reduce(
               (acc, e) => {
+                const denominatorVal = !e?.denominator ? null : e.denominator > 351 ? e.denominator : 351;
                 const errorVal = (metric === 'percentage' && e?.percentage === 0) ||  (metric === 'median_income' && e?.median_income === 0) 
                   ? null : e?.margin_errors;
                 const hasError = typeof errorVal === 'number';
 
                 return {
-                  denominator: acc.denominator + (e?.denominator ?? 0),
+                  denominator: {
+                    minDenominator: denominatorVal? Math.min(acc.denominator.minDenominator, denominatorVal) : acc.denominator.minDenominator,
+                    maxDenominator: denominatorVal? Math.max(acc.denominator.maxDenominator, denominatorVal) : acc.denominator.maxDenominator,
+                  },
                   error: {
-                    min: hasError ? Math.min(acc.error.min, errorVal) : acc.error.min,
-                    max: hasError ? Math.max(acc.error.max, errorVal) : acc.error.max
+                    minError: hasError ? Math.min(acc.error.minError, errorVal) : acc.error.minError,
+                    maxError: hasError ? Math.max(acc.error.maxError, errorVal) : acc.error.maxError
                   }
                 };
               },
               {
-                denominator: 0,
-                error: { min: Infinity, max: 0 }
+                denominator: {minDenominator: Infinity, maxDenominator: 0},
+                error: { minError: Infinity, maxError: 0 }
               }
             );
 
-            const { min, max } = aggregated.error;
-            const hasValidError = min !== Infinity;
+            const { minDenominator, maxDenominator } = aggregated.denominator;
+            const hasValidDenominator = minDenominator !== Infinity;
+
+            const denominatorDisplay = !hasValidDenominator
+              ? 'N/A'
+              : minDenominator === maxDenominator
+                ? `${defineSampleSize(minDenominator)}`
+                : `from ${defineSampleSize(minDenominator)} to ${defineSampleSize(maxDenominator)}`;
+
+            const { minError, maxError } = aggregated.error;
+            const hasValidError = minError !== Infinity;
 
             const errorDisplay = !hasValidError
               ? 'N/A'
-              : min === max
-                ? metric === 'percentage' ? `${min}%` : `$${this._round(min)}`
-                : metric === 'percentage' ? `${min}%–${max}%` : `$${this._round(min)}–$${this._round(max)}`;
+              : minError === maxError
+                ? metric === 'percentage' ? `${minError}%` : `$${this._round(minError)}`
+                : metric === 'percentage' ? `${minError}%–${maxError}%` : `$${this._round(minError)}–$${this._round(maxError)}`;
 
             return [{
-              denominator: aggregated.denominator.toLocaleString('en-US'),
+              denominator: denominatorDisplay,
               group: index === 0 ? 'deaf people' : 'hearing people',
               error: errorDisplay
             }];
-          });
+          })
+        : openAccordion
+          ? series.flatMap(seriesData =>
+              seriesData.map(e => ({
+                denominator: e?.denominator?.toLocaleString('en-US'),
+                group: e?.readable,
+                error: e?.margin_errors + '%'
+              }))
+            )
+          : series.flatMap((seriesData, index) => {
+              if (!seriesData || seriesData.length === 0) return [];
 
-    return `In this chart, estimates are based on a sample size of ${info[0]?.denominator} ${info[0]?.group} and ${info[1]?.denominator} ${info[1]?.group} in ${state === 'United States' ? 'the ' : ''}${state} who participated in the ${acs_one_year} American Community Survey. The margin of errors are ${info[0]?.error} for ${info[0]?.group} and ${info[1]?.error} for ${info[1]?.group}.`;
+              const aggregated = seriesData.reduce(
+                (acc, e) => {
+                  const errorVal = (metric === 'percentage' && e?.percentage === 0) ||  (metric === 'median_income' && e?.median_income === 0) 
+                    ? null : e?.margin_errors;
+                  const hasError = typeof errorVal === 'number';
+
+                  return {
+                    denominator: acc.denominator + (e?.denominator ?? 0),
+                    error: {
+                      min: hasError ? Math.min(acc.error.min, errorVal) : acc.error.min,
+                      max: hasError ? Math.max(acc.error.max, errorVal) : acc.error.max
+                    }
+                  };
+                },
+                {
+                  denominator: 0,
+                  error: { min: Infinity, max: 0 }
+                }
+              );
+
+              const { min, max } = aggregated.error;
+              const hasValidError = min !== Infinity;
+
+              const errorDisplay = !hasValidError
+                ? 'N/A'
+                : min === max
+                  ? metric === 'percentage' ? `${min}%` : `$${this._round(min)}`
+                  : metric === 'percentage' ? `${min}%–${max}%` : `$${this._round(min)}–$${this._round(max)}`;
+
+              return [{
+                denominator: defineSampleSize(aggregated.denominator),
+                group: index === 0 ? 'deaf people' : 'hearing people',
+                error: errorDisplay
+              }];
+            });
+
+    const regex = /from/i;
+
+    if(info.length > 1){
+      return `In this chart, estimates are based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} and ${info[1]?.denominator} ${info[1]?.group} in ${state === 'United States' ? 'the ' : ''}${state} who participated ${chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}. The margins of error are ${info[0]?.error} for ${info[0]?.group} and ${info[1]?.error} for ${info[1]?.group}.`;
+    }else if(info.length === 1){
+      return `In this chart, estimate is based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} in ${state === 'United States' ? 'the ' : ''}${state} who participated ${chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}. The margin of error is ${info[0]?.error}.`;
+    }else{  
+      return '';
+    }
   };
 
   // Construct chart options for Highcharts
   chart = () => {
     const self = this;
+    let definedCaption = '';
     const { series, inverted, metric, categories, maxY, minY } = this.preparedData;
-    const { title, caption, status, colorfill, isExportingEnabled, chartType, attributions, openAccordion } = this.config;
+    const { state, maintitle, caption, status, colorfill, isExportingEnabled, chartType, titleBy, openAccordion } = this.config;
     const colNum = this._defineColorNum();
+
+    // If no data 
+    if(series.length === 0){
+      const noData = {
+        title: {
+          text: ''
+        },
+        series: [{
+          type: 'column',
+          name: '',
+          data: [],
+          color: 'var(--unselected_tab_color)',
+          borderColor: 'var(--unselected_tab_color)',
+        }],
+        xAxis: {
+          title: {
+            text: null
+          },
+        },
+        yAxis: {
+          title: {
+            text: null
+          },
+        },
+        credits: {
+          enabled: false
+        },
+        lang: {
+          noData: 'No data'
+        },
+        legend: {
+          align: 'center',
+          verticalAlign: 'top',
+        },
+        noData: {
+          position: {
+            align: 'center',
+            verticalAlign: 'middle',
+            x: 0,
+            y: 0,
+          },
+          style: {
+            fontWeight: 'bold',
+            fontSize: '15px',
+            color: 'var(--unselected_tab_color)'
+          }
+        },
+        exporting: {
+          enabled: false
+        }
+      }
+      return(noData);
+    }
+    
     const visible = categories.length > 0 || ['all','most_popular','every_class'].includes(chartType) || !openAccordion;
     const { add_stop, content } = this.getContent();
+    
+    if(['all','every_class'].includes(chartType)){
+      definedCaption = `${caption}${state === 'United States' ? ' in the ' : ' in '}${state} (${state === 'United States' ? acs_one_year : (acs_one_year-4)+'-'+acs_one_year })` 
+    }else if(chartType === 'spline'){
+      definedCaption = `${caption} by Year ${state === 'United States' ? ' in the ' : ' in '}${state} (${(acs_one_year-9)+'-'+acs_one_year })`
+    }else if(chartType === 'levels'){
+      definedCaption = `${caption} by Level of Education ${state === 'United States' ? ' in the ' : ' in '}${state} (${(acs_one_year-9)+'-'+acs_one_year })`
+    }else if(openAccordion){
+      definedCaption = `${caption}${state === 'United States' ? ' in the ' : ' in '}${state} (${state === 'United States' ? acs_one_year : (acs_one_year-4)+'-'+acs_one_year })` 
+    }else{
+      definedCaption = `${caption}${titleBy}${state === 'United States' ? ' in the ' : ' in '}${state} (${state === 'United States' ? acs_one_year : (acs_one_year-4)+'-'+acs_one_year })`
+    }
 
     // Define series
     const seriesConfig = series.map((seriesData, index) => {
       const seriesPlot = {
+        id: `main-series-${index}`,
         name: ['all','popular','every_class','levels'].includes(chartType) && index === 0 
           ? 'deaf' :
             ['all','popular','every_class','levels'].includes(chartType) && index === 1 
             ? 'hearing'
             : chartType === 'spline' || openAccordion
-              ? attributions[index]
+              ? series[index][0]?.attribution
               : index === 0 
-                ? 'deaf' 
-                : 'hearing',
+                ? 'deaf' : 'hearing',
         type: ['levels','spline'].includes(chartType) ? 'spline' : 'column',
         color: colorfill[colNum[index]],
         borderColor: colorfill[colNum[index]-2],
@@ -821,7 +998,12 @@ class customHighCharts {
       // 2. spline (main line)
       return [
         {
-          name: (chartType === 'spline' && categories[index] === 0) || index === 0? 'deaf: 95% confidence interval' : 'hearing: 95% confidence interval',
+          linkedTo: `main-series-${index}`,
+          id: `range-series-${index}`,
+          name: openAccordion
+              ? series[index][0]?.attribution
+              : index === 0 
+                ? 'deaf' : 'hearing',
           type: 'areasplinerange',
           color: colorfill[colNum[index] + 1],
           data: seriesData?.map(e => [
@@ -889,7 +1071,7 @@ class customHighCharts {
             }
           },
           title: {
-            text: title,
+            text: maintitle,
             align: 'left',
             x: 25,
             y: 60,
@@ -903,7 +1085,7 @@ class customHighCharts {
             }
           },
           caption: {
-            text: caption,
+            text: definedCaption,
             style: {
               fontSize: '16px',
               fontFamily: 'Roboto',
@@ -964,13 +1146,13 @@ class customHighCharts {
           text: null
         },
         type: 'category', 
-        categories: chartType === 'all' && status === 'overall' 
+        categories: chartType === 'all' && ['overall','all'].includes(status) 
           ? ['High School', "Some College", "Associate's", "Bachelor's", "Master's", "PhD, JD or MD"] 
             : chartType === 'every_class' 
               ? ['For-Profit', 'Non-Profit', "Local Gov't", "State Gov't", "Federal Gov't", "Self-Employed"] 
                 : openAccordion 
                   ? [''] 
-                    : categories,
+                    : categories.map(e => this._capitalize(e)),
         visible: visible,
         crosshair: visible,
         gridLineColor: '#ffffff',

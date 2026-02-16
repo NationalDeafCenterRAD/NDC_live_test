@@ -81,9 +81,9 @@ export const variables = [
    deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men'],
    more_options: ' Gender ', title_by: ' by Gender', age: '16–64'
   },
-  {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities','with additional disabilities'],
-   deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities','deaf with additional disabilities'], 
-   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities','hearing with additional disabilities'],
+  {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
+   deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
+   hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities'],
    more_options: ' Disability ', title_by: ' by Disability', age: '16–64'
   },
   {label: 'Overall', value: 'Overall', variable: 'overall', variables: [''],
@@ -103,9 +103,9 @@ export const variables = [
   deaf: ['deaf women','deaf men'], hearing: ['hearing women','hearing men'],
   more_options: ' Gender ', title_by: ' by Gender', age: '25–64'
  },
- {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities','additional disabilities'],
-  deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities','deaf people with additional disabilities'], 
-  hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities','hearing people with additional disabilities'],
+ {label: 'Disability', value: 'Disability', variable: 'disability', variables: ['blind','disabled','no additional disabilities'],
+  deaf: ['deafblind people','deafdisabled people','deaf people with no additional disabilities'], 
+  hearing: ['hearing blind people','hearing disabled people', 'hearing people with no additional disabilities'],
   more_options: ' Disability ', title_by: ' by Disability', age: '25–64'
  }
 ]
@@ -181,22 +181,18 @@ export const attributions = [
   {label: 'Native American deaf', value: 'Native American deaf', variable: 'race', color: 'teal', words: 'Native American deaf people'},
   {label: 'multiracial deaf', value: 'multiracial deaf', variable: 'race', color: 'teal', words: 'multiracial deaf people'},
   {label: 'white deaf', value: 'white deaf', variable: 'race', color: 'teal', words: 'white deaf people'},
-  //{label: 'deaf BIPOC', value: 'deaf BIPOC', variable: 'race', color: 'teal', words: 'deaf BIPOC'},
   {label: 'Asian hearing', value: 'Asian hearing', variable: 'race', color: 'black', words: 'Asian hearing people'},
   {label: 'Black hearing', value: 'Black hearing', variable: 'race', color: 'black', words: 'Black hearing people'},
   {label: 'Latine hearing', value: 'Latine hearing', variable: 'race', color: 'black', words: 'Latine hearing people'},
   {label: 'Native American hearing', value: 'Native American hearing', variable: 'race', color: 'black', words: 'Native American hearing people'},
   {label: 'multiracial hearing', value: 'multiracial hearing', variable: 'race', color: 'black', words: 'multiracial hearing people'},
   {label: 'white hearing', value: 'white hearing', variable: 'race', color: 'black', words: 'white hearing people'},
-  //{label: 'hearing BIPOC', value: 'hearing BIPOC', variable: 'race', color: 'black', words: 'hearing BIPOC'},
   {label: 'deafblind', value: 'deafblind', variable: 'disability', color: 'teal', words: 'deafblind people'},
   {label: 'deafdisabled', value: 'deafdisabled', variable: 'disability', color: 'teal', words: 'deafdisabled people'},
   {label: 'deaf with no additional disabilities', value: 'deaf with no additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with no additional disabilities'},  
-  {label: 'deaf with additional disabilities', value: 'deaf with additional disabilities', variable: 'disability', color: 'teal', words: 'deaf people with additional disabilities'},  
   {label: 'hearing blind', value: 'hearing blind', variable: 'disability', color: 'black', words: 'hearing blind people'},
   {label: 'hearing disabled', value: 'hearing disabled', variable: 'disability', color: 'black', words: 'hearing disabled people'},
   {label: 'hearing with no additional disabilities', value: 'hearing with no additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with no additional disabilities'},
-  //{label: 'hearing with additional disabilities', value: 'hearing with additional disabilities', variable: 'disability', color: 'black', words: 'hearing people with additional disabilities'}
 ]
 
 export const level_of_education = [

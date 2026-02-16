@@ -498,7 +498,7 @@ const App = () => {
       {
         showInLegend: false,
         name: 'Deaf + Native American',
-        color: colorfill[3],
+        color: colorfill[1],
         borderColor: colorfill[0],
         borderWidth: 1,
         data: us25_64.filter(us25_64 => us25_64.RACETH === 'Native American' &
@@ -507,7 +507,7 @@ const App = () => {
       },
       { showInLegend: false,
         name: 'Deaf + Latinx',
-        color: colorfill[4],
+        color: colorfill[2],
         borderColor: colorfill[0],
         borderWidth: 1,
         data: us25_64.filter(us25_64 => us25_64.RACETH === 'Latinx' &
@@ -517,7 +517,7 @@ const App = () => {
       {
         showInLegend: false,
         name: 'Deaf + Other Race/Multiracial',
-        color: colorfill[5],
+        color: colorfill[0],
         borderColor: colorfill[0],
         borderWidth: 1,
         data: us25_64.filter(us25_64 => us25_64.RACETH === 'Other Race/Multiracial' &

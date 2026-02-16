@@ -33,6 +33,7 @@ import warning_sign from '../../assets/images/warning_sign.svg';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import "highcharts/modules/exporting";
+import 'highcharts/modules/no-data-to-display';
 import "highcharts/modules/accessibility";
 import "highcharts-pattern-fill";
 import 'highcharts/highcharts-more';
@@ -153,13 +154,11 @@ const Dashboard = ({colorfill}) => {
       fontSize: 16,
       fontFamily: 'Roboto',
     }),
+    indicatorSeparator: () => {},
     dropdownIndicator: (provided) => ({
       ...provided,
       cursor: 'pointer',
-      color: nationDisabled ? '#bfbfbf' :'#0d7777',
-      "&:hover": {
-        color: '#0d7777'
-      }
+      color: 'transparent'
     }),
     control: (provided) => ({
       ...provided,
@@ -218,6 +217,10 @@ const Dashboard = ({colorfill}) => {
       fontFamily: 'Roboto',
       cursor: 'pointer'
     }),
+    indicatorSeparator: () => {},
+    dropdownIndicator: () => ({
+      color: 'transparent',
+    }),
     control: (provided) => ({
       ...provided,
       marginTop: -5,
@@ -225,6 +228,7 @@ const Dashboard = ({colorfill}) => {
       borderBottom: 'none',
       borderRadius: '20px 20px 0 0',
       padding: 2,
+      width: '100%',
       "&:hover": {
         background: '#ECEDF0',
         cursor: 'pointer',
@@ -521,7 +525,7 @@ const Dashboard = ({colorfill}) => {
   const [more_options, setMoreOptions] = useState(variables.filter(e => e.variable === selectedAttributions).map(e => e.more_options)[0]);
 
   const changeSection = (e) => {
-    if(e.second_disabled === true){
+    if(e.second_disabled){
       setTitleColor('#bfbfbf')
     }else{
       setTitleColor('#0d7777')
@@ -562,7 +566,14 @@ const Dashboard = ({colorfill}) => {
     setScope(e.scope)
     setSecondSchema([{label: 'Overall', value: 'Overall'}])
     setMoreOptions(' ')
-    if(e.accordion !== 'nothing'){
+    
+    if(e.type === 'Field of Degree'){
+      setAccordionIs('accordion-is')
+      searchParams.delete('groups')
+      setSearchParams(
+        searchParams
+      );
+    }else if(e.accordion !== 'nothing'){
       setAccordionIs(e.accordion)
     }
   }
@@ -602,7 +613,7 @@ const Dashboard = ({colorfill}) => {
     setSentence(e.sentence)
     setAge(e.age)
 
-    if(e.variable === 'all'){
+    if(['every_class','all'].includes(e.variable)){
       setTitleBy('')
       setInsideChartStatus('overall');
       searchParams.set('attr','overall');
@@ -611,8 +622,12 @@ const Dashboard = ({colorfill}) => {
       setDeafLabels(['deaf people'])
       setHearLabels(['hearing people'])
       setMoreOptions(' ')
+      setTitleColor('#bfbfbf');
     }else{
       setInsideChartStatus(e.variable)
+      if(!['popular','levels'].includes(chartType)){
+        setTitleColor('#0d7777');
+      }
     }
 
     setSearchParams(
@@ -1032,7 +1047,9 @@ const Dashboard = ({colorfill}) => {
     scope,
     nationDescript,
     deafLabels: deaf_labels,
-    hearLabels: hear_labels
+    hearLabels: hear_labels,
+    caption: nationalTitle,
+    titleBy: title_by
   });
 
   // State Charts
@@ -2086,7 +2103,7 @@ const Dashboard = ({colorfill}) => {
                   <div className = 'content-for-accordion'>
                     <div className = {accordion_is}>
                       <div className = 'mobile-accordion-title'>
-                        {'More'+more_options+'Options'}
+                        More Options
                         <div className = 'mobile-circle-symbol'  onClick = {clickButton}>
                           <div className="mobile-before-cross"/>
                           <div className="mobile-after-cross"/>
@@ -2614,12 +2631,12 @@ const Dashboard = ({colorfill}) => {
                                           'In this chart, estimates are based on a sample size of '+
                                           size_checker(employment.filter(employment => employment.type === insidechartType & 
                                             employment.variable === selectedAttributions & employment.state === chosen_state_a &
-                                            employment.status === insidechartStatus).map(employment => employment.n).reduce(
+                                            employment.status === insidechartStatus).map(employment => employment.denominator).reduce(
                                               (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                           ' people'+in_the_a.toLowerCase()+state_label_a+' and '+
                                           size_checker(employment.filter(employment => employment.type === insidechartType & 
                                             employment.variable === selectedAttributions & employment.state === chosen_state_b &
-                                            employment.status === insidechartStatus).map(employment => employment.n).reduce(
+                                            employment.status === insidechartStatus).map(employment => employment.denominator).reduce(
                                               (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                           ' people'+in_the_b.toLowerCase()+state_label_b+' who participated '+
                                           'in the American Community Survey '+year+'.'+in_the_a+state_label_a+', the margin of errors are '+
@@ -2649,13 +2666,13 @@ const Dashboard = ({colorfill}) => {
                                           size_checker(employment.filter(employment => employment.type === insidechartType & 
                                           (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
                                           employment.state === chosen_state_a &
-                                          employment.status === insidechartStatus).map(employment => employment.n).reduce(
+                                          employment.status === insidechartStatus).map(employment => employment.denominator).reduce(
                                             (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                           ' people'+in_the_a.toLowerCase()+state_label_a+
                                           ' and '+size_checker(employment.filter(employment => employment.type === insidechartType & 
                                             (employment.attribution === attribute[0] | employment.attribution === attribute[1]) & 
                                             employment.state === chosen_state_b &
-                                            employment.status === insidechartStatus).map(employment => employment.n).reduce(
+                                            employment.status === insidechartStatus).map(employment => employment.denominator).reduce(
                                               (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                           ' people'+in_the_b.toLowerCase()+state_label_b+' who participated '+
                                           'in the American Community Survey '+year+'.'+in_the_a+state_label_a+', the margin of errors are '+
@@ -2684,11 +2701,11 @@ const Dashboard = ({colorfill}) => {
                                         'In this chart, estimates are based on a sample size of '+
                                         size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
                                         employment.status === 'no HS diploma' & employment.type === 'education' & 
-                                          employment.state === chosen_state_a).map(employment => employment.n).reduce(
+                                          employment.state === chosen_state_a).map(employment => employment.denominator).reduce(
                                             (sum, a) => sum + a, 0)).toLocaleString('en-US')+' people '+in_the_a.toLowerCase()+state_label_a+' and '+
                                         size_checker(employment.filter(employment => (employment.attribution === 'deaf' | employment.attribution === 'hearing') & 
                                         employment.status === 'no HS diploma' & employment.type === 'education' & 
-                                          employment.state === chosen_state_b).map(employment => employment.n).reduce(
+                                          employment.state === chosen_state_b).map(employment => employment.denominator).reduce(
                                             (sum, a) => sum + a, 0)).toLocaleString('en-US')+
                                         ' people '+in_the_b+state_label_b+' who participated in the American Community Survey '+year+
                                         '. '+in_the_a+state_label_a+', the margin of errors are between '+
