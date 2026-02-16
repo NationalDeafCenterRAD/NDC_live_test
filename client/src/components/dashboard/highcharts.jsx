@@ -549,7 +549,7 @@ class customHighCharts {
             }
           })
         )
-      )
+      ).filter(e => e !== "")
     }
 
     const statusOrder = ['For-profit', 'Non-profit', "Local gov't", "State gov't", "Federal gov't", "Self-employed/Business"];
@@ -567,26 +567,27 @@ class customHighCharts {
       e?.attribution?.includes('deaf')).map(
       e => [e.status,e.percentage,e.margin_errors]).slice(0,5).reverse()
     
+    console.log(column.length === 1);
     const content = {
       column:
       {
         percentage:
-          series.length > 1 
+          series.length > 1 && column.length > 1
             ?
               'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
               nationDescript+', compared to '+column[1]
-            : series.length === 1
+            : series.length === 1 || column.length === 1
               ?
                 'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
                 nationDescript+'.'
               : 
                 '',
         median_income:
-          series.length > 1 
+          series.length > 1 && column.length > 1
               ?
                 'In the United States, among people aged 16-64 who are working full time, '+column[0]+
                 ', compared to '+column[1]
-              : series.length === 1
+              : series.length === 1 || column.length === 1
                 ?
                   'In the United States, among people aged 16-64 who are working full time, '+column[0]+'.'
                 :
@@ -822,7 +823,7 @@ class customHighCharts {
         : openAccordion
           ? series.flatMap(seriesData =>
               seriesData.map(e => ({
-                denominator: e?.denominator?.toLocaleString('en-US'),
+                denominator: defineSampleSize(e?.denominator),
                 group: e?.readable,
                 error: e?.margin_errors + '%'
               }))
