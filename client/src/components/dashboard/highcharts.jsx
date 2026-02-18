@@ -567,7 +567,6 @@ class customHighCharts {
       e?.attribution?.includes('deaf')).map(
       e => [e.status,e.percentage,e.margin_errors]).slice(0,5).reverse()
     
-    console.log(column.length === 1);
     const content = {
       column:
       {

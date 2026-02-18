@@ -2124,7 +2124,7 @@ const Dashboard = ({colorfill}) => {
                         }}
                         onChange = {changeAttribution}
                         value = {multi_attribution}
-                        options = {attributions.filter(attributions => attributions.variable === selectedAttributions)}
+                        options = {attributions.filter(e => e.variable === selectedAttributions && !(e?.value?.includes('ages 16-24') && limit_age === '25–64'))}
                         isSearchable = {false}
                         />
                       </div>
@@ -2267,7 +2267,7 @@ const Dashboard = ({colorfill}) => {
                           }}
                           onChange = {changeAttribution}
                           value = {multi_attribution}
-                          options = {attributions.filter(attributions => attributions.variable === selectedAttributions)}
+                          options = {attributions.filter(e => e.variable === selectedAttributions && !(e?.value?.includes('ages 16-24') && limit_age === '25–64'))}
                           isSearchable = {false}
                           />
                         </form>
@@ -2356,7 +2356,7 @@ const Dashboard = ({colorfill}) => {
                         }}
                         onChange = {changeAttribution}
                         value = {multi_attribution}
-                        options = {attributions.filter(attributions => attributions.variable === selectedAttributions)}
+                        options = {attributions.filter(e => e.variable === selectedAttributions && !(e?.value?.includes('ages 16-24') && limit_age === '25–64'))}
                         isSearchable = {false}
                         />
                       </div>
@@ -2865,7 +2865,7 @@ const Dashboard = ({colorfill}) => {
                           }}
                           onChange = {changeAttribution}
                           value = {multi_attribution}
-                          options = {attributions.filter(attributions => attributions.variable === selectedAttributions)}
+                          options = {attributions.filter(e => e.variable === selectedAttributions && !(e?.value?.includes('ages 16-24') && limit_age === '25–64'))}
                           isSearchable = {false}
                           />
                         </form>
