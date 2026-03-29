@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useCitation } from "../citation.jsx";
 import acs_one_year from '../../data/acs_year.json';
+import acs_five_year from '../../data/acs_5_year.json';
 import thelogo from "../../assets/images/NDC_logo_color_horizontal-black-text.png";
 import raw_employment from '../../data/employment.json';
 import timeseries from '../../data/timeseries.json'; 
@@ -22,8 +23,8 @@ class customHighCharts {
       state: options.state || 'United States', 
       status: options.status || 'employed', 
       colorfill: options.colorfill || ['#00A79D', '#43C9C8', '#D6EEF0', 'url(#teal)', 'url(#teal1)', 'url(#teal2)', '#282729', '#949494', '#dbdbdb'],
-      openAccordion: options.openAccordion || false,
-      isExportingEnabled: options.isExportingEnabled || true,
+      openAccordion: options.openAccordion ?? false,
+      isExportingEnabled: options.isExportingEnabled ?? true,
       chartType: options.chartType || 'column',
       sentence: options.sentence || '',
       scope: options.scope || '',
@@ -31,7 +32,8 @@ class customHighCharts {
       nationDescript: options.nationDescript || '',
       deafLabels: options.deafLabels || [],
       hearLabels: options.hearLabels || [],
-      titleBy: options.titleBy || ''
+      titleBy: options.titleBy || '',
+      sampleShorterSentence: options.sampleShorterSentence ?? false
     }
     this.data = this._selectDataSet();
     this.preparedData = this._setup();
@@ -504,7 +506,8 @@ class customHighCharts {
     const { 
       chartType, type, status, 
       attributions, sentence,
-      scope, limitAge, nationDescript
+      scope, limitAge, nationDescript,
+      state
     } = this.config;
     const { metric, series } = this.preparedData
     const dataset = this.data;
@@ -573,22 +576,22 @@ class customHighCharts {
         percentage:
           series.length > 1 && column.length > 1
             ?
-              'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
+              `In ${state !== 'United States' && state !== 'US' ? state : 'In the United States'}, among people aged `+limitAge+scope+', an estimated '+column[0]+
               nationDescript+', compared to '+column[1]
             : series.length === 1 || column.length === 1
               ?
-                'In the United States, among people aged '+limitAge+scope+', an estimated '+column[0]+
+                `In ${state !== 'United States' && state !== 'US' ? state : 'In the United States'}, among people aged `+limitAge+scope+', an estimated '+column[0]+
                 nationDescript+'.'
               : 
                 '',
         median_income:
           series.length > 1 && column.length > 1
               ?
-                'In the United States, among people aged 16-64 who are working full time, '+column[0]+
+                `In ${state !== 'United States' && state !== 'US'  ? state : 'In the United States'}, among people aged 16-64 who are working full time, `+column[0]+
                 ', compared to '+column[1]
               : series.length === 1 || column.length === 1
                 ?
-                  'In the United States, among people aged 16-64 who are working full time, '+column[0]+'.'
+                  `In ${state !== 'United States' && state !== 'US' ? state : 'In the United States'}, among people aged 16-64 who are working full time, `+column[0]+'.'
                 :
                   ''
       }[metric],
@@ -662,11 +665,11 @@ class customHighCharts {
             return x+'%'
           }})+' those with a master’s degree',                                
       all: 
-        'In the United States, among people aged '+limitAge+', an estimated'+
+        `In ${state !== 'United States' && state !== 'US'  ? state : 'In the United States'}, among people aged `+limitAge+', an estimated'+
         dataset.filter(e => e.attribution === 'deaf' & 
           e.status !== 'no HS diploma' &  
           e.type === 'education' & 
-          e.state === 'United States').map(
+          e.state === state).map(
           function(e, index){ return index === 0 ? 
           ' and '+
           (e.percentage === 0 ? 'N/A of ' : ((e.margin_errors/100)/1.962937)/(e.percentage/100) > 0.3 ? e.percentage + '% \u26a0 ' : e.percentage + '% ')+
@@ -678,7 +681,7 @@ class customHighCharts {
         dataset.filter(e => e.attribution === 'hearing' & 
           e.status !== 'no HS diploma' & 
           e.type === 'education' & 
-          e.state === 'United States').map(
+          e.state === state).map(
           function(e, index){ return index === 0 ? 
           ' and '+
           (e.percentage === 0 ? 'N/A of ' : ((e.margin_errors/100)/1.962937)/(e.percentage/100) > 0.3 ? e.percentage + '% \u26a0 ' : e.percentage + '% ')+
@@ -723,7 +726,7 @@ class customHighCharts {
 
   getSampleInfo = () => {
     const { series, metric } = this.preparedData;
-    const { state, openAccordion, chartType } = this.config;
+    const { state, openAccordion, chartType, sampleShorterSentence } = this.config;
 
     const defineSampleSize = (x) => {
       return(x > 351 ? x.toLocaleString('en-US') : '351 or less')
@@ -869,9 +872,9 @@ class customHighCharts {
     const regex = /from/i;
 
     if(info.length > 1){
-      return `In this chart, estimates are based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} and ${info[1]?.denominator} ${info[1]?.group} in ${state === 'United States' ? 'the ' : ''}${state} who participated ${chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}. The margins of error are ${info[0]?.error} for ${info[0]?.group} and ${info[1]?.error} for ${info[1]?.group}.`;
+      return `In this chart, estimates are based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} and ${info[1]?.denominator} ${info[1]?.group} in ${state === 'United States' || state === 'US' ? 'the United States' : state}${!sampleShorterSentence ? ` who participated ${state !== 'United States' ? `in the ${acs_five_year-4}–${acs_five_year} American Community Surveys` : chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}` : ''}. The margins of error are ${info[0]?.error} for ${info[0]?.group} and ${info[1]?.error} for ${info[1]?.group}.`;
     }else if(info.length === 1){
-      return `In this chart, estimate is based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} in ${state === 'United States' ? 'the ' : ''}${state} who participated ${chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}. The margin of error is ${info[0]?.error}.`;
+      return `In this chart, estimate is based on ${regex.test(info[0]?.denominator) ? 'the sample sizes ranging' : 'a sample size of'} ${info[0]?.denominator} ${info[0]?.group} in ${state === 'United States' || state === 'US' ? 'the United States' : state}${!sampleShorterSentence ? `who participated ${chartType === 'spline' ? `from ${acs_one_year-9} to ${acs_one_year} American Community Surveys` : `in the ${acs_one_year} American Community Survey`}` : ''}. The margin of error is ${info[0]?.error}.`;
     }else{  
       return '';
     }
@@ -1128,14 +1131,21 @@ class customHighCharts {
             plotBackgroundColor: '#ffffff',
             events: {
               render() {
-                const chart = this,
-                  width = 190;
-                  chart.renderer.image(thelogo,
-                    chart.plotLeft + chart.plotSizeX - width, //x
-                    30, //y
-                    2.37216657881*70, //width
-                    70//height
-                ).add();
+                const chart = this;
+                const logoWidth = 2.37216657881 * 70;
+                const logoHeight = 70;
+                let x, y;
+
+                if (!chart.inverted) {
+                  x = chart.plotLeft + chart.plotWidth - logoWidth;
+                  y = 30;
+                }else{
+                  x = chart.plotLeft + chart.plotWidth - logoWidth;
+                  y = 30;
+                }
+                chart.renderer.image(thelogo,
+                  x,y,logoWidth,logoHeight
+                ).add() 
               }
             }
           }
