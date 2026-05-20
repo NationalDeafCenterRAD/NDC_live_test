@@ -57,10 +57,10 @@ export const national_options = [
    set_for_chart: [{label: "Bachelor's", value: "Bachelor's"}], subvariable: 'bachelor',type: 'education', age: '25–64', description: " have completed a bachelor's degree or higher", description1: '', sentence: "bachelor's degree attainment rate", group: 'TimeSeries',
    chartype: 'spline', metrics: 'percentage', categories: '', accordion: 'accordion-is-open', scope: ''
   },
-  {label: 'Employment/Earnings by Education', value: 'Employment/Earnings by Education', variable: 'levels of education', title: 'Employment Rate',title_by: ' By Level of Education', disabled: true, second_disabled: true, display: 'unset',
+  /*{label: 'Employment/Earnings by Education', value: 'Employment/Earnings by Education', variable: 'levels of education', title: 'Employment Rate',title_by: ' By Level of Education', disabled: true, second_disabled: true, display: 'unset',
    set_for_chart: [{label: "Employment Rates", value: "Employment Rates"}], subvariable: "employed", type: 'levels of education', age: '25–64', description: 'employment rate', description1: '', sentence: '', group: 'levels of education',
    chartype: 'levels', metrics: 'percentage', categories: '', accordion: 'accordion-is', scope: ''
-  }
+  }*/
 ]
 
 export const variables = [
